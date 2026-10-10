@@ -1,6 +1,14 @@
 {
-  "meta": { "title": "Mapa 3D · PUC-SP Consolação", "description": "Encontre prédios do campus Consolação da PUC-SP em um mapa 3D interativo. Por PUC Tech." },
-  "search": { "label": "Buscar prédio", "placeholder": "Buscar prédio…", "noResults": "Nenhum prédio encontrado" },
+  "meta": {
+    "title": "Mapa 3D · PUC-SP Consolação",
+    "description": "Encontre prédios do campus Consolação da PUC-SP em um mapa 3D interativo. Por PUC Tech."
+  },
+  "search": {
+    "label": "Buscar prédio",
+    "placeholder": "Buscar prédio…",
+    "noResults": "Nenhum prédio encontrado",
+    "count": "{count, plural, one {# prédio encontrado} other {# prédios encontrados}}"
+  },
   "sheet": {
     "floors": "{count, plural, one {# andar} other {# andares}}",
     "entrances": "{count, plural, one {# entrada marcada no mapa} other {# entradas marcadas no mapa}}",
@@ -9,9 +17,20 @@
     "collapse": "Mostrar menos",
     "floorList": "Andares"
   },
-  "floor": { "ground": "Térreo", "basement": "Subsolo {n}", "level": "{level}º andar" },
-  "list": { "open": "Lista de prédios", "title": "Prédios", "close": "Fechar lista" },
-  "locale": { "switch": "English", "switchLabel": "Ver em inglês" },
+  "floor": {
+    "ground": "Térreo",
+    "basement": "Subsolo {n}",
+    "level": "{level}º andar"
+  },
+  "list": {
+    "open": "Lista de prédios",
+    "title": "Prédios",
+    "close": "Fechar lista"
+  },
+  "locale": {
+    "switch": "English",
+    "switchLabel": "Ver em inglês"
+  },
   "loading": "Carregando mapa…",
   "noWebgl": "Seu navegador não suporta 3D. Use a lista de prédios."
 }

@@ -1,13 +1,15 @@
 'use client';
 import dynamic from 'next/dynamic';
-import { useState, useSyncExternalStore } from 'react';
+import { useEffect, useState, useSyncExternalStore } from 'react';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
-import { useTranslations } from 'next-intl';
+import { useLocale, useTranslations } from 'next-intl';
+import type { Locale } from '@/lib/campus';
 import { findBuilding } from '@/lib/campus';
 import { SearchBar } from './ui/SearchBar';
 import { BuildingSheet } from './ui/BuildingSheet';
 import { BuildingList } from './ui/BuildingList';
 import { LocaleSwitch } from './ui/LocaleSwitch';
+import { SceneErrorBoundary } from './SceneErrorBoundary';
 
 function Loading() {
   const t = useTranslations();
@@ -35,7 +37,10 @@ export function MapApp() {
   const params = useSearchParams();
   const selected = findBuilding(params.get('b')) ?? null; // unknown ids fall back to the overview
   // Server render assumes WebGL; the client reads the real value after hydration.
-  const webgl = useSyncExternalStore(noSubscribe, hasWebGL, () => true);
+  const webglSupported = useSyncExternalStore(noSubscribe, hasWebGL, () => true);
+  const [sceneFailed, setSceneFailed] = useState(false);
+  const webgl = webglSupported && !sceneFailed;
+  const locale = useLocale() as Locale;
   const [listOpen, setListOpen] = useState(false);
 
   const select = (id: string | null) => {
@@ -43,10 +48,23 @@ export function MapApp() {
     router.push(id ? `${pathname}?b=${encodeURIComponent(id)}` : pathname, { scroll: false });
   };
 
+  // Escape closes the topmost panel: the list first, then the sheet.
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key !== 'Escape') return;
+      if (listOpen && webgl) setListOpen(false);
+      else if (selected) router.push(pathname, { scroll: false });
+    };
+    window.addEventListener('keydown', onKey);
+    return () => window.removeEventListener('keydown', onKey);
+  }, [listOpen, webgl, selected, router, pathname]);
+
   return (
     <main className="fixed inset-0 overflow-hidden">
       {webgl ? (
-        <CampusScene selectedId={selected?.id ?? null} onSelect={select} />
+        <SceneErrorBoundary onError={() => setSceneFailed(true)}>
+          <CampusScene selectedId={selected?.id ?? null} locale={locale} onSelect={select} />
+        </SceneErrorBoundary>
       ) : (
         <p role="status" className="p-4 pt-20 text-sm text-ice/70">{t('noWebgl')}</p>
       )}

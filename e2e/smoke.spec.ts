@@ -64,3 +64,57 @@ test('search ignores accents', async ({ page }) => {
   await page.getByRole('searchbox').fill('predio');
   await expect(page.getByRole('button', { name: first.name.pt, exact: true })).toBeVisible();
 });
+
+test('if the 3D scene fails after the WebGL check, the building list still works', async ({ page }) => {
+  await page.addInitScript(() => {
+    // The first WebGL request (the support check) succeeds; the renderer's own request fails.
+    let calls = 0;
+    const orig = HTMLCanvasElement.prototype.getContext;
+    // @ts-expect-error test stub
+    HTMLCanvasElement.prototype.getContext = function (type: string, ...rest: unknown[]) {
+      if (type.startsWith('webgl') && calls++ > 0) return null;
+      return orig.call(this, type, ...rest);
+    };
+  });
+  await page.goto('/pt');
+  await expect(page.getByTestId('building-list')).toBeVisible();
+  await page.getByTestId('building-list-item').filter({ hasText: new RegExp(`^${first.name.pt}$`) }).click();
+  await expect(page.getByTestId('building-sheet')).toBeVisible();
+});
+
+test('picking a building moves focus to its sheet and Escape closes it', async ({ page }) => {
+  await page.goto('/pt');
+  await page.getByRole('button', { name: 'Lista de prédios' }).click();
+  await page.getByTestId('building-list-item').filter({ hasText: new RegExp(`^${first.name.pt}$`) }).click();
+  await expect(page.getByTestId('building-sheet').getByRole('heading', { level: 2 })).toBeFocused();
+  await page.keyboard.press('Escape');
+  await expect(page.getByTestId('building-sheet')).toHaveCount(0);
+});
+
+test('Escape closes the building list', async ({ page }) => {
+  await page.goto('/pt');
+  await page.getByRole('button', { name: 'Lista de prédios' }).click();
+  await page.keyboard.press('Escape');
+  await expect(page.getByTestId('building-list')).toHaveCount(0);
+});
+
+test('search results are announced to screen readers', async ({ page }) => {
+  await page.goto('/pt');
+  await page.getByRole('searchbox').fill('xyz');
+  await expect(page.getByRole('status')).toHaveText('Nenhum prédio encontrado');
+});
+
+test('picking a search result dismisses the keyboard', async ({ page }) => {
+  await page.goto('/pt');
+  // Enter keeps focus in the input, like a tap on iOS (where buttons don't take focus).
+  await page.getByRole('searchbox').fill(first.name.pt);
+  await page.getByRole('searchbox').press('Enter');
+  await expect(page.getByTestId('building-sheet')).toBeVisible();
+  await expect(page.getByRole('searchbox')).not.toBeFocused();
+});
+
+test('map labels follow the page language', async ({ page }) => {
+  const tall = campus.buildings.find((b) => b.floors.reduce((s, f) => s + f.height, 0) >= 10)!;
+  await page.goto(`/en?b=${tall.id}`);
+  await expect(page.getByTestId('building-label').filter({ hasText: new RegExp(`^${tall.name.en}$`) })).toHaveCount(1);
+});

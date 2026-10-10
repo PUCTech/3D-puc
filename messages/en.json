@@ -1,6 +1,14 @@
 {
-  "meta": { "title": "3D Map · PUC-SP Consolação", "description": "Find buildings on PUC-SP's Consolação campus on an interactive 3D map. By PUC Tech." },
-  "search": { "label": "Search buildings", "placeholder": "Search buildings…", "noResults": "No buildings found" },
+  "meta": {
+    "title": "3D Map · PUC-SP Consolação",
+    "description": "Find buildings on PUC-SP's Consolação campus on an interactive 3D map. By PUC Tech."
+  },
+  "search": {
+    "label": "Search buildings",
+    "placeholder": "Search buildings…",
+    "noResults": "No buildings found",
+    "count": "{count, plural, one {# building found} other {# buildings found}}"
+  },
   "sheet": {
     "floors": "{count, plural, one {# floor} other {# floors}}",
     "entrances": "{count, plural, one {# entrance marked on the map} other {# entrances marked on the map}}",
@@ -9,9 +17,20 @@
     "collapse": "Show less",
     "floorList": "Floors"
   },
-  "floor": { "ground": "Ground floor", "basement": "Basement {n}", "level": "Floor {level}" },
-  "list": { "open": "Building list", "title": "Buildings", "close": "Close list" },
-  "locale": { "switch": "Português", "switchLabel": "Ver em português" },
+  "floor": {
+    "ground": "Ground floor",
+    "basement": "Basement {n}",
+    "level": "Floor {level}"
+  },
+  "list": {
+    "open": "Building list",
+    "title": "Buildings",
+    "close": "Close list"
+  },
+  "locale": {
+    "switch": "Português",
+    "switchLabel": "Ver em português"
+  },
   "loading": "Loading map…",
   "noWebgl": "Your browser doesn't support 3D. Use the building list."
 }

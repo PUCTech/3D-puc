@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { project, pointInPolygon, guessFloors, buildCampus, mergeCampus, type OsmWay } from './osm';
+import { project, pointInPolygon, guessFloors, buildCampus, mergeCampus, importMode, type OsmWay } from './osm';
 
 const origin = { lat: -23.549, lon: -46.649 };
 // small square around origin; OSM closed ways repeat the first node
@@ -71,4 +71,10 @@ describe('mergeCampus', () => {
     expect(mergeCampus({ ...fresh, buildings: [] }, fresh).buildings).toEqual([]));
   it('keeps the existing origin', () =>
     expect(mergeCampus({ ...edited, origin: { lat: 1, lon: 2 } }, fresh).origin).toEqual({ lat: 1, lon: 2 }));
+});
+
+describe('importMode', () => {
+  it('merges by default when data already exists', () => expect(importMode(true, [])).toBe('merge'));
+  it('starts fresh when there is no data yet', () => expect(importMode(false, [])).toBe('fresh'));
+  it('only overwrites existing data with --fresh', () => expect(importMode(true, ['--fresh'])).toBe('fresh'));
 });

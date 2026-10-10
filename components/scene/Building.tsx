@@ -2,17 +2,17 @@ import { useMemo, useRef } from 'react';
 import * as THREE from 'three';
 import { Edges, Html } from '@react-three/drei';
 import { useFrame, type ThreeEvent } from '@react-three/fiber';
-import { buildingHeight, footprintCenter, type Building as B } from '@/lib/campus';
+import { buildingHeight, footprintCenter, type Building as B, type Locale } from '@/lib/campus';
 
 const LOW = new THREE.Color('#143966');
 const HIGH = new THREE.Color('#2b6fac');
 const ICE = new THREE.Color('#bae4fe');
 
-type Props = { building: B; maxHeight: number; selected: boolean; dimmed: boolean; near: boolean; onSelect: () => void };
+type Props = { building: B; maxHeight: number; selected: boolean; dimmed: boolean; near: boolean; locale: Locale; onSelect: () => void };
 
 const LANDMARK_HEIGHT = 10; // meters; taller buildings keep their label in the overview
 
-export function Building({ building, maxHeight, selected, dimmed, near, onSelect }: Props) {
+export function Building({ building, maxHeight, selected, dimmed, near, locale, onSelect }: Props) {
   const height = buildingHeight(building);
   const base = building.baseHeight ?? 0;
   const geometry = useMemo(() => {
@@ -44,9 +44,10 @@ export function Building({ building, maxHeight, selected, dimmed, near, onSelect
       {/* Always mounted, hidden with opacity: unmounting drei <Html> mid-render triggers React warnings */}
       <Html position={[cx, height + 3, cz]} center zIndexRange={[10, 0]} className="pointer-events-none select-none">
         <span
+          data-testid="building-label"
           className={`block whitespace-nowrap font-mono text-[10px] uppercase tracking-widest transition-opacity duration-300 ${selected ? 'text-ice' : 'text-ice/60'} ${showLabel ? 'opacity-100' : 'opacity-0'}`}
         >
-          {building.shortName ?? building.name.pt}
+          {building.shortName ?? building.name[locale]}
         </span>
       </Html>
       {selected && building.entrances?.map(([x, z], i) => <Entrance key={i} x={x} z={z} />)}

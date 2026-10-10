@@ -77,3 +77,7 @@ export function mergeCampus(existing: Campus, fresh: Campus): Campus {
     }),
   };
 }
+
+// Merging is the default once data exists, so a plain re-run can't wipe hand edits.
+export const importMode = (dataExists: boolean, args: string[]): 'merge' | 'fresh' =>
+  dataExists && !args.includes('--fresh') ? 'merge' : 'fresh';

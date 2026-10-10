@@ -1,5 +1,5 @@
 'use client';
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useLocale, useTranslations } from 'next-intl';
 import type { Building, Floor, Locale } from '@/lib/campus';
 
@@ -8,6 +8,9 @@ export function BuildingSheet({ building, onClose }: { building: Building; onClo
   const locale = useLocale() as Locale;
   const [expanded, setExpanded] = useState(false);
   const dragStart = useRef<number | null>(null);
+  const heading = useRef<HTMLHeadingElement>(null);
+  // Move focus here on open so keyboard and screen-reader users land on what they picked.
+  useEffect(() => heading.current?.focus(), []);
   const aboveGround = building.floors.filter((f) => f.level >= 0).length;
   const floorName = (f: Floor) =>
     f.label?.[locale] ?? (f.level === 0 ? t('floor.ground') : f.level < 0 ? t('floor.basement', { n: -f.level }) : t('floor.level', { level: f.level }));
@@ -49,7 +52,7 @@ export function BuildingSheet({ building, onClose }: { building: Building; onClo
               </span>
             )}
           </div>
-          <h2 id="sheet-title" className="mt-2 text-xl font-semibold">{building.name[locale]}</h2>
+          <h2 id="sheet-title" ref={heading} tabIndex={-1} className="mt-2 text-xl font-semibold focus:outline-none">{building.name[locale]}</h2>
         </div>
         <button onClick={onClose} aria-label={t('sheet.close')} className="rounded-lg px-2 py-1 text-ice/70 hover:text-ice">✕</button>
       </div>

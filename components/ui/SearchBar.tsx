@@ -1,5 +1,5 @@
 'use client';
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 import { useLocale, useTranslations } from 'next-intl';
 import { campus, type Locale } from '@/lib/campus';
 import { searchBuildings } from '@/lib/search';
@@ -8,11 +8,14 @@ export function SearchBar({ onPick }: { onPick: (id: string) => void }) {
   const t = useTranslations('search');
   const locale = useLocale() as Locale;
   const [q, setQ] = useState('');
+  const input = useRef<HTMLInputElement>(null);
   const results = q.trim() ? searchBuildings(campus.buildings, q) : [];
-  const pick = (id: string) => { onPick(id); setQ(''); };
+  // blur() drops the phone keyboard, which would otherwise cover the sheet
+  const pick = (id: string) => { onPick(id); setQ(''); input.current?.blur(); };
   return (
     <div className="relative">
       <input
+        ref={input}
         type="search"
         aria-label={t('label')}
         placeholder={t('placeholder')}
@@ -21,6 +24,9 @@ export function SearchBar({ onPick }: { onPick: (id: string) => void }) {
         onKeyDown={(e) => e.key === 'Enter' && results[0] && pick(results[0].id)}
         className="h-11 w-full rounded-xl border border-deep bg-night/85 px-4 text-sm text-paper placeholder:text-ice/50 backdrop-blur focus:border-ice focus:outline-none"
       />
+      <p role="status" className="sr-only">
+        {q.trim() && (results.length ? t('count', { count: results.length }) : t('noResults'))}
+      </p>
       {q.trim() && (
         <ul className="absolute inset-x-0 top-12 max-h-[60vh] overflow-y-auto rounded-xl border border-deep bg-night/95 backdrop-blur">
           {results.length === 0 && <li className="px-4 py-3 text-sm text-ice/60">{t('noResults')}</li>}
