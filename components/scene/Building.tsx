@@ -1,18 +1,22 @@
 import { useMemo, useRef } from 'react';
 import * as THREE from 'three';
-import { Edges, Html } from '@react-three/drei';
+import { Html } from '@react-three/drei';
 import { useFrame, type ThreeEvent } from '@react-three/fiber';
 import { buildingHeight, footprintCenter, type Building as B, type Locale } from '@/lib/campus';
+import { toonRamp, wallTexture } from './pixel';
 
-const LOW = new THREE.Color('#143966');
-const HIGH = new THREE.Color('#2b6fac');
-const ICE = new THREE.Color('#bae4fe');
+// shortcut: one generic palette for every building until real per-building colors are researched
+const WALL = '#e8dcc4';
+const GLASS = '#5b7fa6';
+const FRAME = '#4a4a4a';
+const ROOF = new THREE.Color('#8a8f94');
+const SELECTED_ROOF = new THREE.Color('#ffd166');
 
-type Props = { building: B; maxHeight: number; selected: boolean; dimmed: boolean; near: boolean; locale: Locale; onSelect: () => void };
+type Props = { building: B; selected: boolean; dimmed: boolean; near: boolean; locale: Locale; onSelect: () => void };
 
 const LANDMARK_HEIGHT = 10; // meters; taller buildings keep their label in the overview
 
-export function Building({ building, maxHeight, selected, dimmed, near, locale, onSelect }: Props) {
+export function Building({ building, selected, dimmed, near, locale, onSelect }: Props) {
   const height = buildingHeight(building);
   const base = building.baseHeight ?? 0;
   const geometry = useMemo(() => {
@@ -22,8 +26,7 @@ export function Building({ building, maxHeight, selected, dimmed, near, locale, 
     g.rotateX(-Math.PI / 2);
     return g;
   }, [building.footprint, height]);
-  const side = useMemo(() => LOW.clone().lerp(HIGH, maxHeight ? height / maxHeight : 0), [height, maxHeight]);
-  const roof = useMemo(() => (selected ? side.clone().lerp(ICE, 0.6) : side.clone().lerp(ICE, 0.15)), [side, selected]);
+  const walls = useMemo(() => wallTexture(WALL, GLASS, FRAME), []);
   const [cx, cz] = footprintCenter(building);
   const opacity = dimmed ? 0.45 : 1;
   const showLabel = selected || (!dimmed && (near || height >= LANDMARK_HEIGHT));
@@ -32,20 +35,21 @@ export function Building({ building, maxHeight, selected, dimmed, near, locale, 
     <group position-y={base}>
       <mesh
         geometry={geometry}
+        castShadow
+        receiveShadow
         onClick={(e: ThreeEvent<MouseEvent>) => { e.stopPropagation(); if (e.delta < 4) onSelect(); }}
         onPointerOver={() => (document.body.style.cursor = 'pointer')}
         onPointerOut={() => (document.body.style.cursor = '')}
       >
         {/* ExtrudeGeometry groups: 0 = caps (roof/floor), 1 = walls */}
-        <meshStandardMaterial attach="material-0" color={roof} transparent opacity={opacity} />
-        <meshStandardMaterial attach="material-1" color={side} transparent opacity={opacity} />
-        {!dimmed && <Edges threshold={15} color={selected ? '#bae4fe' : '#7fb4dd'} lineWidth={selected ? 2 : 1} />}
+        <meshToonMaterial attach="material-0" color={selected ? SELECTED_ROOF : ROOF} gradientMap={toonRamp} transparent opacity={opacity} />
+        <meshToonMaterial attach="material-1" map={walls} gradientMap={toonRamp} transparent opacity={opacity} />
       </mesh>
       {/* Always mounted, hidden with opacity: unmounting drei <Html> mid-render triggers React warnings */}
       <Html position={[cx, height + 3, cz]} center zIndexRange={[10, 0]} className="pointer-events-none select-none">
         <span
           data-testid="building-label"
-          className={`block whitespace-nowrap font-mono text-[10px] uppercase tracking-widest transition-opacity duration-300 ${selected ? 'text-ice' : 'text-ice/60'} ${showLabel ? 'opacity-100' : 'opacity-0'}`}
+          className={`block whitespace-nowrap font-mono text-[10px] uppercase tracking-widest transition-opacity duration-300 ${selected ? 'text-yellow-200' : 'text-white'} [text-shadow:1px_1px_0_#000] ${showLabel ? 'opacity-100' : 'opacity-0'}`}
         >
           {building.shortName ?? building.name[locale]}
         </span>

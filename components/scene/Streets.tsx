@@ -18,9 +18,9 @@ export function Streets() {
         const mid = s.path[Math.floor(s.path.length / 2)];
         return (
           <group key={i}>
-            <Line points={s.path.map(([x, z]) => [x, 0.02, z] as [number, number, number])} color="#143966" lineWidth={6} />
+            <Line points={s.path.map(([x, z]) => [x, 0.02, z] as [number, number, number])} color="#4b5058" lineWidth={10} />
             {LABELED.has(i) && (
-              <Html position={[mid[0], 0.5, mid[1]]} center zIndexRange={[10, 0]} className="pointer-events-none select-none whitespace-nowrap font-mono text-[9px] uppercase tracking-widest text-accent">
+              <Html position={[mid[0], 0.5, mid[1]]} center zIndexRange={[10, 0]} className="pointer-events-none select-none whitespace-nowrap font-mono text-[9px] uppercase tracking-widest text-white [text-shadow:1px_1px_0_#000]">
                 {s.name}
               </Html>
             )}

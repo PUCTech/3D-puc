@@ -1,13 +1,13 @@
 'use client';
 import { useState } from 'react';
 import { Canvas, useFrame } from '@react-three/fiber';
-import { campus, buildingHeight, type Locale } from '@/lib/campus';
+import { campus, type Locale } from '@/lib/campus';
 import { Building } from './Building';
 import { Ground } from './Ground';
 import { Streets } from './Streets';
 import { CameraRig } from './CameraRig';
+import { PIXEL_DPR } from './pixel';
 
-const MAX_HEIGHT = Math.max(...campus.buildings.map(buildingHeight));
 const NEAR_DISTANCE = 160; // meters from camera to origin; closer than this, every building gets a label
 
 function Buildings({ selectedId, locale, onSelect }: Props) {
@@ -20,7 +20,6 @@ function Buildings({ selectedId, locale, onSelect }: Props) {
     <Building
       key={b.id}
       building={b}
-      maxHeight={MAX_HEIGHT}
       selected={b.id === selectedId}
       dimmed={selectedId !== null && b.id !== selectedId}
       near={near}
@@ -34,10 +33,25 @@ type Props = { selectedId: string | null; locale: Locale; onSelect: (id: string 
 
 export default function CampusScene({ selectedId, locale, onSelect }: Props) {
   return (
-    <Canvas camera={{ position: [140, 160, 180], fov: 40, near: 1, far: 5000 }} dpr={[1, 2]}>
-      <color attach="background" args={['#020d2b']} />
-      <ambientLight intensity={0.7} />
-      <directionalLight position={[80, 150, 60]} intensity={1.5} />
+    <Canvas
+      camera={{ position: [140, 160, 180], fov: 40, near: 1, far: 5000 }}
+      dpr={PIXEL_DPR}
+      gl={{ antialias: false }}
+      shadows
+      style={{ imageRendering: 'pixelated' }}
+    >
+      <color attach="background" args={['#9fd3f5']} />
+      <hemisphereLight args={['#dff2ff', '#6b7f4e', 0.9]} />
+      <directionalLight
+        position={[60, 120, 40]}
+        intensity={2.2}
+        castShadow
+        shadow-mapSize={[1024, 1024]}
+        shadow-camera-left={-120}
+        shadow-camera-right={120}
+        shadow-camera-top={120}
+        shadow-camera-bottom={-120}
+      />
       <Ground onClear={() => onSelect(null)} />
       <Streets />
       <Buildings selectedId={selectedId} locale={locale} onSelect={onSelect} />
