@@ -9,7 +9,8 @@
     "lint": "eslint",
     "test": "vitest run",
     "typecheck": "tsc --noEmit",
-    "import:footprints": "tsx scripts/import-footprints.ts"
+    "import:footprints": "tsx scripts/import-footprints.ts",
+    "e2e": "playwright test"
   },
   "dependencies": {
     "@react-three/drei": "^10.7.9",
