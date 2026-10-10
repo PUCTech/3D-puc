@@ -16,6 +16,7 @@ export type Building = {
   baseHeight?: number;
   floors: Floor[];
   entrances?: Point[];
+  style?: { wall?: string; roof?: string; roofGarden?: boolean }; // hand-written look
 };
 export type Campus = {
   origin: { lat: number; lon: number };
@@ -26,6 +27,7 @@ export type Campus = {
   areas?: { kind: string; polygon: Point[] }[]; // OSM leisure/landuse inside or near campus, e.g. "pitch", "garden"
   footways?: Point[][];
   context?: { footprint: Point[]; height: number }[]; // neighbouring city buildings
+  gardens?: { name?: string; polygon: Point[]; trees?: Point[] }[]; // hand-written landscaping
 };
 
 export const campus = data as unknown as Campus; // JSON infers number[][], not tuples
