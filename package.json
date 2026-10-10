@@ -7,10 +7,8 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint",
-    "test": "vitest run",
     "typecheck": "tsc --noEmit",
-    "import:footprints": "tsx scripts/import-footprints.ts",
-    "e2e": "playwright test"
+    "import:footprints": "tsx scripts/import-footprints.ts"
   },
   "dependencies": {
     "@react-three/drei": "^10.7.9",
@@ -22,7 +20,6 @@
     "three": "^0.186.1"
   },
   "devDependencies": {
-    "@playwright/test": "^1.64.0",
     "@tailwindcss/turbopack": "^4",
     "@types/node": "^20",
     "@types/react": "^19",
@@ -32,7 +29,6 @@
     "eslint-config-next": "16.4.0",
     "tailwindcss": "^4",
     "tsx": "^4.23.15",
-    "typescript": "^5",
-    "vitest": "^4.1.11"
+    "typescript": "^5"
   }
 }

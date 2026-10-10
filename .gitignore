@@ -41,6 +41,10 @@ yarn-error.log*
 next-env.d.ts
 .superpowers/
 
-# playwright
+# tests are kept out of this repo
+*.test.ts
+*.spec.ts
+/tests/
+/e2e/
 /test-results/
 /playwright-report/
