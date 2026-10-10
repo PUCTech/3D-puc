@@ -12,20 +12,23 @@ export const toonRamp = (() => {
   return t;
 })();
 
-// Rino Levi's cobogó panel (2.52 m × 3.38 m): 9 × 12 cement cells, lower 9 rows glazed,
-// top 3 rows brass louvers. One pixel per cell plus 1-pixel concrete ribs.
+// Rino Levi's cobogó panel (2.52 m × 3.38 m) as in photos 04/05: a cream cement grid of 9 × 12 cells,
+// dark glass in the lower 9 rows, cream concrete louvers in the top 3, light pilaster/beam on the panel edge.
 export function cobogoTexture() {
   const c = document.createElement('canvas');
-  c.width = 19;
-  c.height = 25;
+  c.width = 20;
+  c.height = 26;
   const g = c.getContext('2d')!;
-  g.fillStyle = '#e4ded2'; // concrete ribs
-  g.fillRect(0, 0, 19, 25);
+  g.fillStyle = '#e6dcc2'; // cement grid
+  g.fillRect(0, 0, 20, 26);
   for (let row = 0; row < 12; row++)
     for (let col = 0; col < 9; col++) {
-      g.fillStyle = row < 3 ? '#c9a24a' : '#7fb2d6'; // canvas row 0 is the top: brass louvers, then glass
-      g.fillRect(1 + col * 2, 1 + row * 2, 1, 1);
+      g.fillStyle = row < 3 ? '#bfb39a' : '#4f5b63'; // canvas row 0 is the top: louver shadow lines, then dark glass
+      g.fillRect(2 + col * 2, 1 + row * 2, 1, 1);
     }
+  g.fillStyle = '#d9d9d4'; // pilaster and floor beam between panels
+  g.fillRect(0, 0, 1, 26);
+  g.fillRect(0, 25, 20, 1);
   const t = new THREE.CanvasTexture(c);
   t.magFilter = t.minFilter = THREE.NearestFilter;
   t.wrapS = t.wrapT = THREE.RepeatWrapping;

@@ -184,3 +184,15 @@ Photo set: Wikimedia Commons "Instituto Sedes Sapientiae 01–15" (2016-09-27), 
 - The fence's full extent beyond the stretch the photo shows.
 - Tree count and spacing (approximated from the photo's density).
 - The gate itself: no photo of the entrance.
+
+## Photo iteration 5: cobogó colors and patio planting
+**Changed**
+- **Cobogó:** brass louvers and light-blue glass replaced by a cream cement grid (#e6dcc2) with dark glass cells, cream concrete louvers in the top 3 rows, and light pilasters and floor beams between panels.
+  - Photo 04: https://commons.wikimedia.org/wiki/File:Instituto_Sedes_Sapientiae_04.jpg
+  - Photo 05: https://commons.wikimedia.org/wiki/File:Instituto_Sedes_Sapientiae_05.jpg
+- **Patio:**
+  - dense dark-green ground cover (photo 05);
+  - red-earth beds and a winding light stone path (photo 02: https://commons.wikimedia.org/wiki/File:Instituto_Sedes_Sapientiae_02.jpg);
+  - a tall palm near the Auditório (photo 07: https://commons.wikimedia.org/wiki/File:Instituto_Sedes_Sapientiae_07.jpg).
+
+**Still assumed:** exact positions of the path, beds and palm. The photos show what's there, not where in plan.

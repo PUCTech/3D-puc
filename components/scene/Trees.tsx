@@ -39,3 +39,26 @@ export function Trees({ at, scale = 1, slender = false }: { at: Point[]; scale?:
     </>
   );
 }
+
+const frond = new THREE.BoxGeometry(3.2, 0.12, 0.7);
+frond.translate(1.6, 0, 0);
+
+// Palm (photo 07): tall bare trunk with a star of drooping fronds.
+export function Palms({ at }: { at: Point[] }) {
+  return (
+    <>
+      {at.map(([x, z], i) => (
+        <group key={i} position={[x, 0, z]}>
+          <mesh geometry={trunk} position-y={4.5} scale={[0.9, 9, 0.9]} castShadow>
+            <meshToonMaterial color="#9a7b55" gradientMap={toonRamp} />
+          </mesh>
+          {Array.from({ length: 8 }, (_, k) => (
+            <mesh key={k} geometry={frond} position-y={9} rotation={[0, (k * Math.PI) / 4, -0.45]} castShadow>
+              <meshToonMaterial color="#3f9a3a" gradientMap={toonRamp} />
+            </mesh>
+          ))}
+        </group>
+      ))}
+    </>
+  );
+}
