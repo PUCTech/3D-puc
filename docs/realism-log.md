@@ -264,3 +264,8 @@ Randomness is seeded per plant (mulberry32), so the scene is identical on every 
 - **Concrete slab benches** beside the patio path. Tour 01 and the PUC campus banner (https://www.pucsp.br/sites/default/files/2018-01/campus-consolacao_0.jpg).
 - **Campus ground:** sandy color (an early text guess) changed to light grey concrete paving, as in every photo (tour 01; Jornada do Patrimônio photos 1–2, https://j.pucsp.br/noticia/campus-consolacao-integra-jornada-do-patrimonio-pelo-terceiro-ano-consecutivo).
 - Checked and discarded: the Commons category's Werner Haberkorn photo is 1950s downtown São Paulo, and the campus isn't identifiable in it.
+
+## Custom 4: Prédio 2 roof details
+- Corrugated sheeting: ribs running down both slopes every 1.2 m, a shade darker than the roof.
+- Exposed rafter tails under both eaves every 0.9 m.
+- Photo 15: https://commons.wikimedia.org/wiki/File:Instituto_Sedes_Sapientiae_15.jpg

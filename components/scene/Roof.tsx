@@ -2,7 +2,7 @@ import { useMemo } from 'react';
 import * as THREE from 'three';
 import { Edges } from '@react-three/drei';
 import type { Point } from '@/lib/campus';
-import { extrude } from './geometry';
+import { extrude, mergeGeometries } from './geometry';
 import { INK_WIDTH, toonRamp } from './pixel';
 
 const EAVE = { overhang: 0.7, thickness: 0.3 }; // photos 13/14: thick slab projecting past the walls
@@ -38,6 +38,36 @@ function orientedBox(points: Point[]) {
   return { ux, uz, vx, vz, u: [Math.min(...us), Math.max(...us)], v: [Math.min(...vs), Math.max(...vs)] };
 }
 
+// Photo 15: corrugated sheeting (ribs down the slope) and exposed rafter tails under the eave.
+const RIB_EVERY = 1.2;
+const RAFTER_EVERY = 0.9;
+function gableDetails(points: Point[], height: number) {
+  const { ux, uz, vx, vz, u, v } = orientedBox(points);
+  const [u0, u1] = [u[0] - GABLE.overhang, u[1] + GABLE.overhang];
+  const [v0, v1] = [v[0] - GABLE.overhang, v[1] + GABLE.overhang];
+  const vm = (v0 + v1) / 2;
+  const half = (v1 - v0) / 2;
+  const slope = Math.atan2(GABLE.rise, half);
+  const slant = Math.hypot(GABLE.rise, half);
+  const yaw = Math.atan2(uz, ux); // u axis direction
+  const ribs: THREE.BufferGeometry[] = [];
+  const rafters: THREE.BufferGeometry[] = [];
+  const place = (g: THREE.BufferGeometry, a: number, b: number, y: number, tilt: number) => {
+    g.rotateX(tilt);
+    g.rotateY(-yaw);
+    g.translate(a * ux + b * vx, y, a * uz + b * vz);
+    return g;
+  };
+  for (let a = u0 + 0.3; a < u1; a += RIB_EVERY)
+    for (const side of [-1, 1]) {
+      // rib along the slope, from eave to ridge, sitting on the roof plane
+      ribs.push(place(new THREE.BoxGeometry(0.12, 0.06, slant), a, vm + (side * half) / 2, height + GABLE.rise / 2 + 0.04, side * slope));
+    }
+  for (let a = u[0]; a <= u[1]; a += RAFTER_EVERY)
+    for (const side of [-1, 1]) rafters.push(place(new THREE.BoxGeometry(0.1, 0.14, GABLE.overhang), a, vm + side * (half - GABLE.overhang / 2), height - 0.08, 0));
+  return { ribs: mergeGeometries(ribs), rafters: mergeGeometries(rafters) };
+}
+
 function gable(points: Point[], height: number) {
   const { ux, uz, vx, vz, u, v } = orientedBox(points);
   const [u0, u1] = [u[0] - GABLE.overhang, u[1] + GABLE.overhang];
@@ -61,10 +91,23 @@ export function Roof({ kind, footprint, height, color, opacity }: { kind: 'eave'
     g.translate(0, height - EAVE.thickness + 0.02, 0);
     return g;
   }, [kind, footprint, height]);
+  const details = useMemo(() => (kind === 'gable' ? gableDetails(footprint, height) : null), [kind, footprint, height]);
   return (
+    <>
+    {details && (
+      <>
+        <mesh geometry={details.ribs}>
+          <meshToonMaterial color={color.clone().multiplyScalar(0.82)} gradientMap={toonRamp} transparent opacity={opacity} />
+        </mesh>
+        <mesh geometry={details.rafters}>
+          <meshToonMaterial color="#6b6258" gradientMap={toonRamp} transparent opacity={opacity} />
+        </mesh>
+      </>
+    )}
     <mesh geometry={geometry} castShadow receiveShadow>
       <meshToonMaterial color={color} gradientMap={toonRamp} side={THREE.DoubleSide} transparent opacity={opacity} />
       {opacity === 1 && <Edges threshold={15} color="#1b1b24" lineWidth={INK_WIDTH * 0.8} />}
     </mesh>
+    </>
   );
 }
