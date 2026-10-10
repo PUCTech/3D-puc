@@ -1,15 +1,15 @@
 import { useMemo, useRef } from 'react';
 import * as THREE from 'three';
-import { Html } from '@react-three/drei';
+import { Edges, Html } from '@react-three/drei';
 import { useFrame, type ThreeEvent } from '@react-three/fiber';
 import { buildingHeight, footprintCenter, type Building as B, type Locale } from '@/lib/campus';
 import { toonRamp, wallTexture } from './pixel';
 
 // shortcut: one generic palette for every building until real per-building colors are researched
-const WALL = '#e8dcc4';
-const GLASS = '#5b7fa6';
-const FRAME = '#4a4a4a';
-const ROOF = new THREE.Color('#8a8f94');
+const WALL = '#f6e7c8';
+const GLASS = '#6fb6e8';
+const FRAME = '#3a3a48';
+const ROOF = new THREE.Color('#b9a7a0');
 const SELECTED_ROOF = new THREE.Color('#ffd166');
 
 type Props = { building: B; selected: boolean; dimmed: boolean; near: boolean; locale: Locale; onSelect: () => void };
@@ -44,6 +44,8 @@ export function Building({ building, selected, dimmed, near, locale, onSelect }:
         {/* ExtrudeGeometry groups: 0 = caps (roof/floor), 1 = walls */}
         <meshToonMaterial attach="material-0" color={selected ? SELECTED_ROOF : ROOF} gradientMap={toonRamp} transparent opacity={opacity} />
         <meshToonMaterial attach="material-1" map={walls} gradientMap={toonRamp} transparent opacity={opacity} />
+        {/* Ink outline: the main cartoon cue */}
+        {!dimmed && <Edges threshold={15} color="#1b1b24" lineWidth={3} />}
       </mesh>
       {/* Always mounted, hidden with opacity: unmounting drei <Html> mid-render triggers React warnings */}
       <Html position={[cx, height + 3, cz]} center zIndexRange={[10, 0]} className="pointer-events-none select-none">

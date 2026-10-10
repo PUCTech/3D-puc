@@ -40,8 +40,8 @@ export default function CampusScene({ selectedId, locale, onSelect }: Props) {
       shadows
       style={{ imageRendering: 'pixelated' }}
     >
-      <color attach="background" args={['#9fd3f5']} />
-      <hemisphereLight args={['#dff2ff', '#6b7f4e', 0.9]} />
+      <color attach="background" args={['#a8dcff']} />
+      <hemisphereLight args={['#ffffff', '#7fae55', 1.1]} />
       <directionalLight
         position={[60, 120, 40]}
         intensity={2.2}

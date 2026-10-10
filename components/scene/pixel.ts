@@ -1,11 +1,11 @@
 import * as THREE from 'three';
 
 // Pixel-art look: render at a fraction of the screen resolution, upscale without smoothing.
-export const PIXEL_DPR = 0.25; // 1 rendered pixel = 4 CSS pixels
+export const PIXEL_DPR = 0.5; // 1 rendered pixel = 2 CSS pixels: pixelated but soft enough to read as cartoon
 
-// 3-step light ramp: toon shading gives flat, cartoon-like faces.
+// 3-step light ramp: toon shading gives flat, cartoon-like faces; bright shadows keep it cheerful.
 export const toonRamp = (() => {
-  const t = new THREE.DataTexture(new Uint8Array([90, 170, 255]), 3, 1, THREE.RedFormat);
+  const t = new THREE.DataTexture(new Uint8Array([150, 210, 255]), 3, 1, THREE.RedFormat);
   t.minFilter = t.magFilter = THREE.NearestFilter;
   t.needsUpdate = true;
   return t;
