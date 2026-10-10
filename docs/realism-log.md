@@ -111,3 +111,34 @@ Each remaining gap needs a source the loop couldn't read:
 - **Street trees.** OSM has no `natural=tree` near the campus.
 
 The quickest way forward: photos from a campus walk (facades, gates, patio), or the FAU-USP / CONDEPHAAT plans (see `docs/floor-plan-sources.md`).
+
+---
+
+# Photo-only pass
+From here on, photographs are the only source of truth. Text-based guesses are kept only when no photo contradicts them, and are marked as unverified.
+
+Photo set: Wikimedia Commons "Instituto Sedes Sapientiae 01–15" (2016-09-27), from pt.wikipedia, plus "Fachada da COGEAE".
+
+## Photo iteration 1: wall colors and window types
+**Changed**
+- **Prédio 1:** walls changed from concrete-white to cream (#ece4cf), with grey louvered shutters in deep recesses.
+  - Photo 14 (street front on Marquês de Paranaguá): https://commons.wikimedia.org/wiki/File:Instituto_Sedes_Sapientiae_14.jpg
+  - Photo 13 (side front): https://commons.wikimedia.org/wiki/File:Instituto_Sedes_Sapientiae_13.jpg
+  - Photo 03 shows white shutters on the yard side; the iso camera sees the street side, so it uses grey.
+- **Prédio 2:** walls changed from white to salmon pink (#d9a898), with windows in grey-blue surrounds and grilles.
+  - Photo 15 ("Front side of the second building"): https://commons.wikimedia.org/wiki/File:Instituto_Sedes_Sapientiae_15.jpg
+- **Auditório:** white walls with a continuous band of windows.
+  - Photo 07 ("Aisle from the first to the second building"): https://commons.wikimedia.org/wiki/File:Instituto_Sedes_Sapientiae_07.jpg
+  - Assumption: that photo shows the Auditório. The caption doesn't name the building.
+- Window rows now follow each building's real floor height, so Prédio 2's ≈5.4 m floors show as 3 rows.
+
+**Photo-checked mismatches still open**
+- **Canopy:** it undulates in elevation, not in plan (photos 03, 07, 15). Its columns are round and cream.
+- **Prédio 2 roof:** shallow pitched, with rafter eaves (photo 15).
+- **Prédio 1 roof:** a projecting concrete eave (photos 13, 14).
+- **Street fence:** a concrete lattice grid on a low wall between square pillars (photo 14). The model has OSM's "metal bars".
+- **Auditório ground floor:** pale yellow under the canopy (photo 07).
+- **Patio:** a winding stone path, red earth, palms and monstera (photo 02).
+- **Cobogó:** off-white grid; the top rows are angled concrete louvers, not brass (photo 04).
+
+**Unverified by any photo:** the Auditório roof garden, Prédio 3 and Prédio 10.

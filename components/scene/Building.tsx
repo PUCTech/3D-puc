@@ -10,8 +10,6 @@ import { Cobogo } from './Cobogo';
 
 // Defaults when a building has no hand-written style.
 const WALL = '#f6e7c8';
-const GLASS = '#6fb6e8';
-const FRAME = '#3a3a48';
 const ROOF = new THREE.Color('#b9a7a0');
 const SELECTED_ROOF = new THREE.Color('#ffd166');
 
@@ -31,7 +29,8 @@ export function Building({ building, selected, dimmed, near, locale, onSelect }:
   const base = building.baseHeight ?? 0;
   const geometry = useMemo(() => extrude(building.footprint, height), [building.footprint, height]);
   const style = building.style ?? {};
-  const walls = useMemo(() => wallTexture(style.wall ?? WALL, GLASS, FRAME), [style.wall]);
+  const floorHeight = building.floors.find((f) => f.level >= 0)?.height ?? 3.5;
+  const walls = useMemo(() => wallTexture(style.wall ?? WALL, style.windows, floorHeight), [style.wall, style.windows, floorHeight]);
   const roofColor = useMemo(() => new THREE.Color(style.roof ?? ROOF), [style.roof]);
   const roofGarden = useMemo(() => (style.roofGarden ? flatPolygon(building.footprint, height + 0.05) : null), [style.roofGarden, building.footprint, height]);
   const roofShrubs = useMemo(() => (style.roofGarden ? shrubSpots(building.footprint) : []), [style.roofGarden, building.footprint]);

@@ -17,7 +17,13 @@ export type Building = {
   floors: Floor[];
   entrances?: Point[];
   // hand-written look; cobogoWall = the wall segment covered by a cobogó (concrete grid) screen
-  style?: { wall?: string; roof?: string; roofGarden?: boolean; cobogoWall?: [Point, Point] };
+  style?: {
+    wall?: string;
+    roof?: string;
+    windows?: 'default' | 'shutter-white' | 'shutter-grey' | 'framed' | 'ribbon';
+    roofGarden?: boolean;
+    cobogoWall?: [Point, Point];
+  };
 };
 export type Campus = {
   origin: { lat: number; lon: number };

@@ -28,7 +28,7 @@ export function City() {
     });
     return parts.length ? mergeGeometries(parts) : null;
   }, []);
-  const walls = useMemo(() => wallTexture('#ffffff', '#4d6a8c', '#8a8a8a'), []);
+  const walls = useMemo(() => wallTexture('#ffffff'), []);
   if (!geometry) return null;
   return (
     <mesh geometry={geometry} castShadow receiveShadow>
