@@ -1,0 +1,12 @@
+{
+  "origin": { "lat": -23.54907, "lon": -46.64948 },
+  "streets": [],
+  "buildings": [
+    {
+      "id": "predio-1",
+      "name": { "pt": "Prédio 1", "en": "Building 1" },
+      "footprint": [[0, 0], [20, 0], [20, 10], [0, 10]],
+      "floors": [{ "level": 0, "height": 3.5, "rooms": [] }]
+    }
+  ]
+}
