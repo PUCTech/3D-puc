@@ -6,6 +6,7 @@ import { buildingHeight, footprintCenter, type Building as B, type Locale } from
 import { INK_WIDTH, toonRamp, wallTexture } from './pixel';
 import { extrude, flatPolygon } from './geometry';
 import { Trees } from './Trees';
+import { Cobogo } from './Cobogo';
 
 // Defaults when a building has no hand-written style.
 const WALL = '#f6e7c8';
@@ -54,6 +55,7 @@ export function Building({ building, selected, dimmed, near, locale, onSelect }:
         {/* Ink outline: the main cartoon cue */}
         {!dimmed && <Edges threshold={15} color="#1b1b24" lineWidth={INK_WIDTH} />}
       </mesh>
+      {style.cobogoWall && <Cobogo wall={style.cobogoWall} center={footprintCenter(building)} height={height} opacity={opacity} />}
       {roofGarden && (
         <>
           <mesh geometry={roofGarden} receiveShadow>

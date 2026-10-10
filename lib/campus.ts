@@ -16,7 +16,8 @@ export type Building = {
   baseHeight?: number;
   floors: Floor[];
   entrances?: Point[];
-  style?: { wall?: string; roof?: string; roofGarden?: boolean }; // hand-written look
+  // hand-written look; cobogoWall = the wall segment covered by a cobogó (concrete grid) screen
+  style?: { wall?: string; roof?: string; roofGarden?: boolean; cobogoWall?: [Point, Point] };
 };
 export type Campus = {
   origin: { lat: number; lon: number };
@@ -28,6 +29,7 @@ export type Campus = {
   footways?: Point[][];
   context?: { footprint: Point[]; height: number }[]; // neighbouring city buildings
   gardens?: { name?: string; polygon: Point[]; trees?: Point[] }[]; // hand-written landscaping
+  marquees?: { path: Point[]; width: number; height: number }[]; // covered walkways; the canopy extends to the (dz, -dx) side of the path
 };
 
 export const campus = data as unknown as Campus; // JSON infers number[][], not tuples

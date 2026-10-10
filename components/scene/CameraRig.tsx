@@ -5,7 +5,8 @@ import { campus, buildingHeight, findBuilding, type Building } from '@/lib/campu
 
 const { ACTION } = CameraControlsImpl;
 // Fixed isometric view, like a MOBA camera: pan and zoom only, no rotation.
-export const ISO_AZIMUTH = Math.PI / 4;
+// From the south-west: the view of visitors arriving from the entrance, facing the cobogó wall across the patio.
+export const ISO_AZIMUTH = -Math.PI / 4;
 export const ISO_POLAR = 0.96; // ~55° from vertical
 
 const sphereOf = (buildings: Building[]) => {

@@ -46,3 +46,30 @@ Running log of the "make it look like the real campus" loop. Style: pixel-art to
 - The undulating concrete marquees linking the blocks.
 - The concrete-grid wall of Prédio 2 facing the patio.
 - Exact wall colors from photos.
+
+## Iteration 3: cobogó wall, undulating marquees, classroom block floors
+**Added**
+- Cobogó screen on Prédio 2's west (patio) wall, modeled on the real panel module.
+  - Each panel is 2.52 m × 3.38 m: 9 × 12 cement cells, glass in the lower 9 rows and brass louvers in the top 3.
+  - Style field `cobogoWall`.
+- Prédio 2 corrected to 3 floors (≈5.4 m each, matching OSM's 16 m height).
+- Undulating concrete canopy around the patio, along Prédio 1, the gap and the Auditório.
+  - The outer edge waves (0.9 m amplitude, 6 m wavelength).
+  - Thin columns every 6 m.
+  - Field `marquees` in `campus.json`.
+- Fixed iso camera now looks from the south-west instead of the south-east. Per the paper, that's the visitor's view from the entrance, with the cobogó wall as the patio's backdrop.
+
+**Sources**
+- Sica Palermo, UIA 2021 / ACSA proceedings, paper 55. It says:
+  - The 3 blocks of different heights form a continuous "C".
+  - The classroom block has 3 levels, sits at the back of the lot, and its west facade toward the central patio is cobogós.
+  - The panel dimensions and composition.
+- The circulation around the patio is protected by marquees (earlier search summary of the same paper).
+
+**Assumptions**
+- The canopy's exact route and wave shape are illustrative. No plan or photo was readable.
+
+**Still unknown / next**
+- Entrances and gates on the street side (OSM `barrier=gate` nodes nearby).
+- Street-side facades.
+- Which blocks are the dormitory and teaching wings beyond Prédio 2.
