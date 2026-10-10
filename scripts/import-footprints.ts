@@ -44,7 +44,10 @@ async function main() {
   const errors = validateCampus(result);
   if (errors.length) throw new Error(`refusing to write invalid campus:\n${errors.join('\n')}`);
   // One line per building/street keeps the file diffable without indenting every coordinate pair.
-  writeFileSync(OUT, JSON.stringify(result, (_, v) => v, 1).replace(/\[\s+(-?[\d.]+),\s+(-?[\d.]+)\s+\]/g, '[$1,$2]') + '\n');
+  const json = JSON.stringify(result, null, 1)
+    .replace(/\[\s+(-?[\d.]+),\s+(-?[\d.]+)\s+\]/g, '[$1,$2]') // points on one line
+    .replace(/\[\n\s+(\[-?[\d.]+,-?[\d.]+\](?:,\n\s+\[-?[\d.]+,-?[\d.]+\])*)\n\s+\]/g, (_, pts: string) => `[${pts.replace(/,\n\s+/g, ',')}]`); // point lists on one line
+  writeFileSync(OUT, json + '\n');
   console.log(`wrote ${OUT}: ${result.buildings.length} buildings, ${result.streets.length} streets`);
 }
 

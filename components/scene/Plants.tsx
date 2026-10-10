@@ -145,7 +145,8 @@ function buildPlants(plants: Plant[], scale: number) {
     const r = rng(Math.round(p.at[0] * 1000) ^ Math.round(p.at[1] * 1000) ^ (i * 7919));
     const place = new THREE.Matrix4().makeTranslation(p.at[0], 0, p.at[1]).multiply(new THREE.Matrix4().makeRotationY(r() * Math.PI * 2)).multiply(new THREE.Matrix4().makeScale(scale, scale, scale));
     for (const part of BUILDERS[p.kind](r)) {
-      const g = part.geometry.clone().applyMatrix4(place.clone().multiply(part.matrix)).toNonIndexed();
+      let g = part.geometry.clone().applyMatrix4(place.clone().multiply(part.matrix));
+      if (g.index) g = g.toNonIndexed(); // merging needs all pieces non-indexed
       g.deleteAttribute('uv');
       const c = new THREE.Color(part.color);
       const colors = new Float32Array(g.getAttribute('position').count * 3);
