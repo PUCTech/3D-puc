@@ -24,7 +24,7 @@ export function Site() {
     <>
       {lot && (
         <mesh geometry={lot} receiveShadow>
-          <meshLambertMaterial color="#e6cf9f" />
+          <meshLambertMaterial color="#cfcbc2" /> {/* light grey concrete paving (photos tour 01, jornada 1–2) */}
         </mesh>
       )}
       {footways && (

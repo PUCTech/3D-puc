@@ -13,6 +13,7 @@ import { Marquees } from './Marquees';
 import { Edge } from './Edge';
 import { Furniture } from './Furniture';
 import { StreetFence } from './StreetFence';
+import { Props as CampusProps } from './Props';
 import { Plants } from './Plants';
 import { GROUND_COLOR } from './Ground';
 
@@ -73,6 +74,7 @@ export default function CampusScene({ selectedId, locale, onSelect }: Props) {
       <Edge />
       <Furniture />
       <StreetFence />
+      <CampusProps />
       <Plants plants={STREET_TREES} />
       <Buildings selectedId={selectedId} locale={locale} onSelect={onSelect} />
       <CameraRig selectedId={selectedId} />

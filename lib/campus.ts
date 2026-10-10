@@ -46,6 +46,8 @@ export type Campus = {
   entrance?: { at: Point; along: Point; label: string; path: Point[] };
   streetFences?: { path: Point[]; height: number }[]; // hand-placed from photos: concrete lattice on a low wall
   streetTrees?: Point[]; // hand-placed from photos: tall slender trees behind the street fence
+  // hand-placed small objects from photos; angle = rotation around Y in radians (atan2(dz, dx) of their facing line)
+  props?: { kind: 'lamp' | 'totem' | 'bench'; at: Point; angle: number }[];
   marquees?: { path: Point[]; width: number; height: number }[]; // covered walkways; the canopy extends to the (dz, -dx) side of the path
 };
 
