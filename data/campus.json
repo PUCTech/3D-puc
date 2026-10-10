@@ -5986,8 +5986,245 @@
   "label": "PUC-SP · R. Marquês de Paranaguá, 111",
   "path": [
    [-69.6,29.3],
-   [-58.0,27.5],
-   [-50.0,24.0]
+   [-58,27.5],
+   [-50,24]
   ]
- }
+ },
+ "furniture": [
+  {
+   "kind": "traffic_signals",
+   "at": [47.35,-117.4],
+   "angle": -0.343
+  },
+  {
+   "kind": "traffic_signals",
+   "at": [43.32,-134.38],
+   "angle": -1.408
+  },
+  {
+   "kind": "traffic_signals",
+   "at": [-9.84,220.67],
+   "angle": 2.784
+  },
+  {
+   "kind": "crossing",
+   "at": [-276.66,-3.23],
+   "angle": -0.367
+  },
+  {
+   "kind": "traffic_signals",
+   "at": [172.58,-159],
+   "angle": -0.346
+  },
+  {
+   "kind": "crossing",
+   "at": [174.61,-158.27],
+   "angle": -0.346
+  },
+  {
+   "kind": "crossing",
+   "at": [112.41,-168.86],
+   "angle": 2.481
+  },
+  {
+   "kind": "crossing",
+   "at": [46.96,-156.52],
+   "angle": -1.408
+  },
+  {
+   "kind": "crossing",
+   "at": [29.36,-146.45],
+   "angle": -2.429
+  },
+  {
+   "kind": "traffic_signals",
+   "at": [19.16,-126.5],
+   "angle": 2.817
+  },
+  {
+   "kind": "traffic_signals",
+   "at": [25.3,-109.62],
+   "angle": -0.339
+  },
+  {
+   "kind": "crossing",
+   "at": [51.77,-104.44],
+   "angle": -1.908
+  },
+  {
+   "kind": "traffic_signals",
+   "at": [-69.52,-96.63],
+   "angle": 2.815
+  },
+  {
+   "kind": "traffic_signals",
+   "at": [-63.18,-80.29],
+   "angle": -0.341
+  },
+  {
+   "kind": "crossing",
+   "at": [-106.67,-52.36],
+   "angle": 1.227
+  },
+  {
+   "kind": "bus_stop",
+   "at": [63.62,190.21],
+   "angle": 2.824
+  },
+  {
+   "kind": "bus_stop",
+   "at": [-37.26,235.69],
+   "angle": 2.808
+  },
+  {
+   "kind": "crossing",
+   "at": [140.2,-210.42],
+   "angle": -3.119
+  },
+  {
+   "kind": "crossing",
+   "at": [48.8,-196.07],
+   "angle": -1.524
+  },
+  {
+   "kind": "crossing",
+   "at": [263.56,67.15],
+   "angle": 1.247
+  },
+  {
+   "kind": "traffic_signals",
+   "at": [147.45,166.55],
+   "angle": -1.925
+  },
+  {
+   "kind": "crossing",
+   "at": [58.36,-212.34],
+   "angle": -3.118
+  },
+  {
+   "kind": "bus_stop",
+   "at": [-54.72,-92.45],
+   "angle": 2.817
+  },
+  {
+   "kind": "bus_stop",
+   "at": [10.63,-114.86],
+   "angle": 2.817
+  },
+  {
+   "kind": "crossing",
+   "at": [-13.61,210.79],
+   "angle": 1.232
+  },
+  {
+   "kind": "crossing",
+   "at": [-22.79,225.44],
+   "angle": 2.806
+  },
+  {
+   "kind": "crossing",
+   "at": [-6.52,230.98],
+   "angle": 1.259
+  },
+  {
+   "kind": "crossing",
+   "at": [-2.65,217.96],
+   "angle": 2.819
+  },
+  {
+   "kind": "crossing",
+   "at": [150.73,175.93],
+   "angle": -1.92
+  },
+  {
+   "kind": "crossing",
+   "at": [157.56,162.78],
+   "angle": 2.784
+  },
+  {
+   "kind": "crossing",
+   "at": [144.61,158.87],
+   "angle": -1.925
+  },
+  {
+   "kind": "crossing",
+   "at": [137.97,169.66],
+   "angle": 2.825
+  },
+  {
+   "kind": "bus_stop",
+   "at": [104.3,17.87],
+   "angle": -1.909
+  },
+  {
+   "kind": "crossing",
+   "at": [99.09,4.05],
+   "angle": -0.297
+  },
+  {
+   "kind": "crossing",
+   "at": [218.23,-39.65],
+   "angle": -0.352
+  },
+  {
+   "kind": "crossing",
+   "at": [-218.19,-11.37],
+   "angle": -1.895
+  },
+  {
+   "kind": "crossing",
+   "at": [-69.18,53.26],
+   "angle": 1.23
+  },
+  {
+   "kind": "crossing",
+   "at": [-183.59,91.47],
+   "angle": -1.895
+  },
+  {
+   "kind": "crossing",
+   "at": [-167.75,97.23],
+   "angle": 2.804
+  },
+  {
+   "kind": "crossing",
+   "at": [-78.2,65.8],
+   "angle": 2.804
+  },
+  {
+   "kind": "crossing",
+   "at": [124.13,100.7],
+   "angle": -1.909
+  },
+  {
+   "kind": "crossing",
+   "at": [46.07,-151.1],
+   "angle": -1.408
+  },
+  {
+   "kind": "crossing",
+   "at": [49.25,-203.33],
+   "angle": -1.509
+  },
+  {
+   "kind": "crossing",
+   "at": [180.44,-151.46],
+   "angle": 1.088
+  },
+  {
+   "kind": "crossing",
+   "at": [170.68,-146.98],
+   "angle": 1.075
+  },
+  {
+   "kind": "crossing",
+   "at": [236.23,-11.92],
+   "angle": 1.233
+  },
+  {
+   "kind": "crossing",
+   "at": [243.89,9.61],
+   "angle": 1.229
+  }
+ ]
 }

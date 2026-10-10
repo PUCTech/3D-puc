@@ -30,7 +30,9 @@ export type Campus = {
   context?: { footprint: Point[]; height: number }[]; // neighbouring city buildings
   gardens?: { name?: string; polygon: Point[]; trees?: Point[] }[]; // hand-written landscaping
   barriers?: { kind: string; path: Point[]; height: number }[]; // OSM fences/walls along the campus edge
-  gates?: Point[]; // OSM barrier=gate on the campus edge
+  gates?: Point[];
+  // OSM street details; angle = direction of the street there (radians, atan2(dz, dx))
+  furniture?: { kind: 'crossing' | 'traffic_signals' | 'bus_stop'; at: Point; angle: number }[]; // OSM barrier=gate on the campus edge
   entrance?: { at: Point; label: string; path: Point[] }; // hand-written main entrance and the walk inside
   marquees?: { path: Point[]; width: number; height: number }[]; // covered walkways; the canopy extends to the (dz, -dx) side of the path
 };

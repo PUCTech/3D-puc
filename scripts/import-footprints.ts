@@ -12,6 +12,8 @@ way(${CAMPUS_WAY})->.campus;
 way(around.campus:200); // everything nearby; around = distance to the boundary line. buildCampus sorts it out
 out geom;
 node["barrier"](around.campus:30);
+out;
+node["highway"~"^(crossing|traffic_signals|bus_stop)$"](around.campus:200);
 out;`;
 
 // Plain async main: package.json is CommonJS, so tsx can't use top-level await here.

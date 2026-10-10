@@ -8,6 +8,7 @@ const M_PER_DEG_LAT = 110540;
 const M_PER_DEG_LON = 111320;
 const FLOOR_HEIGHT = 3.5;
 const CAR_ROADS = /^(primary|secondary|tertiary|residential|unclassified|living_street|pedestrian|service)$/;
+const FURNITURE = new Set(['crossing', 'traffic_signals', 'bus_stop']);
 const AREA_KINDS = new Set(['pitch', 'garden', 'park', 'grass', 'playground']);
 const r2 = (n: number) => Math.round(n * 100) / 100;
 
@@ -93,7 +94,23 @@ export function buildCampus(ways: OsmWay[], campusWayId: number, origin?: LatLon
     .filter(({ path }) => path.some(nearEdge))
     .map(({ w, path }) => ({ kind: w.tags!.barrier, path, height: Number(w.tags?.height?.replace(',', '.')) || (w.tags!.barrier === 'wall' ? 2.5 : 2) }));
   const gates = nodes.filter((n) => n.tags?.barrier === 'gate').map((n) => project(n, o)).filter(nearEdge);
-  return { origin: o, streets, buildings, boundary, areas, footways, context, barriers, gates };
+  // Street direction at a point: the nearest street segment's angle.
+  const streetAngle = (p: Point) => {
+    let best = { d: Infinity, angle: 0 };
+    for (const s of streets)
+      for (let i = 1; i < s.path.length; i++) {
+        const d = segmentDistance(p, s.path[i - 1], s.path[i]);
+        if (d < best.d) best = { d, angle: Math.atan2(s.path[i][1] - s.path[i - 1][1], s.path[i][0] - s.path[i - 1][0]) };
+      }
+    return Math.round(best.angle * 1000) / 1000;
+  };
+  const furniture = nodes
+    .filter((n) => FURNITURE.has(n.tags?.highway ?? ''))
+    .map((n) => {
+      const at = project(n, o);
+      return { kind: n.tags!.highway as 'crossing' | 'traffic_signals' | 'bus_stop', at, angle: streetAngle(at) };
+    });
+  return { origin: o, streets, buildings, boundary, areas, footways, context, barriers, gates, furniture };
 }
 
 export function mergeCampus(existing: Campus, fresh: Campus): Campus {
@@ -107,6 +124,7 @@ export function mergeCampus(existing: Campus, fresh: Campus): Campus {
     context: fresh.context,
     barriers: fresh.barriers,
     gates: fresh.gates,
+    furniture: fresh.furniture,
     buildings: existing.buildings.map((b) => {
       const match = b.osmId !== undefined ? byOsm.get(b.osmId) : undefined;
       return match ? { ...b, footprint: match.footprint } : b;

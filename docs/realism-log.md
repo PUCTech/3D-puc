@@ -92,3 +92,22 @@ Running log of the "make it look like the real campus" loop. Style: pixel-art to
 - Where the other street entrances are (Rua Caio Prado side?).
 - Street-side facades.
 - Neighbour colors (still invented).
+
+## Iteration 5: street details
+**Added**
+- From OSM (field `furniture`; each item stores the direction of the nearest street):
+  - 33 zebra crossings;
+  - 9 traffic lights;
+  - 5 bus-stop shelters.
+
+**Sources:** OSM nodes `highway=crossing|traffic_signals|bus_stop` within 200 m of the campus.
+
+## Where the loop stopped, and why
+Each remaining gap needs a source the loop couldn't read:
+- **Street-side facades and exact wall colors of the campus buildings.** These need photos. Image results and PDFs with figures can't be read as text, and the text sources don't mention colors.
+- **Prédio 3 and Prédio 10.** These aren't part of Rino Levi's C. The PUC Tour page names a "central building", COGEAE, the Auditório Joel Martins and the Sisters' House, but nothing ties those names to footprints.
+- **Other entrances.** OSM has only one gate node and the address point.
+- **Neighbour colors.** OSM has no `building:colour` tags here; the palette is invented.
+- **Street trees.** OSM has no `natural=tree` near the campus.
+
+The quickest way forward: photos from a campus walk (facades, gates, patio), or the FAU-USP / CONDEPHAAT plans (see `docs/floor-plan-sources.md`).
