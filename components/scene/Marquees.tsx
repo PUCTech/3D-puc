@@ -8,6 +8,7 @@ import { mergeGeometries } from './geometry';
 // From photos 03/07/15: straight in plan, the slab waves in elevation and dips over each column.
 const WAVE = { depth: 0.6, length: 6 }; // meters
 const SLAB = 0.25;
+const LIP = { height: 0.18, width: 0.12 }; // raised edge along the outer rim (photos 03, 15)
 
 // Walk the path in small steps; each sample has its point, the side normal (x, z) = (dz, -dx) and distance along the path.
 function samples(path: Point[], step = 0.4) {
@@ -24,7 +25,7 @@ function samples(path: Point[], step = 0.4) {
   return out;
 }
 
-// Slab as a strip: per sample 4 vertices (inner/outer × top/bottom), quads between samples.
+// Slab as a strip: per sample 6 vertices (inner/outer × top/bottom, plus the lip's inner and outer top), quads between samples.
 function slab(path: Point[], width: number, height: number) {
   const pts = samples(path);
   const pos: number[] = [];
@@ -32,15 +33,18 @@ function slab(path: Point[], width: number, height: number) {
   for (const { p: [x, z], n: [nx, nz], s } of pts) {
     const y = height - (WAVE.depth * (1 - Math.cos((2 * Math.PI * s) / WAVE.length))) / 2; // dips to height - depth
     const [ox, oz] = [x + nx * width, z + nz * width];
-    pos.push(x, y, z, ox, y, oz, x, y - SLAB, z, ox, y - SLAB, oz);
+    const [lx, lz] = [x + nx * (width - LIP.width), z + nz * (width - LIP.width)];
+    pos.push(x, y, z, ox, y, oz, x, y - SLAB, z, ox, y - SLAB, oz, lx, y + LIP.height, lz, ox, y + LIP.height, oz);
   }
   const quad = (a: number, b: number, c: number, d: number) => idx.push(a, b, c, a, c, d);
   for (let i = 1; i < pts.length; i++) {
-    const [p, q] = [(i - 1) * 4, i * 4];
+    const [p, q] = [(i - 1) * 6, i * 6];
     quad(p, q, q + 1, p + 1); // top
     quad(p + 2, p + 3, q + 3, q + 2); // bottom
     quad(p + 1, q + 1, q + 3, p + 3); // outer edge
     quad(p, p + 2, q + 2, q); // wall side
+    quad(p + 5, q + 5, q + 4, p + 4); // lip top
+    quad(p + 1, q + 1, q + 5, p + 5); // lip outer face
   }
   const g = new THREE.BufferGeometry();
   g.setAttribute('position', new THREE.Float32BufferAttribute(pos, 3));

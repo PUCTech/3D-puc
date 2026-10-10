@@ -278,3 +278,17 @@ Randomness is seeded per plant (mulberry32), so the scene is identical on every 
   - the Descubra Sampa gate photo.
 - The campus now stands out the way it does in reality.
 - Individual neighbour colors are still unknown; the tones are randomized from the photo palette.
+
+## Custom 6: canopy lip
+- A raised lip (0.18 m high, 0.12 m wide) along the canopy's outer rim, following the wave.
+- Photo 15: https://commons.wikimedia.org/wiki/File:Instituto_Sedes_Sapientiae_15.jpg
+- Photo 03: https://commons.wikimedia.org/wiki/File:Instituto_Sedes_Sapientiae_03.jpg
+
+## Where the goal pass stands
+**Custom models done:** plants (5 species), cobogó relief, street fence, gatehouse, roofs (eave slab; pitched with ribs and rafters), canopy with lip, lamp posts, totem sign, benches.
+
+**Image sources exhausted:** Wikimedia Commons (16 campus photos and its category), PUC-SP pages and the PUC Tour gallery, j.pucsp.br, Descubra Sampa. Flickr's public feed had nothing for the campus.
+
+**Considered and skipped:** 3D window sills. The wall texture coordinates follow world axes, so sills would drift off the painted windows on angled walls.
+
+**Still unverified for lack of photos:** Prédio 3, Prédio 10, the Auditório roof, and the exact positions of the canopy, path and plants.
