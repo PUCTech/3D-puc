@@ -142,3 +142,16 @@ Photo set: Wikimedia Commons "Instituto Sedes Sapientiae 01–15" (2016-09-27), 
 - **Cobogó:** off-white grid; the top rows are angled concrete louvers, not brass (photo 04).
 
 **Unverified by any photo:** the Auditório roof garden, Prédio 3 and Prédio 10.
+
+## Photo iteration 2: canopy shape
+**Changed**
+- Canopy rebuilt. Before: a plan-view wave (text-based guess, contradicted by the photos). Now:
+  - straight in plan;
+  - a 2.8 m-wide white slab whose height waves along its length, dipping ~0.6 m over each column;
+  - thin round cream columns every 6 m.
+- Photos:
+  - 03 (canopy with dips at the columns): https://commons.wikimedia.org/wiki/File:Instituto_Sedes_Sapientiae_03.jpg
+  - 15 (S-curve close-up, round cream columns): https://commons.wikimedia.org/wiki/File:Instituto_Sedes_Sapientiae_15.jpg
+  - 07 (canopy along the aisle): https://commons.wikimedia.org/wiki/File:Instituto_Sedes_Sapientiae_07.jpg
+
+**Still assumed:** the canopy's route around the patio. The photos show its shape, not a plan.
