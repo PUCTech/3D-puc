@@ -155,3 +155,17 @@ Photo set: Wikimedia Commons "Instituto Sedes Sapientiae 01–15" (2016-09-27), 
   - 07 (canopy along the aisle): https://commons.wikimedia.org/wiki/File:Instituto_Sedes_Sapientiae_07.jpg
 
 **Still assumed:** the canopy's route around the patio. The photos show its shape, not a plan.
+
+## Photo iteration 3: roofs
+**Changed**
+- **Prédio 1 and the Auditório:** a flat roof with a thick concrete eave projecting 0.7 m past the walls.
+  - Photo 13: https://commons.wikimedia.org/wiki/File:Instituto_Sedes_Sapientiae_13.jpg
+  - Photo 14: https://commons.wikimedia.org/wiki/File:Instituto_Sedes_Sapientiae_14.jpg
+  - Photo 07 (thin slab edge on the Auditório): https://commons.wikimedia.org/wiki/File:Instituto_Sedes_Sapientiae_07.jpg
+- **Prédio 2:** a shallow grey pitched roof overhanging 0.6 m. The ridge runs along the bar.
+  - Photo 15: https://commons.wikimedia.org/wiki/File:Instituto_Sedes_Sapientiae_15.jpg
+- Rendering fix: shadow bias removes the acne stripes on the roof slopes.
+
+**Still assumed**
+- Ridge direction and pitch: photo 15 shows only one eave.
+- The Auditório roof garden: no photo shows the roof. It's kept from text and is unverified.

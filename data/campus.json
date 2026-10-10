@@ -528,7 +528,8 @@
    "style": {
     "wall": "#ece4cf",
     "roof": "#b9b5ab",
-    "windows": "shutter-grey"
+    "windows": "shutter-grey",
+    "roofShape": "eave"
    }
   },
   {
@@ -569,12 +570,13 @@
    ],
    "style": {
     "wall": "#d9a898",
-    "roof": "#9c9a95",
+    "roof": "#8f8f8a",
     "cobogoWall": [
      [-45.48,-17.84],
      [-31.11,23.23]
     ],
-    "windows": "framed"
+    "windows": "framed",
+    "roofShape": "gable"
    }
   },
   {
@@ -658,7 +660,8 @@
     "wall": "#f1efe8",
     "roof": "#c9c3b8",
     "roofGarden": true,
-    "windows": "ribbon"
+    "windows": "ribbon",
+    "roofShape": "eave"
    }
   },
   {

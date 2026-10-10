@@ -53,6 +53,8 @@ export default function CampusScene({ selectedId, locale, onSelect }: Props) {
         position={[120, 240, 80]}
         intensity={2.2}
         castShadow
+        shadow-bias={-0.0005}
+        shadow-normalBias={0.08} // removes acne stripes on roofs and slopes
         shadow-mapSize={[2048, 2048]}
         shadow-camera-left={-250}
         shadow-camera-right={250}

@@ -21,6 +21,7 @@ export type Building = {
     wall?: string;
     roof?: string;
     windows?: 'default' | 'shutter-white' | 'shutter-grey' | 'framed' | 'ribbon';
+    roofShape?: 'flat' | 'eave' | 'gable';
     roofGarden?: boolean;
     cobogoWall?: [Point, Point];
   };
