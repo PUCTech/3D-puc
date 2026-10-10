@@ -248,3 +248,12 @@ The generic "trunk + ball" tree is replaced by procedural models, one per specie
 Patio planting: 8 shade trees, 3 slender trees, 1 palm, 10 monstera and 8 dracaena, kept 1.5 m off the stone path. Positions are illustrative.
 
 Randomness is seeded per plant (mulberry32), so the scene is identical on every load.
+
+## Custom 2: cobogó facade as relief (`components/scene/Cobogo.tsx`)
+- The flat textured plane is now a 3D facade:
+  - light concrete pilasters (0.3 m wide, standing 0.45 m proud) at every 2.52 m panel joint;
+  - a floor beam at every level;
+  - the lattice screen set back behind them.
+- Soft grey ink instead of black: the real frame is light.
+- Photo tour 02 ("Prédio Central"): https://www5.pucsp.br/puc-tour/img/galeria/consolacao/consolacao_02.jpg
+- Photos 04 and 05: https://commons.wikimedia.org/wiki/File:Instituto_Sedes_Sapientiae_04.jpg, https://commons.wikimedia.org/wiki/File:Instituto_Sedes_Sapientiae_05.jpg

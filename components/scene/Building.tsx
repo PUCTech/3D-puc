@@ -62,7 +62,7 @@ export function Building({ building, selected, dimmed, near, locale, onSelect }:
       {style.roofShape && style.roofShape !== 'flat' && (
         <Roof kind={style.roofShape} footprint={building.footprint} height={height} color={selected ? SELECTED_ROOF : roofColor} opacity={opacity} />
       )}
-      {style.cobogoWall && <Cobogo wall={style.cobogoWall} center={footprintCenter(building)} height={height} opacity={opacity} />}
+      {style.cobogoWall && <Cobogo wall={style.cobogoWall} center={footprintCenter(building)} height={height} floorHeight={floorHeight} opacity={opacity} />}
       {roofGarden && (
         <>
           <mesh geometry={roofGarden} receiveShadow>
