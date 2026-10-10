@@ -1,7 +1,7 @@
 import { useMemo } from 'react';
 import { campus } from '@/lib/campus';
 import { flatPolygon, ribbons } from './geometry';
-import { Palms, Trees } from './Trees';
+import { Plants } from './Plants';
 
 const AREA_COLORS: Record<string, string> = { pitch: '#3fae4f', garden: '#6cc24a', park: '#6cc24a', grass: '#82d05c', playground: '#f0a43a' };
 
@@ -16,8 +16,7 @@ export function Site() {
         geometry: flatPolygon(g.polygon, 0.06),
         earth: (g.earth ?? []).map((e) => flatPolygon(e, 0.07)),
         path: g.path ? ribbons([g.path], 1.6, 0.08) : null,
-        trees: g.trees ?? [],
-        palms: g.palms ?? [],
+        plants: g.plants ?? [],
       })),
     [],
   );
@@ -49,8 +48,7 @@ export function Site() {
               <meshLambertMaterial color="#cfc6b2" />
             </mesh>
           )}
-          <Trees at={g.trees} />
-          <Palms at={g.palms} />
+          <Plants plants={g.plants} />
         </group>
       ))}
       {areas.map((a, i) => (

@@ -233,3 +233,18 @@ Searched: Wikimedia Commons, PUC-SP's campus page, the PUC Tour gallery, j.pucsp
 - **The yard side under the canopy** (pale-yellow ground floor, photo 06): real, but hidden from the fixed iso camera.
 
 Best next source: photos from a campus walk of Prédio 3, Prédio 10, the Auditório roof (from an upper floor of Prédio 2), and an aerial or upper-floor view of the patio.
+
+---
+
+# Goal pass: custom models
+## Custom 1: plant species models (`components/scene/Plants.tsx`)
+The generic "trunk + ball" tree is replaced by procedural models, one per species seen in the photos. All plants in a group merge into one vertex-colored mesh (one draw call).
+- **Canary palm:** a thick trunk and 18 fronds, each 4 segments arching down. Photo 07.
+- **Slender street tree:** a clump of 3–5 thin, leaning trunks 9–13 m tall, with small crowns high up. Photo 14.
+- **Shade tree:** a short trunk with 3 branches and a lumpy crown of 5–7 blobs. Photos 02 and tour 01.
+- **Monstera:** a low clump of 6–9 big flat leaves on stalks, tilted outward. Photos 02 and tour 01.
+- **Dracaena:** thin stems topped with tufts of long blades. Tour 01.
+
+Patio planting: 8 shade trees, 3 slender trees, 1 palm, 10 monstera and 8 dracaena, kept 1.5 m off the stone path. Positions are illustrative.
+
+Randomness is seeded per plant (mulberry32), so the scene is identical on every load.

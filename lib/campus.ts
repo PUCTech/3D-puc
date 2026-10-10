@@ -37,7 +37,7 @@ export type Campus = {
   footways?: Point[][];
   context?: { footprint: Point[]; height: number }[]; // neighbouring city buildings
   // hand-written landscaping (photos 02/05/07): planting, red-earth beds, stone path, palms
-  gardens?: { name?: string; polygon: Point[]; trees?: Point[]; palms?: Point[]; earth?: Point[][]; path?: Point[] }[];
+  gardens?: { name?: string; polygon: Point[]; plants?: { kind: 'palm' | 'slender' | 'shade' | 'monstera' | 'dracaena'; at: Point }[]; earth?: Point[][]; path?: Point[] }[];
   barriers?: { kind: string; path: Point[]; height: number }[]; // OSM fences/walls along the campus edge
   gates?: Point[];
   // OSM street details; angle = direction of the street there (radians, atan2(dz, dx))

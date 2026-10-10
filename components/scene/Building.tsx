@@ -5,7 +5,7 @@ import { useFrame, type ThreeEvent } from '@react-three/fiber';
 import { buildingHeight, footprintCenter, type Building as B, type Locale } from '@/lib/campus';
 import { INK_WIDTH, toonRamp, wallTexture } from './pixel';
 import { blankShortWalls, extrude, flatPolygon } from './geometry';
-import { Trees } from './Trees';
+import { Plants } from './Plants';
 import { Cobogo } from './Cobogo';
 import { Roof } from './Roof';
 
@@ -38,7 +38,7 @@ export function Building({ building, selected, dimmed, near, locale, onSelect }:
   const walls = useMemo(() => wallTexture(style.wall ?? WALL, style.windows, floorHeight), [style.wall, style.windows, floorHeight]);
   const roofColor = useMemo(() => new THREE.Color(style.roof ?? ROOF), [style.roof]);
   const roofGarden = useMemo(() => (style.roofGarden ? flatPolygon(building.footprint, height + 0.05) : null), [style.roofGarden, building.footprint, height]);
-  const roofShrubs = useMemo(() => (style.roofGarden ? shrubSpots(building.footprint) : []), [style.roofGarden, building.footprint]);
+  const roofShrubs = useMemo(() => (style.roofGarden ? shrubSpots(building.footprint).map((at) => ({ kind: 'dracaena' as const, at })) : []), [style.roofGarden, building.footprint]);
   const [cx, cz] = footprintCenter(building);
   const opacity = dimmed ? 0.45 : 1;
   const showLabel = selected || (!dimmed && (near || height >= LANDMARK_HEIGHT));
@@ -69,7 +69,7 @@ export function Building({ building, selected, dimmed, near, locale, onSelect }:
             <meshLambertMaterial color="#6cc24a" transparent opacity={opacity} />
           </mesh>
           <group position-y={height}>
-            <Trees at={roofShrubs} scale={0.35} />
+            <Plants plants={roofShrubs} scale={0.6} />
           </group>
         </>
       )}
