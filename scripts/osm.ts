@@ -2,6 +2,7 @@ import type { Campus, Building, Floor, Point } from '../lib/campus';
 
 export type LatLon = { lat: number; lon: number };
 export type OsmWay = { type: 'way'; id: number; tags?: Record<string, string>; geometry: LatLon[] };
+export type OsmNode = { type: 'node'; id: number; tags?: Record<string, string> } & LatLon;
 
 const M_PER_DEG_LAT = 110540;
 const M_PER_DEG_LON = 111320;
@@ -41,7 +42,14 @@ const center = (pts: Point[]): Point => [
   pts.reduce((s, p) => s + p[1], 0) / pts.length,
 ];
 
-export function buildCampus(ways: OsmWay[], campusWayId: number, origin?: LatLon): Campus {
+const segmentDistance = ([px, pz]: Point, [ax, az]: Point, [bx, bz]: Point) => {
+  const [dx, dz] = [bx - ax, bz - az];
+  const t = Math.max(0, Math.min(1, ((px - ax) * dx + (pz - az) * dz) / (dx * dx + dz * dz || 1)));
+  return Math.hypot(px - ax - t * dx, pz - az - t * dz);
+};
+const EDGE_DISTANCE = 15; // meters: barriers this close to the campus boundary belong to the campus edge
+
+export function buildCampus(ways: OsmWay[], campusWayId: number, origin?: LatLon, nodes: OsmNode[] = []): Campus {
   const campusWay = ways.find((w) => w.id === campusWayId);
   if (!campusWay) throw new Error(`campus way ${campusWayId} not found in Overpass result`);
   const g = campusWay.geometry.slice(0, -1);
@@ -78,7 +86,14 @@ export function buildCampus(ways: OsmWay[], campusWayId: number, origin?: LatLon
       footprint: footprint.map(([x, z]): Point => [Math.round(x * 10) / 10, Math.round(z * 10) / 10]), // background: 10 cm is plenty
       height: Number(w.tags?.height) || FLOOR_HEIGHT * Number(w.tags?.['building:levels'] ?? 3),
     }));
-  return { origin: o, streets, buildings, boundary, areas, footways, context };
+  const nearEdge = (p: Point) => boundary.some((a, i) => segmentDistance(p, a, boundary[(i + 1) % boundary.length]) < EDGE_DISTANCE);
+  const barriers = ways
+    .filter((w) => w.tags?.barrier === 'fence' || w.tags?.barrier === 'wall')
+    .map((w) => ({ w, path: w.geometry.map((p) => project(p, o)) }))
+    .filter(({ path }) => path.some(nearEdge))
+    .map(({ w, path }) => ({ kind: w.tags!.barrier, path, height: Number(w.tags?.height?.replace(',', '.')) || (w.tags!.barrier === 'wall' ? 2.5 : 2) }));
+  const gates = nodes.filter((n) => n.tags?.barrier === 'gate').map((n) => project(n, o)).filter(nearEdge);
+  return { origin: o, streets, buildings, boundary, areas, footways, context, barriers, gates };
 }
 
 export function mergeCampus(existing: Campus, fresh: Campus): Campus {
@@ -90,6 +105,8 @@ export function mergeCampus(existing: Campus, fresh: Campus): Campus {
     areas: fresh.areas,
     footways: fresh.footways,
     context: fresh.context,
+    barriers: fresh.barriers,
+    gates: fresh.gates,
     buildings: existing.buildings.map((b) => {
       const match = b.osmId !== undefined ? byOsm.get(b.osmId) : undefined;
       return match ? { ...b, footprint: match.footprint } : b;

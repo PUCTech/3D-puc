@@ -40,10 +40,10 @@ export function CameraRig({ selectedId }: { selectedId: string | null }) {
       maxPolarAngle={ISO_POLAR}
       minZoom={1.5}
       maxZoom={40}
-      verticalDragToForward // vertical drags slide along the ground instead of lifting the view
       dollyToCursor
-      mouseButtons={{ left: ACTION.TRUCK, middle: ACTION.NONE, right: ACTION.TRUCK, wheel: ACTION.ZOOM }}
-      touches={{ one: ACTION.TOUCH_TRUCK, two: ACTION.TOUCH_ZOOM_TRUCK, three: ACTION.NONE }}
+      // SCREEN_PAN: vertical drags slide along the ground instead of lifting the view
+      mouseButtons={{ left: ACTION.SCREEN_PAN, middle: ACTION.NONE, right: ACTION.SCREEN_PAN, wheel: ACTION.ZOOM }}
+      touches={{ one: ACTION.TOUCH_SCREEN_PAN, two: ACTION.TOUCH_ZOOM_TRUCK, three: ACTION.NONE }}
     />
   );
 }

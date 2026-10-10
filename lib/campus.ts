@@ -29,6 +29,9 @@ export type Campus = {
   footways?: Point[][];
   context?: { footprint: Point[]; height: number }[]; // neighbouring city buildings
   gardens?: { name?: string; polygon: Point[]; trees?: Point[] }[]; // hand-written landscaping
+  barriers?: { kind: string; path: Point[]; height: number }[]; // OSM fences/walls along the campus edge
+  gates?: Point[]; // OSM barrier=gate on the campus edge
+  entrance?: { at: Point; label: string; path: Point[] }; // hand-written main entrance and the walk inside
   marquees?: { path: Point[]; width: number; height: number }[]; // covered walkways; the canopy extends to the (dz, -dx) side of the path
 };
 

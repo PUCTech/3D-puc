@@ -73,3 +73,22 @@ Running log of the "make it look like the real campus" loop. Style: pixel-art to
 - Entrances and gates on the street side (OSM `barrier=gate` nodes nearby).
 - Street-side facades.
 - Which blocks are the dormitory and teaching wings beyond Prédio 2.
+
+## Iteration 4: campus edge and main entrance
+**Added**
+- Main entrance on Rua Marquês de Paranaguá, 111: gate pillars, a red sign, and a walk east into the gap between Prédio 1 and the Auditório (the way into the patio). Field `entrance`.
+- OSM edge barriers, imported (`barriers`, `gates`):
+  - a 2.2 m metal-bar fence on the west;
+  - concrete walls on the east and around the lot to the south;
+  - a gate at the south-west corner.
+- Camera fix: this camera-controls version silently ignores `verticalDragToForward`. Drag now uses `SCREEN_PAN`, which slides along the ground at the fixed angle.
+
+**Sources**
+- OSM: address node "111, Rua Marquês de Paranaguá" sits exactly on the west boundary vertex; barrier ways 546571986, 230593247, 1231187970; gate node 13443117378.
+- Sica Palermo (UIA 2021): the classroom block "closes the view of those arriving from the access". This fits an entrance on the west looking east across the patio.
+
+**Still unknown / next**
+- What the real gate and portico look like.
+- Where the other street entrances are (Rua Caio Prado side?).
+- Street-side facades.
+- Neighbour colors (still invented).

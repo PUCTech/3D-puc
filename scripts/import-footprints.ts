@@ -1,7 +1,7 @@
 // One-time import of campus footprints from OpenStreetMap (Overpass API).
 // Re-runs merge: footprints/streets update, hand-edited fields stay. --fresh overwrites everything.
 import { existsSync, readFileSync, writeFileSync } from 'node:fs';
-import { buildCampus, importMode, mergeCampus, type OsmWay } from './osm';
+import { buildCampus, importMode, mergeCampus, type OsmNode, type OsmWay } from './osm';
 import { validateCampus, type Campus } from '../lib/campus';
 
 const CAMPUS_WAY = 38629633; // "PUC Campus Consolação" boundary in OSM
@@ -10,7 +10,9 @@ const QUERY = `[out:json][timeout:25];
 way(${CAMPUS_WAY})->.campus;
 .campus out geom;
 way(around.campus:200); // everything nearby; around = distance to the boundary line. buildCampus sorts it out
-out geom;`;
+out geom;
+node["barrier"](around.campus:30);
+out;`;
 
 // Plain async main: package.json is CommonJS, so tsx can't use top-level await here.
 async function main() {
@@ -27,12 +29,14 @@ async function main() {
     await new Promise((r) => setTimeout(r, attempt * 15_000));
   }
   if (!res?.ok) throw new Error(`Overpass ${res?.status}: ${await res?.text()}`);
-  const ways = ((await res.json()).elements as OsmWay[]).filter((e) => e.type === 'way');
+  const elements = (await res!.json()).elements as (OsmWay | OsmNode)[];
+  const ways = elements.filter((e): e is OsmWay => e.type === 'way');
+  const nodes = elements.filter((e): e is OsmNode => e.type === 'node');
 
   const existing: Campus | undefined = importMode(existsSync(OUT), process.argv) === 'merge'
     ? JSON.parse(readFileSync(OUT, 'utf8'))
     : undefined;
-  const fresh = buildCampus(ways, CAMPUS_WAY, existing?.origin);
+  const fresh = buildCampus(ways, CAMPUS_WAY, existing?.origin, nodes);
   const result = existing ? mergeCampus(existing, fresh) : fresh;
 
   const errors = validateCampus(result);
