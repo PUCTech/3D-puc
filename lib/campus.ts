@@ -22,6 +22,7 @@ export type Building = {
     roof?: string;
     windows?: 'default' | 'shutter-white' | 'shutter-grey' | 'framed' | 'ribbon';
     roofShape?: 'flat' | 'eave' | 'gable';
+    blankEnds?: number; // walls shorter than this many meters have no windows (end walls of bar blocks)
     roofGarden?: boolean;
     cobogoWall?: [Point, Point];
   };

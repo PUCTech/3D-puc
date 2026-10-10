@@ -196,3 +196,15 @@ Photo set: Wikimedia Commons "Instituto Sedes Sapientiae 01–15" (2016-09-27), 
   - a tall palm near the Auditório (photo 07: https://commons.wikimedia.org/wiki/File:Instituto_Sedes_Sapientiae_07.jpg).
 
 **Still assumed:** exact positions of the path, beds and palm. The photos show what's there, not where in plan.
+
+## Photo iteration 6: plain end walls
+**Changed**
+- The end walls of Prédio 1 and Prédio 2 (wall faces shorter than 13 m) have no tiled windows any more. Style field `blankEnds`.
+  - Photo 08 ("Side front of the first building to the yard"): https://commons.wikimedia.org/wiki/File:Instituto_Sedes_Sapientiae_08.jpg
+- Photo 08 also re-confirms the thick projecting eave.
+
+**Checked, not applied**
+- Photo 06 shows white shutters and a pale yellow ground floor on the yard side, under the canopy: https://commons.wikimedia.org/wiki/File:Instituto_Sedes_Sapientiae_06.jpg. The canopy hides that floor from the fixed iso camera, so it isn't modeled.
+- "Fachada da COGEAE" shows exposed board-marked concrete, metal ribbon windows and a glass ground floor: https://commons.wikimedia.org/wiki/File:Fachada_da_COGEAE.JPG. Nothing ties it to a footprint here, so it isn't assigned to Prédio 3 or Prédio 10.
+
+**Not modeled:** the single central window stack on the end wall (glass blocks and a balcony door). It's too small at map scale.

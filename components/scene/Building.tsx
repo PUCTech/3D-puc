@@ -4,7 +4,7 @@ import { Edges, Html } from '@react-three/drei';
 import { useFrame, type ThreeEvent } from '@react-three/fiber';
 import { buildingHeight, footprintCenter, type Building as B, type Locale } from '@/lib/campus';
 import { INK_WIDTH, toonRamp, wallTexture } from './pixel';
-import { extrude, flatPolygon } from './geometry';
+import { blankShortWalls, extrude, flatPolygon } from './geometry';
 import { Trees } from './Trees';
 import { Cobogo } from './Cobogo';
 import { Roof } from './Roof';
@@ -28,7 +28,11 @@ const LANDMARK_HEIGHT = 10; // meters; taller buildings keep their label in the 
 export function Building({ building, selected, dimmed, near, locale, onSelect }: Props) {
   const height = buildingHeight(building);
   const base = building.baseHeight ?? 0;
-  const geometry = useMemo(() => extrude(building.footprint, height), [building.footprint, height]);
+  const blankEnds = building.style?.blankEnds;
+  const geometry = useMemo(() => {
+    const g = extrude(building.footprint, height);
+    return blankEnds ? blankShortWalls(g, blankEnds) : g;
+  }, [building.footprint, height, blankEnds]);
   const style = building.style ?? {};
   const floorHeight = building.floors.find((f) => f.level >= 0)?.height ?? 3.5;
   const walls = useMemo(() => wallTexture(style.wall ?? WALL, style.windows, floorHeight), [style.wall, style.windows, floorHeight]);

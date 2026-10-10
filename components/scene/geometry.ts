@@ -13,6 +13,20 @@ export function extrude(points: Point[], height: number) {
   return g;
 }
 
+// Make wall faces shorter than maxLength plain: their UVs move to the window-free texel (0,0).
+// For bar-shaped blocks this blanks the end walls, as in photo 08. Side faces are quads of 6 vertices.
+export function blankShortWalls(g: THREE.BufferGeometry, maxLength: number) {
+  const pos = g.getAttribute('position');
+  const uv = g.getAttribute('uv') as THREE.BufferAttribute;
+  const { start, count } = g.groups[1];
+  for (let q = start; q < start + count; q += 6) {
+    let len = 0;
+    for (let v = q; v < q + 6; v++) len = Math.max(len, Math.hypot(pos.getX(v) - pos.getX(q), pos.getZ(v) - pos.getZ(q)));
+    if (len < maxLength) for (let v = q; v < q + 6; v++) uv.setXY(v, 0, 0);
+  }
+  return g;
+}
+
 // Flat polygon on the ground at height y.
 export function flatPolygon(points: Point[], y: number) {
   const g = new THREE.ShapeGeometry(shapeOf(points));

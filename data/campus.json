@@ -529,7 +529,8 @@
     "wall": "#ece4cf",
     "roof": "#b9b5ab",
     "windows": "shutter-grey",
-    "roofShape": "eave"
+    "roofShape": "eave",
+    "blankEnds": 13
    }
   },
   {
@@ -576,7 +577,8 @@
      [-31.11,23.23]
     ],
     "windows": "framed",
-    "roofShape": "gable"
+    "roofShape": "gable",
+    "blankEnds": 13
    }
   },
   {
