@@ -4,6 +4,7 @@ import { Html } from '@react-three/drei';
 import { campus, type Point } from '@/lib/campus';
 import { mergeGeometries, ribbons } from './geometry';
 import { toonRamp } from './pixel';
+import { latticeTexture } from './StreetFence';
 
 // Upright strips along a path: walls (thick, opaque) and fences (thin, see-through bars).
 function barrier(path: Point[], height: number, thickness: number) {
@@ -25,6 +26,39 @@ function Pillar({ at: [x, z], height = 3 }: { at: Point; height?: number }) {
       <boxGeometry args={[0.8, height, 0.8]} />
       <meshToonMaterial color="#d8d2c6" gradientMap={toonRamp} />
     </mesh>
+  );
+}
+
+// Main gate (Descubra Sampa photo): pale-yellow gatehouses with cobogó lattice inserts flanking a white metal gate.
+const GATE = { width: 3, house: 4, depth: 3, height: 2.8 };
+function Gatehouse({ at: [x, z], along: [ax, az] }: { at: Point; along: Point }) {
+  const lattice = useMemo(() => {
+    const t = latticeTexture();
+    t.repeat.set(GATE.house * 2, 4);
+    return t;
+  }, []);
+  const angle = -Math.atan2(az, ax);
+  const offset = GATE.width / 2 + GATE.house / 2;
+  return (
+    <group position={[x, 0, z]} rotation-y={angle}>
+      {[-offset, offset].map((u) => (
+        <group key={u} position-x={u}>
+          <mesh position-y={GATE.height / 2} castShadow receiveShadow>
+            <boxGeometry args={[GATE.house, GATE.height, GATE.depth]} />
+            <meshToonMaterial color="#e8dba0" gradientMap={toonRamp} />
+          </mesh>
+          {/* lattice insert on the street face (+z after rotation is the street side for this gate) */}
+          <mesh position={[0, GATE.height * 0.6, -GATE.depth / 2 - 0.02]} rotation-y={Math.PI}>
+            <planeGeometry args={[GATE.house * 0.6, GATE.height * 0.4]} />
+            <meshToonMaterial map={lattice} color="#f1e7b8" gradientMap={toonRamp} alphaTest={0.5} transparent side={THREE.DoubleSide} />
+          </mesh>
+        </group>
+      ))}
+      <mesh position-y={1.2}>
+        <boxGeometry args={[GATE.width, 2.4, 0.08]} />
+        <meshToonMaterial color="#f3f3ee" gradientMap={toonRamp} transparent opacity={0.7} />
+      </mesh>
+    </group>
   );
 }
 
@@ -59,10 +93,10 @@ export function Edge() {
               <meshLambertMaterial color="#f1e6cf" />
             </mesh>
           )}
-          <Pillar at={[entrance.at[0], entrance.at[1] - 2.2]} />
-          <Pillar at={[entrance.at[0], entrance.at[1] + 2.2]} />
+          <Gatehouse at={entrance.at} along={entrance.along} />
           <Html position={[entrance.at[0], 4.2, entrance.at[1]]} center zIndexRange={[10, 0]} className="pointer-events-none select-none">
-            <span className="block whitespace-nowrap rounded-sm bg-[#c0392b] px-1.5 py-0.5 font-mono text-[9px] uppercase tracking-wider text-white shadow-[2px_2px_0_#000]">
+            {/* white plaque with dark lettering, as on the real gate (Descubra Sampa photo) */}
+            <span className="block whitespace-nowrap rounded-sm border border-[#555] bg-[#f7f6f1] px-1.5 py-0.5 font-mono text-[9px] uppercase tracking-wider text-[#2a2a2a] shadow-[2px_2px_0_#000]">
               {entrance.label}
             </span>
           </Html>

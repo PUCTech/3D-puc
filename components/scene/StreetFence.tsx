@@ -10,7 +10,7 @@ const PILLAR_EVERY = 2.6;
 const CONCRETE = '#d8d4cb';
 
 // Lattice cell texture: 1-px ribs, transparent holes (alphaTest cuts them out).
-function latticeTexture() {
+export function latticeTexture() {
   const c = document.createElement('canvas');
   c.width = c.height = 4;
   const g = c.getContext('2d')!;

@@ -42,7 +42,8 @@ export type Campus = {
   gates?: Point[];
   // OSM street details; angle = direction of the street there (radians, atan2(dz, dx))
   furniture?: { kind: 'crossing' | 'traffic_signals' | 'bus_stop'; at: Point; angle: number }[]; // OSM barrier=gate on the campus edge
-  entrance?: { at: Point; label: string; path: Point[] }; // hand-written main entrance and the walk inside
+  // hand-written main entrance; `along` is the street direction at the gate (the gatehouses sit either side)
+  entrance?: { at: Point; along: Point; label: string; path: Point[] };
   streetFences?: { path: Point[]; height: number }[]; // hand-placed from photos: concrete lattice on a low wall
   streetTrees?: Point[]; // hand-placed from photos: tall slender trees behind the street fence
   marquees?: { path: Point[]; width: number; height: number }[]; // covered walkways; the canopy extends to the (dz, -dx) side of the path

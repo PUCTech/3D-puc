@@ -208,3 +208,19 @@ Photo set: Wikimedia Commons "Instituto Sedes Sapientiae 01–15" (2016-09-27), 
 - "Fachada da COGEAE" shows exposed board-marked concrete, metal ribbon windows and a glass ground floor: https://commons.wikimedia.org/wiki/File:Fachada_da_COGEAE.JPG. Nothing ties it to a footprint here, so it isn't assigned to Prédio 3 or Prédio 10.
 
 **Not modeled:** the single central window stack on the end wall (glass blocks and a balcony door). It's too small at map scale.
+
+## Photo iteration 7: the main gate
+**Changed**
+- The entrance's plain pillars and red sign are replaced by:
+  - pale-yellow gatehouses (#e8dba0) on each side, with concrete lattice inserts on the street face;
+  - a white metal gate between them;
+  - a white "PUC-SP" plaque with dark lettering.
+- The street-fence gaps were widened to fit the gatehouses.
+- Photo (Sergio Brisola / Descubra Sampa, 2022): https://www.descubrasampa.com.br/2022/05/puc-sp-campus-consolacao.html
+  - It also shows the lattice street fence continuing from the gate, and photo 08's end wall (balcony, glass blocks) behind it.
+
+**Also checked (PUC Tour gallery, https://www5.pucsp.br/puc-tour/consolacao.php)**
+- `consolacao_01`: confirms the white yard side of Prédio 1 with white shutters, the wavy canopy on cream columns, and the flagstone path.
+- `consolacao_02`: names the cobogó block **"Prédio Central"**, which is our Prédio 2.
+- `consolacao_04`: COGEAE is a separate tall concrete building, not one of the five on the map.
+- `mapa-consolacao`: PUC's official campus map. Its colors are legend categories, not facade colors, so they're not used.
