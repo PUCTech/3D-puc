@@ -1,0 +1,18 @@
+@import "tailwindcss";
+
+@theme inline {
+  --color-ink: #020d2b;
+  --color-night: #081a3e;
+  --color-deep: #143966;
+  --color-accent: #2b6fac;
+  --color-ice: #bae4fe;
+  --color-paper: #f0f4f9;
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+}
+
+html, body {
+  height: 100%;
+  background: var(--color-ink);
+  color: var(--color-paper);
+}
