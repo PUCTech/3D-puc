@@ -42,7 +42,7 @@ export function Building({ building, maxHeight, selected, dimmed, near, onSelect
         {!dimmed && <Edges threshold={15} color={selected ? '#bae4fe' : '#7fb4dd'} lineWidth={selected ? 2 : 1} />}
       </mesh>
       {/* Always mounted, hidden with opacity: unmounting drei <Html> mid-render triggers React warnings */}
-      <Html position={[cx, height + 3, cz]} center className="pointer-events-none select-none">
+      <Html position={[cx, height + 3, cz]} center zIndexRange={[10, 0]} className="pointer-events-none select-none">
         <span
           className={`block whitespace-nowrap font-mono text-[10px] uppercase tracking-widest transition-opacity duration-300 ${selected ? 'text-ice' : 'text-ice/60'} ${showLabel ? 'opacity-100' : 'opacity-0'}`}
         >
