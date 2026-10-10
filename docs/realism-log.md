@@ -169,3 +169,18 @@ Photo set: Wikimedia Commons "Instituto Sedes Sapientiae 01–15" (2016-09-27), 
 **Still assumed**
 - Ridge direction and pitch: photo 15 shows only one eave.
 - The Auditório roof garden: no photo shows the roof. It's kept from text and is unverified.
+
+## Photo iteration 4: street front on Marquês de Paranaguá
+**Added**
+- Concrete lattice fence along the west boundary in front of Prédio 1 and the Auditório, with a gap at the entrance:
+  - a 0.5 m low wall;
+  - a 25 cm square lattice up to 2.2 m;
+  - square pillars every 2.6 m.
+  - Field `streetFences`.
+- 17 tall, slender trees (10–13 m trunks, small high crowns) 2.5 m inside the fence. Field `streetTrees`.
+- Photo 14 (view from Rua Marquês de Paranaguá): https://commons.wikimedia.org/wiki/File:Instituto_Sedes_Sapientiae_14.jpg
+
+**Still assumed**
+- The fence's full extent beyond the stretch the photo shows.
+- Tree count and spacing (approximated from the photo's density).
+- The gate itself: no photo of the entrance.

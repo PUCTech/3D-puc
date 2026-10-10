@@ -12,6 +12,8 @@ import { Site } from './Site';
 import { Marquees } from './Marquees';
 import { Edge } from './Edge';
 import { Furniture } from './Furniture';
+import { StreetFence } from './StreetFence';
+import { Trees } from './Trees';
 import { GROUND_COLOR } from './Ground';
 
 const NEAR_ZOOM = 6; // orthographic zoom = CSS px per meter; zoomed in past this, every building gets a label
@@ -69,6 +71,8 @@ export default function CampusScene({ selectedId, locale, onSelect }: Props) {
       <Marquees />
       <Edge />
       <Furniture />
+      <StreetFence />
+      <Trees at={campus.streetTrees ?? []} slender />
       <Buildings selectedId={selectedId} locale={locale} onSelect={onSelect} />
       <CameraRig selectedId={selectedId} />
     </Canvas>
