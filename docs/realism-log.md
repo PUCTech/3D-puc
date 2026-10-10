@@ -224,3 +224,12 @@ Photo set: Wikimedia Commons "Instituto Sedes Sapientiae 01–15" (2016-09-27), 
 - `consolacao_02`: names the cobogó block **"Prédio Central"**, which is our Prédio 2.
 - `consolacao_04`: COGEAE is a separate tall concrete building, not one of the five on the map.
 - `mapa-consolacao`: PUC's official campus map. Its colors are legend categories, not facade colors, so they're not used.
+
+## Where the photo-only pass stopped, and why
+Searched: Wikimedia Commons, PUC-SP's campus page, the PUC Tour gallery, j.pucsp.br (Jornada do Patrimônio 2018, 5 event photos), and Descubra Sampa. No photo resolves what's left:
+- **Prédio 3 and Prédio 10:** no photo shows them. They keep generic warm walls and default windows, and are unverified.
+- **Auditório roof garden:** no photo shows the roof. It's kept from text and is unverified.
+- **Canopy and patio layout:** the photos confirm the shape and the planting, but not their positions in plan.
+- **The yard side under the canopy** (pale-yellow ground floor, photo 06): real, but hidden from the fixed iso camera.
+
+Best next source: photos from a campus walk of Prédio 3, Prédio 10, the Auditório roof (from an upper floor of Prédio 2), and an aerial or upper-floor view of the patio.
