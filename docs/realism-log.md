@@ -269,3 +269,12 @@ Randomness is seeded per plant (mulberry32), so the scene is identical on every 
 - Corrugated sheeting: ribs running down both slopes every 1.2 m, a shade darker than the roof.
 - Exposed rafter tails under both eaves every 0.9 m.
 - Photo 15: https://commons.wikimedia.org/wiki/File:Instituto_Sedes_Sapientiae_15.jpg
+
+## Custom 5: neighbourhood tones
+- Neighbour palette changed from invented candy colors to muted concrete greys, off-whites and beiges, as seen behind the campus in every photo:
+  - photo 03: https://commons.wikimedia.org/wiki/File:Instituto_Sedes_Sapientiae_03.jpg
+  - photo 07: https://commons.wikimedia.org/wiki/File:Instituto_Sedes_Sapientiae_07.jpg
+  - tour 04;
+  - the Descubra Sampa gate photo.
+- The campus now stands out the way it does in reality.
+- Individual neighbour colors are still unknown; the tones are randomized from the photo palette.

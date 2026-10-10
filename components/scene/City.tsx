@@ -4,8 +4,9 @@ import { campus } from '@/lib/campus';
 import { extrude, mergeGeometries } from './geometry';
 import { toonRamp, wallTexture } from './pixel';
 
-// shortcut: neighbour colors are a cheerful made-up palette, not their real facades
-const PALETTE = ['#f4b8a4', '#f7d794', '#a9dcc0', '#a3c9ef', '#d9bdf0', '#f3efe6', '#eeb07f', '#c7e59a'];
+// Muted concrete tones seen behind the campus in every photo (03, 07, tour 04, Descubra Sampa gate):
+// grey, off-white and beige towers. Per-building colors are still not individually known.
+const PALETTE = ['#d9d6cf', '#c9c4ba', '#e4ded2', '#b9b7b2', '#d6cdbd', '#cfd3d6', '#bfb5a5', '#e8e4dc'];
 
 // All neighbouring buildings as one merged mesh (~300 buildings, one draw call).
 export function City() {
