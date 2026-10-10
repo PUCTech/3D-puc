@@ -1,26 +1,35 @@
 'use client';
 import { useState } from 'react';
 import { Canvas, useFrame } from '@react-three/fiber';
-import { campus, buildingHeight, type Locale } from '@/lib/campus';
+import { campus, type Locale } from '@/lib/campus';
 import { Building } from './Building';
 import { Ground } from './Ground';
 import { Streets } from './Streets';
 import { CameraRig } from './CameraRig';
+import { PIXEL_DPR } from './pixel';
+import { City } from './City';
+import { Site } from './Site';
+import { Marquees } from './Marquees';
+import { Edge } from './Edge';
+import { Furniture } from './Furniture';
+import { StreetFence } from './StreetFence';
+import { Props as CampusProps } from './Props';
+import { Plants } from './Plants';
+import { GROUND_COLOR } from './Ground';
 
-const MAX_HEIGHT = Math.max(...campus.buildings.map(buildingHeight));
-const NEAR_DISTANCE = 160; // meters from camera to origin; closer than this, every building gets a label
+const STREET_TREES = (campus.streetTrees ?? []).map((at) => ({ kind: 'slender' as const, at }));
+const NEAR_ZOOM = 6; // orthographic zoom = CSS px per meter; zoomed in past this, every building gets a label
 
 function Buildings({ selectedId, locale, onSelect }: Props) {
   const [near, setNear] = useState(false);
   useFrame(({ camera }) => {
-    const n = camera.position.length() < NEAR_DISTANCE;
+    const n = camera.zoom > NEAR_ZOOM;
     if (n !== near) setNear(n);
   });
   return campus.buildings.map((b) => (
     <Building
       key={b.id}
       building={b}
-      maxHeight={MAX_HEIGHT}
       selected={b.id === selectedId}
       dimmed={selectedId !== null && b.id !== selectedId}
       near={near}
@@ -34,12 +43,39 @@ type Props = { selectedId: string | null; locale: Locale; onSelect: (id: string 
 
 export default function CampusScene({ selectedId, locale, onSelect }: Props) {
   return (
-    <Canvas camera={{ position: [140, 160, 180], fov: 40, near: 1, far: 5000 }} dpr={[1, 2]}>
-      <color attach="background" args={['#020d2b']} />
-      <ambientLight intensity={0.7} />
-      <directionalLight position={[80, 150, 60]} intensity={1.5} />
+    <Canvas
+      orthographic
+      camera={{ position: [-250, 300, 250], zoom: 4, near: 1, far: 3000 }}
+      dpr={PIXEL_DPR}
+      gl={{ antialias: false }}
+      shadows
+      style={{ imageRendering: 'pixelated' }}
+    >
+      <color attach="background" args={[GROUND_COLOR]} />
+      <hemisphereLight args={['#ffffff', '#7fae55', 1.1]} />
+      <directionalLight
+        position={[120, 240, 80]}
+        intensity={2.2}
+        castShadow
+        shadow-bias={-0.0005}
+        shadow-normalBias={0.08} // removes acne stripes on roofs and slopes
+        shadow-mapSize={[2048, 2048]}
+        shadow-camera-left={-250}
+        shadow-camera-right={250}
+        shadow-camera-top={250}
+        shadow-camera-bottom={-250}
+        shadow-camera-far={600}
+      />
       <Ground onClear={() => onSelect(null)} />
+      <Site />
       <Streets />
+      <City />
+      <Marquees />
+      <Edge />
+      <Furniture />
+      <StreetFence />
+      <CampusProps />
+      <Plants plants={STREET_TREES} />
       <Buildings selectedId={selectedId} locale={locale} onSelect={onSelect} />
       <CameraRig selectedId={selectedId} />
     </Canvas>

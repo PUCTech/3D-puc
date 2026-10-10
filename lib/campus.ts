@@ -16,11 +16,39 @@ export type Building = {
   baseHeight?: number;
   floors: Floor[];
   entrances?: Point[];
+  // hand-written look; cobogoWall = the wall segment covered by a cobogó (concrete grid) screen
+  style?: {
+    wall?: string;
+    roof?: string;
+    windows?: 'default' | 'shutter-white' | 'shutter-grey' | 'framed' | 'ribbon';
+    roofShape?: 'flat' | 'eave' | 'gable';
+    blankEnds?: number; // walls shorter than this many meters have no windows (end walls of bar blocks)
+    roofGarden?: boolean;
+    cobogoWall?: [Point, Point];
+  };
 };
 export type Campus = {
   origin: { lat: number; lon: number };
   streets: { name: string; path: Point[] }[];
   buildings: Building[];
+  // Generated site context (import script); optional so hand-written data stays valid.
+  boundary?: Point[];
+  areas?: { kind: string; polygon: Point[] }[]; // OSM leisure/landuse inside or near campus, e.g. "pitch", "garden"
+  footways?: Point[][];
+  context?: { footprint: Point[]; height: number }[]; // neighbouring city buildings
+  // hand-written landscaping (photos 02/05/07): planting, red-earth beds, stone path, palms
+  gardens?: { name?: string; polygon: Point[]; plants?: { kind: 'palm' | 'slender' | 'shade' | 'monstera' | 'dracaena'; at: Point }[]; earth?: Point[][]; path?: Point[] }[];
+  barriers?: { kind: string; path: Point[]; height: number }[]; // OSM fences/walls along the campus edge
+  gates?: Point[];
+  // OSM street details; angle = direction of the street there (radians, atan2(dz, dx))
+  furniture?: { kind: 'crossing' | 'traffic_signals' | 'bus_stop'; at: Point; angle: number }[]; // OSM barrier=gate on the campus edge
+  // hand-written main entrance; `along` is the street direction at the gate (the gatehouses sit either side)
+  entrance?: { at: Point; along: Point; label: string; path: Point[] };
+  streetFences?: { path: Point[]; height: number }[]; // hand-placed from photos: concrete lattice on a low wall
+  streetTrees?: Point[]; // hand-placed from photos: tall slender trees behind the street fence
+  // hand-placed small objects from photos; angle = rotation around Y in radians (atan2(dz, dx) of their facing line)
+  props?: { kind: 'lamp' | 'totem' | 'bench'; at: Point; angle: number }[];
+  marquees?: { path: Point[]; width: number; height: number }[]; // covered walkways; the canopy extends to the (dz, -dx) side of the path
 };
 
 export const campus = data as unknown as Campus; // JSON infers number[][], not tuples

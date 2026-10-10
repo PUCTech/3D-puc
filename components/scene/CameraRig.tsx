@@ -1,7 +1,13 @@
 import { useEffect, useRef } from 'react';
 import * as THREE from 'three';
-import { CameraControls } from '@react-three/drei';
+import { CameraControls, CameraControlsImpl } from '@react-three/drei';
 import { campus, buildingHeight, findBuilding, type Building } from '@/lib/campus';
+
+const { ACTION } = CameraControlsImpl;
+// Fixed isometric view, like a MOBA camera: pan and zoom only, no rotation.
+// From the south-west: the view of visitors arriving from the entrance, facing the cobogó wall across the patio.
+export const ISO_AZIMUTH = -Math.PI / 4;
+export const ISO_POLAR = 0.96; // ~55° from vertical
 
 const sphereOf = (buildings: Building[]) => {
   const box = new THREE.Box3();
@@ -10,7 +16,7 @@ const sphereOf = (buildings: Building[]) => {
     for (const [x, z] of b.footprint) box.expandByPoint(new THREE.Vector3(x, 0, z)).expandByPoint(new THREE.Vector3(x, top, z));
   }
   const sphere = box.getBoundingSphere(new THREE.Sphere());
-  sphere.radius = Math.max(sphere.radius * 1.15, 15); // breathing room; small sheds still show their surroundings
+  sphere.radius = Math.max(sphere.radius * 1.15, 15); // breathing room; small buildings still show their surroundings
   return sphere;
 };
 const CAMPUS_SPHERE = sphereOf(campus.buildings);
@@ -22,9 +28,22 @@ export function CameraRig({ selectedId }: { selectedId: string | null }) {
     if (!controls) return;
     const smooth = !window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     const b = findBuilding(selectedId);
-    // fitToSphere keeps the view angle (fitToBox snaps to axis-aligned views).
-    controls.rotatePolarTo(0.9, smooth); // ~50° from vertical: buildings read as 3D, streets stay visible
     controls.fitToSphere(b ? sphereOf([b]) : CAMPUS_SPHERE, smooth);
   }, [selectedId]);
-  return <CameraControls ref={ref} makeDefault minDistance={20} maxDistance={600} minPolarAngle={0.2} maxPolarAngle={Math.PI * 0.45} />;
+  return (
+    <CameraControls
+      ref={ref}
+      makeDefault
+      minAzimuthAngle={ISO_AZIMUTH}
+      maxAzimuthAngle={ISO_AZIMUTH}
+      minPolarAngle={ISO_POLAR}
+      maxPolarAngle={ISO_POLAR}
+      minZoom={1.5}
+      maxZoom={40}
+      dollyToCursor
+      // SCREEN_PAN: vertical drags slide along the ground instead of lifting the view
+      mouseButtons={{ left: ACTION.SCREEN_PAN, middle: ACTION.NONE, right: ACTION.SCREEN_PAN, wheel: ACTION.ZOOM }}
+      touches={{ one: ACTION.TOUCH_SCREEN_PAN, two: ACTION.TOUCH_ZOOM_TRUCK, three: ACTION.NONE }}
+    />
+  );
 }
