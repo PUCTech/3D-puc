@@ -70,6 +70,7 @@ type Campus = {
 
 type Building = {
   id: string;                        // URL slug, e.g. "predio-novo"
+  osmId?: number;                    // source OSM way; import script matches on this
   name: Localized;
   shortName?: string;                // map label
   description?: Localized;
@@ -98,7 +99,9 @@ Rules:
 - Building height is the sum of its floor heights. No separate height field.
 - Below-ground floors (negative `level`) are not rendered in v1; they still count toward the floor list shown in the sheet.
 - Coordinates are local meters, converted from latitude/longitude by the import script (equirectangular projection around `origin`, accurate enough at campus scale). No projection code at runtime.
-- The import script writes `footprint` and `streets` and keeps every hand-written field (`name`, `description`, `floors`, `entrances`, …) when it runs again, matched by `id`.
+- **Source confirmed:** OSM way 38629633 (campus boundary) contains 16 building footprints with `height` tags (3–16 m) and no names. The first import creates placeholder names ("Prédio N" / "Building N") and guesses floors from `height / 3.5 m`. Real names and floor counts are then edited by hand.
+- On later runs, the import script updates `footprint` (matched by `osmId`) and `streets`, and keeps every hand-written field (`id`, `name`, `description`, `floors`, `entrances`, …). It never adds or removes buildings after the first run, so a deleted shed stays deleted.
+- OSM closed ways repeat their first point; the script drops the duplicate. Winding order is left as-is (Three.js `ExtrudeGeometry` handles both).
 - v3 events will reference `buildingId` + optional `roomId`; nothing in this model changes for them.
 
 ## 5. UI and interactions
@@ -130,7 +133,7 @@ Matches building `name` (both languages) and `shortName`, ignoring case and acce
 
 ### Labels
 
-Geist Mono labels above each building, using drei `<Html>`. They fade when they would overlap or when zoomed far out.
+Geist Mono labels above each building, using drei `<Html>` with `distanceFactor`, so they shrink as the camera zooms out. (shortcut: no overlap detection; add it if labels collide once real names are in)
 
 ### Visual style
 
@@ -186,6 +189,6 @@ GitHub Actions runs lint, type-check, Vitest and Playwright on every PR. Vercel 
 
 ## 7. Open risks
 
-- **Footprint coverage unverified.** GeoSampa/OSM accuracy for this campus hasn't been checked. If it's poor, footprints get hand-traced (a few buildings, acceptable effort).
+- **Footprint accuracy.** OSM has footprints and heights for all 16 campus buildings (verified 2026-10-10), but they haven't been checked against reality. If something is off, GeoSampa LiDAR (2017/2020) is the fallback.
 - **Floor counts and building names** must be gathered by hand (a campus walk). The import script can't provide them.
-- **Indoor data for v2** has no source yet. Requesting floor plans from the PUC-SP facilities office is the recommended path.
+- **Indoor data for v2** has no source yet. See `docs/floor-plan-sources.md`. The campus is Rino Levi's 1942 Sedes Sapientiae, so the original plans exist (FAU-USP Rino Levi collection, CONDEPHAAT listing).
