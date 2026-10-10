@@ -3,7 +3,8 @@ import * as THREE from 'three';
 import { Edges, Html } from '@react-three/drei';
 import { useFrame, type ThreeEvent } from '@react-three/fiber';
 import { buildingHeight, footprintCenter, type Building as B, type Locale } from '@/lib/campus';
-import { toonRamp, wallTexture } from './pixel';
+import { INK_WIDTH, toonRamp, wallTexture } from './pixel';
+import { extrude } from './geometry';
 
 // shortcut: one generic palette for every building until real per-building colors are researched
 const WALL = '#f6e7c8';
@@ -19,13 +20,7 @@ const LANDMARK_HEIGHT = 10; // meters; taller buildings keep their label in the 
 export function Building({ building, selected, dimmed, near, locale, onSelect }: Props) {
   const height = buildingHeight(building);
   const base = building.baseHeight ?? 0;
-  const geometry = useMemo(() => {
-    // Shape lives in XY; after rotateX(-90°), shape y becomes -z, so feed -z to land on +z (south).
-    const shape = new THREE.Shape(building.footprint.map(([x, z]) => new THREE.Vector2(x, -z)));
-    const g = new THREE.ExtrudeGeometry(shape, { depth: height, bevelEnabled: false });
-    g.rotateX(-Math.PI / 2);
-    return g;
-  }, [building.footprint, height]);
+  const geometry = useMemo(() => extrude(building.footprint, height), [building.footprint, height]);
   const walls = useMemo(() => wallTexture(WALL, GLASS, FRAME), []);
   const [cx, cz] = footprintCenter(building);
   const opacity = dimmed ? 0.45 : 1;
@@ -45,7 +40,7 @@ export function Building({ building, selected, dimmed, near, locale, onSelect }:
         <meshToonMaterial attach="material-0" color={selected ? SELECTED_ROOF : ROOF} gradientMap={toonRamp} transparent opacity={opacity} />
         <meshToonMaterial attach="material-1" map={walls} gradientMap={toonRamp} transparent opacity={opacity} />
         {/* Ink outline: the main cartoon cue */}
-        {!dimmed && <Edges threshold={15} color="#1b1b24" lineWidth={3} />}
+        {!dimmed && <Edges threshold={15} color="#1b1b24" lineWidth={INK_WIDTH} />}
       </mesh>
       {/* Always mounted, hidden with opacity: unmounting drei <Html> mid-render triggers React warnings */}
       <Html position={[cx, height + 3, cz]} center zIndexRange={[10, 0]} className="pointer-events-none select-none">

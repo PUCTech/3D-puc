@@ -7,13 +7,16 @@ import { Ground } from './Ground';
 import { Streets } from './Streets';
 import { CameraRig } from './CameraRig';
 import { PIXEL_DPR } from './pixel';
+import { City } from './City';
+import { Site } from './Site';
+import { GROUND_COLOR } from './Ground';
 
-const NEAR_DISTANCE = 160; // meters from camera to origin; closer than this, every building gets a label
+const NEAR_ZOOM = 6; // orthographic zoom = CSS px per meter; zoomed in past this, every building gets a label
 
 function Buildings({ selectedId, locale, onSelect }: Props) {
   const [near, setNear] = useState(false);
   useFrame(({ camera }) => {
-    const n = camera.position.length() < NEAR_DISTANCE;
+    const n = camera.zoom > NEAR_ZOOM;
     if (n !== near) setNear(n);
   });
   return campus.buildings.map((b) => (
@@ -34,26 +37,30 @@ type Props = { selectedId: string | null; locale: Locale; onSelect: (id: string 
 export default function CampusScene({ selectedId, locale, onSelect }: Props) {
   return (
     <Canvas
-      camera={{ position: [140, 160, 180], fov: 40, near: 1, far: 5000 }}
+      orthographic
+      camera={{ position: [250, 300, 250], zoom: 4, near: 1, far: 3000 }}
       dpr={PIXEL_DPR}
       gl={{ antialias: false }}
       shadows
       style={{ imageRendering: 'pixelated' }}
     >
-      <color attach="background" args={['#a8dcff']} />
+      <color attach="background" args={[GROUND_COLOR]} />
       <hemisphereLight args={['#ffffff', '#7fae55', 1.1]} />
       <directionalLight
-        position={[60, 120, 40]}
+        position={[120, 240, 80]}
         intensity={2.2}
         castShadow
-        shadow-mapSize={[1024, 1024]}
-        shadow-camera-left={-120}
-        shadow-camera-right={120}
-        shadow-camera-top={120}
-        shadow-camera-bottom={-120}
+        shadow-mapSize={[2048, 2048]}
+        shadow-camera-left={-250}
+        shadow-camera-right={250}
+        shadow-camera-top={250}
+        shadow-camera-bottom={-250}
+        shadow-camera-far={600}
       />
       <Ground onClear={() => onSelect(null)} />
+      <Site />
       <Streets />
+      <City />
       <Buildings selectedId={selectedId} locale={locale} onSelect={onSelect} />
       <CameraRig selectedId={selectedId} />
     </Canvas>

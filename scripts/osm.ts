@@ -6,6 +6,8 @@ export type OsmWay = { type: 'way'; id: number; tags?: Record<string, string>; g
 const M_PER_DEG_LAT = 110540;
 const M_PER_DEG_LON = 111320;
 const FLOOR_HEIGHT = 3.5;
+const CAR_ROADS = /^(primary|secondary|tertiary|residential|unclassified|living_street|pedestrian|service)$/;
+const AREA_KINDS = new Set(['pitch', 'garden', 'park', 'grass', 'playground']);
 const r2 = (n: number) => Math.round(n * 100) / 100;
 
 // Equirectangular projection: accurate to centimeters at campus scale.
@@ -61,9 +63,22 @@ export function buildCampus(ways: OsmWay[], campusWayId: number, origin?: LatLon
       floors: guessFloors(w.tags?.height ? Number(w.tags.height) : undefined),
     }));
   const streets = ways
-    .filter((w) => w.tags?.highway)
+    .filter((w) => CAR_ROADS.test(w.tags?.highway ?? ''))
     .map((w) => ({ name: w.tags?.name ?? '', path: w.geometry.map((p) => project(p, o)) }));
-  return { origin: o, streets, buildings };
+  const footways = ways.filter((w) => w.tags?.highway === 'footway').map((w) => w.geometry.map((p) => project(p, o)));
+  const areas = ways
+    .filter((w) => AREA_KINDS.has(w.tags?.leisure ?? w.tags?.landuse ?? ''))
+    .map((w) => ({ kind: (w.tags?.leisure ?? w.tags?.landuse)!, polygon: ring(w, o) }));
+  // Neighbours only: campus buildings left out of data/campus.json were removed on purpose.
+  const context = ways
+    .filter((w) => w.tags?.building && w.id !== campusWayId)
+    .map((w) => ({ w, footprint: ring(w, o) }))
+    .filter(({ footprint }) => !pointInPolygon(center(footprint), boundary))
+    .map(({ w, footprint }) => ({
+      footprint: footprint.map(([x, z]): Point => [Math.round(x * 10) / 10, Math.round(z * 10) / 10]), // background: 10 cm is plenty
+      height: Number(w.tags?.height) || FLOOR_HEIGHT * Number(w.tags?.['building:levels'] ?? 3),
+    }));
+  return { origin: o, streets, buildings, boundary, areas, footways, context };
 }
 
 export function mergeCampus(existing: Campus, fresh: Campus): Campus {
@@ -71,6 +86,10 @@ export function mergeCampus(existing: Campus, fresh: Campus): Campus {
   return {
     ...existing,
     streets: fresh.streets,
+    boundary: fresh.boundary,
+    areas: fresh.areas,
+    footways: fresh.footways,
+    context: fresh.context,
     buildings: existing.buildings.map((b) => {
       const match = b.osmId !== undefined ? byOsm.get(b.osmId) : undefined;
       return match ? { ...b, footprint: match.footprint } : b;

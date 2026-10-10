@@ -9,19 +9,24 @@ const OUT = 'data/campus.json';
 const QUERY = `[out:json][timeout:25];
 way(${CAMPUS_WAY})->.campus;
 .campus out geom;
-way["building"](around.campus:200); // around = distance to the boundary line, so reach the middle; buildCampus filters to inside
-out geom;
-way["highway"~"^(primary|secondary|tertiary|residential|unclassified|living_street|pedestrian)$"](around.campus:80);
+way(around.campus:200); // everything nearby; around = distance to the boundary line. buildCampus sorts it out
 out geom;`;
 
 // Plain async main: package.json is CommonJS, so tsx can't use top-level await here.
 async function main() {
-  const res = await fetch('https://overpass-api.de/api/interpreter', {
-    method: 'POST',
-    headers: { 'User-Agent': '3d-puc campus map importer' },
-    body: new URLSearchParams({ data: QUERY }),
-  });
-  if (!res.ok) throw new Error(`Overpass ${res.status}: ${await res.text()}`);
+  // Overpass rate-limits bursts (429/504); retry a few times with backoff.
+  let res: Response | undefined;
+  for (let attempt = 1; attempt <= 4; attempt++) {
+    res = await fetch('https://overpass-api.de/api/interpreter', {
+      method: 'POST',
+      headers: { 'User-Agent': '3d-puc campus map importer' },
+      body: new URLSearchParams({ data: QUERY }),
+    });
+    if (res.ok) break;
+    console.warn(`Overpass ${res.status}, retrying in ${attempt * 15}s`);
+    await new Promise((r) => setTimeout(r, attempt * 15_000));
+  }
+  if (!res?.ok) throw new Error(`Overpass ${res?.status}: ${await res?.text()}`);
   const ways = ((await res.json()).elements as OsmWay[]).filter((e) => e.type === 'way');
 
   const existing: Campus | undefined = importMode(existsSync(OUT), process.argv) === 'merge'
@@ -32,7 +37,8 @@ async function main() {
 
   const errors = validateCampus(result);
   if (errors.length) throw new Error(`refusing to write invalid campus:\n${errors.join('\n')}`);
-  writeFileSync(OUT, JSON.stringify(result, null, 1) + '\n');
+  // One line per building/street keeps the file diffable without indenting every coordinate pair.
+  writeFileSync(OUT, JSON.stringify(result, (_, v) => v, 1).replace(/\[\s+(-?[\d.]+),\s+(-?[\d.]+)\s+\]/g, '[$1,$2]') + '\n');
   console.log(`wrote ${OUT}: ${result.buildings.length} buildings, ${result.streets.length} streets`);
 }
 

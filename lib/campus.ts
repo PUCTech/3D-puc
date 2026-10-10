@@ -21,6 +21,11 @@ export type Campus = {
   origin: { lat: number; lon: number };
   streets: { name: string; path: Point[] }[];
   buildings: Building[];
+  // Generated site context (import script); optional so hand-written data stays valid.
+  boundary?: Point[];
+  areas?: { kind: string; polygon: Point[] }[]; // OSM leisure/landuse inside or near campus, e.g. "pitch", "garden"
+  footways?: Point[][];
+  context?: { footprint: Point[]; height: number }[]; // neighbouring city buildings
 };
 
 export const campus = data as unknown as Campus; // JSON infers number[][], not tuples
