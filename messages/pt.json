@@ -23,14 +23,27 @@
     "level": "{level}º andar"
   },
   "list": {
-    "open": "Lista de prédios",
+    "open": "Prédios",
     "title": "Prédios",
-    "close": "Fechar lista"
+    "close": "Fechar lista",
+    "back": "Voltar",
+    "hint": "Escolha um prédio no mapa ou na lista"
   },
   "locale": {
     "switch": "English",
     "switchLabel": "Ver em inglês"
   },
   "loading": "Carregando mapa…",
-  "noWebgl": "Seu navegador não suporta 3D. Use a lista de prédios."
+  "noWebgl": "Seu navegador não suporta 3D. Use a lista de prédios.",
+  "brand": {
+    "title": "Mapa do campus",
+    "place": "PUC-SP · Consolação",
+    "by": "por PUC Tech"
+  },
+  "map": {
+    "zoomIn": "Aproximar",
+    "zoomOut": "Afastar",
+    "recenter": "Centralizar mapa",
+    "controls": "Controles do mapa"
+  }
 }

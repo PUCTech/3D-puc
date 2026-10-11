@@ -1,4 +1,4 @@
-import { useMemo, useRef } from 'react';
+import { useMemo, useRef, useState } from 'react';
 import * as THREE from 'three';
 import { Edges, Html } from '@react-three/drei';
 import { useFrame, type ThreeEvent } from '@react-three/fiber';
@@ -41,7 +41,8 @@ export function Building({ building, selected, dimmed, near, locale, onSelect }:
   const roofShrubs = useMemo(() => (style.roofGarden ? shrubSpots(building.footprint).map((at) => ({ kind: 'dracaena' as const, at })) : []), [style.roofGarden, building.footprint]);
   const [cx, cz] = footprintCenter(building);
   const opacity = dimmed ? 0.45 : 1;
-  const showLabel = selected || (!dimmed && (near || height >= LANDMARK_HEIGHT));
+  const [hovered, setHovered] = useState(false);
+  const showLabel = selected || hovered || (!dimmed && (near || height >= LANDMARK_HEIGHT));
 
   return (
     <group position-y={base}>
@@ -50,8 +51,15 @@ export function Building({ building, selected, dimmed, near, locale, onSelect }:
         castShadow
         receiveShadow
         onClick={(e: ThreeEvent<MouseEvent>) => { e.stopPropagation(); if (e.delta < 4) onSelect(); }}
-        onPointerOver={() => (document.body.style.cursor = 'pointer')}
-        onPointerOut={() => (document.body.style.cursor = '')}
+        onPointerOver={(e) => {
+          e.stopPropagation();
+          setHovered(true);
+          document.body.style.cursor = 'pointer';
+        }}
+        onPointerOut={() => {
+          setHovered(false);
+          document.body.style.cursor = '';
+        }}
       >
         {/* ExtrudeGeometry groups: 0 = caps (roof/floor), 1 = walls */}
         <meshToonMaterial attach="material-0" color={selected ? SELECTED_ROOF : roofColor} gradientMap={toonRamp} transparent opacity={opacity} />
@@ -77,7 +85,7 @@ export function Building({ building, selected, dimmed, near, locale, onSelect }:
       <Html position={[cx, height + 3, cz]} center zIndexRange={[10, 0]} className="pointer-events-none select-none">
         <span
           data-testid="building-label"
-          className={`block whitespace-nowrap font-mono text-[10px] uppercase tracking-widest transition-opacity duration-300 ${selected ? 'text-yellow-200' : 'text-white'} [text-shadow:1px_1px_0_#000] ${showLabel ? 'opacity-100' : 'opacity-0'}`}
+          className={`pixel-chip block whitespace-nowrap px-1.5 text-[13px] transition-opacity duration-200 ${selected ? 'bg-sun text-ink' : hovered ? 'bg-ice text-navy' : 'bg-paper text-navy'} ${showLabel ? 'opacity-100' : 'opacity-0'}`}
         >
           {building.shortName ?? building.name[locale]}
         </span>

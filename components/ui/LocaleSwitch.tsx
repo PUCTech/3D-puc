@@ -8,8 +8,8 @@ export function LocaleSwitch() {
   const qs = useSearchParams().toString();
   return (
     // Plain <a>: a full load switches the locale's messages; keeps ?b= so the selection survives.
-    <a href={`/${other}${qs ? `?${qs}` : ''}`} aria-label={t('switchLabel')} hrefLang={other} className="rounded-xl border border-deep bg-night/85 px-3 py-2.5 font-mono text-xs uppercase tracking-wider text-ice backdrop-blur hover:border-ice">
-      {other.toUpperCase()}
+    <a href={`/${other}${qs ? `?${qs}` : ''}`} aria-label={t('switchLabel')} hrefLang={other} className="pixel-btn pixel-btn-paper grid h-11 place-items-center px-3 text-base uppercase">
+      {other}
     </a>
   );
 }

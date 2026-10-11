@@ -21,18 +21,21 @@ export function SearchBar({ onPick }: { onPick: (id: string) => void }) {
         placeholder={t('placeholder')}
         value={q}
         onChange={(e) => setQ(e.target.value)}
-        onKeyDown={(e) => e.key === 'Enter' && results[0] && pick(results[0].id)}
-        className="h-11 w-full rounded-xl border border-deep bg-night/85 px-4 text-sm text-paper placeholder:text-ice/50 backdrop-blur focus:border-ice focus:outline-none"
+        onKeyDown={(e) => {
+          if (e.key === 'Enter' && results[0]) pick(results[0].id);
+          if (e.key === 'Escape') setQ('');
+        }}
+        className="pixel-box h-11 w-full px-3 text-sm text-ink placeholder:text-ink/45 focus:outline-none focus-visible:outline-3 focus-visible:outline-puc"
       />
       <p role="status" className="sr-only">
         {q.trim() && (results.length ? t('count', { count: results.length }) : t('noResults'))}
       </p>
       {q.trim() && (
-        <ul className="absolute inset-x-0 top-12 max-h-[60vh] overflow-y-auto rounded-xl border border-deep bg-night/95 backdrop-blur">
-          {results.length === 0 && <li className="px-4 py-3 text-sm text-ice/60">{t('noResults')}</li>}
+        <ul className="pixel-box absolute inset-x-0 top-[calc(100%+8px)] z-30 max-h-[60vh] overflow-y-auto">
+          {results.length === 0 && <li className="px-3 py-3 text-sm text-ink/60">{t('noResults')}</li>}
           {results.map((b) => (
-            <li key={b.id}>
-              <button onClick={() => pick(b.id)} className="w-full px-4 py-3 text-left text-sm hover:bg-deep focus:bg-deep focus:outline-none">
+            <li key={b.id} className="border-b-2 border-ink/10 last:border-b-0">
+              <button onClick={() => pick(b.id)} className="w-full px-3 py-2.5 text-left font-pixel text-base text-navy hover:bg-ice focus:bg-ice focus:outline-none">
                 {b.name[locale]}
               </button>
             </li>
