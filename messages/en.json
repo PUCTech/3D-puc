@@ -23,14 +23,27 @@
     "level": "Floor {level}"
   },
   "list": {
-    "open": "Building list",
+    "open": "Buildings",
     "title": "Buildings",
-    "close": "Close list"
+    "close": "Close list",
+    "back": "Back",
+    "hint": "Pick a building on the map or in the list"
   },
   "locale": {
     "switch": "Português",
     "switchLabel": "Ver em português"
   },
   "loading": "Loading map…",
-  "noWebgl": "Your browser doesn't support 3D. Use the building list."
+  "noWebgl": "Your browser doesn't support 3D. Use the building list.",
+  "brand": {
+    "title": "Campus map",
+    "place": "PUC-SP · Consolação",
+    "by": "by PUC Tech"
+  },
+  "map": {
+    "zoomIn": "Zoom in",
+    "zoomOut": "Zoom out",
+    "recenter": "Recenter map",
+    "controls": "Map controls"
+  }
 }

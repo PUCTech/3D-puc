@@ -1,18 +1,64 @@
 @import "tailwindcss";
 
+/* Pixel HUD design tokens. PUC Tech blue (puc / navy) carries the brand. */
 @theme inline {
-  --color-ink: #020d2b;
-  --color-night: #081a3e;
-  --color-deep: #143966;
-  --color-accent: #2b6fac;
+  --color-ink: #1b1b24;
+  --color-paper: #fdf6e3;
+  --color-puc: #2b6fac;
+  --color-navy: #143966;
   --color-ice: #bae4fe;
-  --color-paper: #f0f4f9;
+  --color-sun: #ffd166;
+  --color-ground: #b7ab98;
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
+  --font-pixel: var(--font-pixelify);
 }
 
 html, body {
   height: 100%;
-  background: var(--color-ink);
-  color: var(--color-paper);
+  background: var(--color-ground);
+  color: var(--color-ink);
 }
+
+@layer components {
+  /* Square panel, thick ink outline, hard drop shadow. */
+  .pixel-box {
+    background: var(--color-paper);
+    border: 3px solid var(--color-ink);
+    box-shadow: 4px 4px 0 var(--color-ink);
+  }
+  /* Button that "presses in": the shadow collapses on click. */
+  .pixel-btn {
+    font-family: var(--font-pixel);
+    border: 3px solid var(--color-ink);
+    box-shadow: 3px 3px 0 var(--color-ink);
+    background: var(--color-puc);
+    color: #fff;
+    transition: transform 60ms, box-shadow 60ms, background-color 120ms;
+  }
+  .pixel-btn:hover { background: var(--color-navy); }
+  .pixel-btn:active { transform: translate(3px, 3px); box-shadow: 0 0 0 var(--color-ink); }
+  .pixel-btn-paper { background: var(--color-paper); color: var(--color-navy); }
+  .pixel-btn-paper:hover { background: var(--color-ice); }
+  /* Small labelled chip: tags and map labels. */
+  .pixel-chip {
+    font-family: var(--font-pixel);
+    border: 2px solid var(--color-ink);
+    box-shadow: 2px 2px 0 var(--color-ink);
+  }
+  .pixel-row {
+    border: 2px solid var(--color-ink);
+    background: #fff;
+  }
+}
+
+/* Thick, square keyboard focus everywhere. In the base layer so utilities like outline-none still win. */
+@layer base {
+  :focus-visible {
+    outline: 3px solid var(--color-puc);
+    outline-offset: 2px;
+  }
+}
+
+@keyframes pixel-blink { 50% { opacity: 0; } }
+.pixel-blink { animation: pixel-blink 1s steps(1) infinite; }

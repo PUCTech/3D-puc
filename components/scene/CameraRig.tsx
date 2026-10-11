@@ -2,6 +2,7 @@ import { useEffect, useRef } from 'react';
 import * as THREE from 'three';
 import { CameraControls, CameraControlsImpl } from '@react-three/drei';
 import { campus, buildingHeight, findBuilding, type Building } from '@/lib/campus';
+import { CAMERA_EVENT, type CameraCommand } from '@/components/ui/MapControls';
 
 const { ACTION } = CameraControlsImpl;
 // Fixed isometric view, like a MOBA camera: pan and zoom only, no rotation.
@@ -29,6 +30,24 @@ export function CameraRig({ selectedId }: { selectedId: string | null }) {
     const smooth = !window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     const b = findBuilding(selectedId);
     controls.fitToSphere(b ? sphereOf([b]) : CAMPUS_SPHERE, smooth);
+  }, [selectedId]);
+
+  // Zoom / recenter buttons (MapControls) talk to the camera through a window event.
+  useEffect(() => {
+    const onCommand = (e: Event) => {
+      const controls = ref.current;
+      if (!controls) return;
+      const smooth = !window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      const command = (e as CustomEvent<CameraCommand>).detail;
+      if (command === 'in') controls.zoomTo(controls.camera.zoom * 1.5, smooth);
+      else if (command === 'out') controls.zoomTo(controls.camera.zoom / 1.5, smooth);
+      else {
+        const b = findBuilding(selectedId);
+        controls.fitToSphere(b ? sphereOf([b]) : CAMPUS_SPHERE, smooth);
+      }
+    };
+    window.addEventListener(CAMERA_EVENT, onCommand);
+    return () => window.removeEventListener(CAMERA_EVENT, onCommand);
   }, [selectedId]);
   return (
     <CameraControls
