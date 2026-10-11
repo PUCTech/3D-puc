@@ -3,6 +3,7 @@ import * as THREE from 'three';
 import { campus } from '@/lib/campus';
 import { extrude, mergeGeometries } from './geometry';
 import { toonRamp, wallTexture } from './pixel';
+import { hideOccluders, tagObject } from './occlusion';
 
 // Muted concrete tones seen behind the campus in every photo (03, 07, tour 04, Descubra Sampa gate):
 // grey, off-white and beige towers. Per-building colors are still not individually known.
@@ -25,7 +26,9 @@ export function City() {
       }
       g.setAttribute('color', new THREE.BufferAttribute(colors, 3));
       g.clearGroups();
-      return g;
+      const xs = c.footprint.map((q) => q[0]), zs = c.footprint.map((q) => q[1]);
+      const [x0, x1, z0, z1] = [Math.min(...xs), Math.max(...xs), Math.min(...zs), Math.max(...zs)];
+      return tagObject(g, (x0 + x1) / 2, (z0 + z1) / 2, Math.hypot(x1 - x0, z1 - z0) / 2, c.height);
     });
     return parts.length ? mergeGeometries(parts) : null;
   }, []);
@@ -33,7 +36,7 @@ export function City() {
   if (!geometry) return null;
   return (
     <mesh geometry={geometry} castShadow receiveShadow>
-      <meshToonMaterial vertexColors map={walls} gradientMap={toonRamp} />
+      <meshToonMaterial vertexColors map={walls} gradientMap={toonRamp} onBeforeCompile={hideOccluders} />
     </mesh>
   );
 }

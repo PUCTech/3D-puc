@@ -79,5 +79,16 @@
     "label": "Level",
     "street": "Street",
     "lower": "Lower level"
+  },
+  "history": {
+    "title": "History",
+    "open": "See history",
+    "close": "Close history",
+    "sources": "Sources",
+    "site": "History of the site",
+    "facts": "Trivia",
+    "thisFloor": "This floor",
+    "siteLabel": "Before the campus",
+    "closePhoto": "Close photo"
   }
 }
