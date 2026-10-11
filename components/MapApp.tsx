@@ -14,6 +14,7 @@ import { BuildingDetails } from './ui/BuildingDetails';
 import { MapControls } from './ui/MapControls';
 import { useIsDesktop } from './ui/useIsDesktop';
 import { LevelToggle } from './ui/LevelToggle';
+import { PucTechCredit } from './ui/PucTechCredit';
 
 function Loading() {
   const t = useTranslations();
@@ -132,7 +133,7 @@ export function MapApp() {
               <BuildingList onPick={select} inline />
             )}
           </div>
-          <footer className="border-t-3 border-ink bg-ice/40 px-5 py-2 font-display text-[13px] text-navy/70">{t('brand.by')}</footer>
+          <PucTechCredit className="border-t-3 border-ink" />
         </aside>
         {webgl && <MapControls />}
         {webgl && <LevelToggle lower={lower} onChange={setLower} className="fixed right-5 top-5 z-20" />}
