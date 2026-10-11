@@ -393,3 +393,11 @@ Frames sampled every 2 s.
 - Gardens now take a `depth`, to sit on the sunken level.
 
 **Faded buildings** drop to 20% opacity when something else is selected. Prédio 2 blocks the court from the fixed camera, so this lets the court read through.
+
+## Lower-level view and the Prédio 3 roof (user)
+- **Prédio 3:** flat dark roof.
+- **New STREET / LOWER toggle** (`?nivel=inferior`). It's on by default when a basement floor is picked.
+  - **Removes:** street-level-only buildings (Prédio 1, the Auditório), the patio and gardens, canopies, paving, streets, street furniture and the street fence.
+  - **Ground:** drops to the lower level, and the city shifts down with it.
+  - **Prédio 2:** opens at Subsolo 1 with its rooms, drawn normally (no X-ray needed).
+  - **Shows on one plane:** the court, DTI, Prédio 3, the lower woods and the basement.

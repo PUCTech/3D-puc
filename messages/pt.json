@@ -71,5 +71,10 @@
     "entrance": "Entrada",
     "bar": "Copa",
     "canteen": "Cantina"
+  },
+  "level": {
+    "label": "Nível",
+    "street": "Rua",
+    "lower": "Nível inferior"
   }
 }

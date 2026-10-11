@@ -431,7 +431,7 @@
     "wall": "#f1f0ec",
     "roof": "#4e5257",
     "windows": "pane",
-    "roofShape": "hip"
+    "roofShape": "flat"
    },
    "baseHeight": -3.4
   },

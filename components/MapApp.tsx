@@ -13,6 +13,7 @@ import { SceneErrorBoundary } from './SceneErrorBoundary';
 import { BuildingDetails } from './ui/BuildingDetails';
 import { MapControls } from './ui/MapControls';
 import { useIsDesktop } from './ui/useIsDesktop';
+import { LevelToggle } from './ui/LevelToggle';
 
 function Loading() {
   const t = useTranslations();
@@ -60,6 +61,18 @@ export function MapApp() {
     setListOpen(false);
     router.push(id ? `${pathname}?b=${encodeURIComponent(id)}` : pathname, { scroll: false });
   };
+  // Lower-level view: ?nivel=inferior, or implied by picking a basement floor.
+  const lower = params.get('nivel') === 'inferior' || (selectedFloor !== null && selectedFloor < 0);
+  const setLower = (on: boolean) => {
+    const q = new URLSearchParams(params.toString());
+    if (on) q.set('nivel', 'inferior');
+    else {
+      q.delete('nivel');
+      if (Number(q.get('f')) < 0) q.delete('f'); // leaving the lower level also leaves a basement floor
+    }
+    const s = q.toString();
+    router.push(s ? `${pathname}?${s}` : pathname, { scroll: false });
+  };
   const selectFloor = (level: number | null) => {
     if (!selected) return;
     const b = `?b=${encodeURIComponent(selected.id)}`;
@@ -79,7 +92,7 @@ export function MapApp() {
 
   const scene = webgl ? (
     <SceneErrorBoundary onError={() => setSceneFailed(true)}>
-      <CampusScene selectedId={selected?.id ?? null} selectedFloor={selectedFloor} bottomInset={isDesktop || !selected ? 0 : selectedFloor !== null ? 0.42 : 0.2} locale={locale} onSelect={select} />
+      <CampusScene selectedId={selected?.id ?? null} selectedFloor={selectedFloor} lower={lower} bottomInset={isDesktop || !selected ? 0 : selectedFloor !== null ? 0.42 : 0.2} locale={locale} onSelect={select} />
     </SceneErrorBoundary>
   ) : (
     <p role="status" className="grid h-full place-items-center p-6 text-center font-display text-lg text-navy">
@@ -118,6 +131,7 @@ export function MapApp() {
           <footer className="border-t-3 border-ink bg-ice/40 px-5 py-2 font-display text-[13px] text-navy/70">{t('brand.by')}</footer>
         </aside>
         {webgl && <MapControls />}
+        {webgl && <LevelToggle lower={lower} onChange={setLower} className="fixed right-5 top-5 z-20" />}
       </main>
     );
 
@@ -139,6 +153,7 @@ export function MapApp() {
           <LocaleSwitch />
         </div>
       </div>
+      {webgl && !listOpen && <LevelToggle lower={lower} onChange={setLower} className="fixed left-3 top-[4.25rem] z-10" />}
       {(listOpen || !webgl) && <BuildingList onPick={select} onClose={webgl ? () => setListOpen(false) : undefined} />}
       {selected && <BuildingSheet key={selected.id} building={selected} floor={selectedFloor} onFloor={selectFloor} onClose={() => select(null)} />}
     </main>
