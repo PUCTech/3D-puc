@@ -1,4 +1,4 @@
-import type { Metadata } from 'next';
+import type { Metadata, Viewport } from 'next';
 import { Archivo_Narrow, Geist, Geist_Mono } from 'next/font/google';
 import { notFound } from 'next/navigation';
 import { NextIntlClientProvider, hasLocale } from 'next-intl';
@@ -12,11 +12,14 @@ const mono = Geist_Mono({ variable: '--font-geist-mono', subsets: ['latin'] });
 const sign = Archivo_Narrow({ variable: '--font-sign', subsets: ['latin'], weight: ['700'] });
 
 export const dynamicParams = false;
+// viewport-fit=cover: the map runs under the notch / home bar; the UI pads itself with env(safe-area-inset-*).
+export const viewport: Viewport = { width: 'device-width', initialScale: 1, viewportFit: 'cover', themeColor: '#143966' };
 export const generateStaticParams = () => routing.locales.map((locale) => ({ locale }));
 
 export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }): Promise<Metadata> {
   const t = await getTranslations({ locale: (await params).locale, namespace: 'meta' });
-  return { title: t('title'), description: t('description') };
+  // appleWebApp: from the Home Screen, iOS opens it full screen with the map under a translucent status bar.
+  return { title: t('title'), description: t('description'), appleWebApp: { capable: true, title: 'Mapa PUC', statusBarStyle: 'black-translucent' } };
 }
 
 export default async function LocaleLayout({ children, params }: { children: React.ReactNode; params: Promise<{ locale: string }> }) {

@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from 'react';
+import { Label } from './Label';
 import * as THREE from 'three';
-import { Html } from '@react-three/drei';
 import { campus, type Point } from '@/lib/campus';
 import { mergeGeometries, ribbons } from './geometry';
 import { barsTexture, toonRamp } from './pixel';
@@ -119,6 +119,7 @@ export function Edge() {
   const walls = useMemo(() => (campus.barriers ?? []).filter((b) => b.kind === 'wall').map((b) => barrier(b.path, b.height, 0.4)), []);
   const fences = useMemo(() => (campus.barriers ?? []).filter((b) => b.kind !== 'wall').map((b) => barrier(b.path, b.height, 0.08)), []);
   const entrance = campus.entrance;
+  const [narrow] = useState(() => window.matchMedia('(max-width: 639px)').matches);
   const walk = useMemo(() => (entrance ? ribbons([entrance.path], 3.5, 0.045) : null), [entrance]);
   return (
     <>
@@ -146,12 +147,12 @@ export function Edge() {
             </mesh>
           )}
           <Gatehouse at={entrance.at} along={entrance.along} />
-          <Html position={[entrance.at[0], 6.5, entrance.at[1]]} center zIndexRange={[10, 0]} className="pointer-events-none select-none">
-            {/* white plaque with dark lettering, as on the real gate (Descubra Sampa photo) */}
-            <span className="block whitespace-nowrap rounded-sm border border-[#555] bg-[#f7f6f1] px-1.5 py-0.5 font-display text-[13px] uppercase tracking-wider text-[#2a2a2a] shadow-[2px_2px_0_#000]">
-              {entrance.label}
-            </span>
-          </Html>
+          {/* white plaque with dark lettering, as on the real gate (Descubra Sampa photo); phones show only "PUC-SP" */}
+          <Label
+            position={[entrance.at[0], 6.5, entrance.at[1]]}
+            text={narrow ? entrance.label.split(' · ')[0] : entrance.label}
+            className="block whitespace-nowrap rounded-sm border border-[#555] bg-[#f7f6f1] px-1.5 py-0.5 font-display text-[13px] uppercase tracking-wider text-[#2a2a2a] shadow-[2px_2px_0_#000]"
+          />
         </group>
       )}
     </>

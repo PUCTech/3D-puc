@@ -1,6 +1,7 @@
 import { useMemo, useRef, useState } from 'react';
+import { Label } from './Label';
 import * as THREE from 'three';
-import { Edges, Html } from '@react-three/drei';
+import { Edges } from '@react-three/drei';
 import { useFrame, type ThreeEvent } from '@react-three/fiber';
 import { basementDepth, buildingHeight, floorBase, footprintCenter, type Building as B, type Locale, type Point } from '@/lib/campus';
 import { INK_WIDTH, toonRamp, wallTexture } from './pixel';
@@ -142,15 +143,12 @@ export function Building({ building, selected, dimmed, near, locale, floorLevel,
           </mesh>
         </group>
       ))}
-      {/* Always mounted, hidden with opacity: unmounting drei <Html> mid-render triggers React warnings */}
-      <Html position={[cx, height + 3, cz]} center zIndexRange={[10, 0]} className="pointer-events-none select-none">
-        <span
-          data-testid="building-label"
-          className={`pixel-chip block whitespace-nowrap px-1.5 text-[13px] transition-opacity duration-200 ${selected ? 'bg-sun text-ink' : hovered ? 'bg-ice text-navy' : 'bg-paper text-navy'} ${showLabel ? 'opacity-100' : 'opacity-0'}`}
-        >
-          {building.shortName ?? building.name[locale]}
-        </span>
-      </Html>
+      <Label
+        position={[cx, height + 3, cz]}
+        testId="building-label"
+        text={building.shortName ?? building.name[locale]}
+        className={`pixel-chip block whitespace-nowrap px-1.5 text-[13px] transition-opacity duration-200 ${selected ? 'bg-sun text-ink' : hovered ? 'bg-ice text-navy' : 'bg-paper text-navy'} ${showLabel ? 'opacity-100' : 'opacity-0'}`}
+      />
       {selected && building.entrances?.map(([x, z], i) => <Entrance key={i} x={x} z={z} />)}
     </group>
   );
@@ -158,9 +156,10 @@ export function Building({ building, selected, dimmed, near, locale, floorLevel,
 
 function Entrance({ x, z }: { x: number; z: number }) {
   const ref = useRef<THREE.Mesh>(null);
-  useFrame(({ clock }) => {
+  useFrame(({ clock, invalidate }) => {
     const s = 1 + 0.3 * Math.sin(clock.elapsedTime * 3);
     ref.current?.scale.set(s, s, s);
+    invalidate(); // the scene renders on demand; this pulse asks for the next frame itself
   });
   return (
     <mesh ref={ref} position={[x, 0.05, z]} rotation-x={-Math.PI / 2}>

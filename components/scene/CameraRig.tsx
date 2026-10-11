@@ -23,11 +23,61 @@ const sphereOf = (buildings: Building[]) => {
 };
 const CAMPUS_SPHERE = sphereOf(campus.buildings);
 
-// bottomInset: share of the screen covered by a bottom sheet (phones); the selection is framed above it.
-// leftInset: CSS px covered by side panels (desktop); the selection is framed in the map area right of them.
-export function CameraRig({ selectedId, bottomInset, leftInset }: { selectedId: string | null; bottomInset: number; leftInset: number }) {
+// leftInset / topInset / bottomInset: CSS px covered by side panels (desktop) or the top bar and bottom sheet (phones).
+// The selection is fitted into the uncovered rectangle and centered in it.
+export function CameraRig({ selectedId, bottomInset, leftInset, topInset }: { selectedId: string | null; bottomInset: number; leftInset: number; topInset: number }) {
   const ref = useRef<CameraControls>(null);
   const size = useThree((s) => s.size);
+  const gl = useThree((s) => s.gl);
+  const invalidate = useThree((s) => s.invalidate);
+
+  // Two-finger pinch like any maps app: zoom follows the finger distance 1:1 and the point between the fingers
+  // stays under them (moving both fingers pans). camera-controls' own pinch is an eased step per move, which feels
+  // slow and floaty, so its two-finger action is off (touches.two = NONE below) and this handles it instead.
+  useEffect(() => {
+    const el = gl.domElement;
+    const fingers = new Map<number, { x: number; y: number }>();
+    let last: { dist: number; mx: number; my: number } | null = null;
+    const pinch = () => {
+      const [a, b] = [...fingers.values()];
+      const r = el.getBoundingClientRect();
+      // midpoint relative to the canvas center, in CSS px (x right, y down)
+      return { dist: Math.hypot(a.x - b.x, a.y - b.y), mx: (a.x + b.x) / 2 - r.left - r.width / 2, my: (a.y + b.y) / 2 - r.top - r.height / 2 };
+    };
+    const down = (e: PointerEvent) => {
+      if (e.pointerType !== 'touch') return;
+      fingers.set(e.pointerId, { x: e.clientX, y: e.clientY });
+      if (fingers.size === 2) last = pinch();
+    };
+    const move = (e: PointerEvent) => {
+      if (!fingers.has(e.pointerId)) return;
+      fingers.set(e.pointerId, { x: e.clientX, y: e.clientY });
+      const controls = ref.current;
+      if (fingers.size !== 2 || !last || !controls) return;
+      const now = pinch();
+      const z0 = controls.camera.zoom;
+      const z1 = Math.min(controls.maxZoom, Math.max(controls.minZoom, (z0 * now.dist) / last.dist));
+      controls.zoomTo(z1, false);
+      // Keep the world point that was under the old midpoint under the new one (truck moves in screen-oriented meters).
+      controls.truck(last.mx / z0 - now.mx / z1, last.my / z0 - now.my / z1, false);
+      last = now;
+      invalidate(); // the scene renders on demand
+    };
+    const up = (e: PointerEvent) => {
+      fingers.delete(e.pointerId);
+      last = fingers.size === 2 ? pinch() : null;
+    };
+    el.addEventListener('pointerdown', down);
+    window.addEventListener('pointermove', move);
+    window.addEventListener('pointerup', up);
+    window.addEventListener('pointercancel', up);
+    return () => {
+      el.removeEventListener('pointerdown', down);
+      window.removeEventListener('pointermove', move);
+      window.removeEventListener('pointerup', up);
+      window.removeEventListener('pointercancel', up);
+    };
+  }, [gl, invalidate]);
   // Shared by selection changes and the recenter button.
   const frame = useCallback(
     (smooth: boolean) => {
@@ -35,19 +85,14 @@ export function CameraRig({ selectedId, bottomInset, leftInset }: { selectedId: 
       if (!controls) return;
       const b = findBuilding(selectedId);
       const sphere = b ? sphereOf([b]) : CAMPUS_SPHERE;
-      if (leftInset) {
-        // Fit the sphere into the uncovered area, then slide the camera left (negative x) by half the panels' width.
-        const zoom = Math.min(size.width - leftInset, size.height) / (2 * sphere.radius);
-        controls.moveTo(sphere.center.x, sphere.center.y, sphere.center.z, smooth);
-        controls.zoomTo(zoom, smooth);
-        controls.setFocalOffset(-leftInset / 2 / zoom, 0, 0, smooth);
-        return;
-      }
-      controls.fitToSphere(sphere, smooth);
-      // Positive y focal offset shifts the view up past the target, so the object sits higher on screen (above the sheet).
-      controls.setFocalOffset(0, b ? sphere.radius * bottomInset * 1.8 : 0, 0, smooth);
+        // Orthographic zoom is CSS px per meter: fit the sphere's diameter into the uncovered rectangle.
+      const zoom = Math.max(1.5, Math.min(size.width - leftInset, size.height - bottomInset - topInset) / (2 * sphere.radius));
+      controls.moveTo(sphere.center.x, sphere.center.y, sphere.center.z, smooth);
+      controls.zoomTo(zoom, smooth);
+      // Shift by half the covered size (in meters at this zoom): -x moves the selection right, +y moves it up.
+      controls.setFocalOffset(-leftInset / 2 / zoom, (bottomInset - topInset) / 2 / zoom, 0, smooth);
     },
-    [selectedId, bottomInset, leftInset, size.width, size.height],
+    [selectedId, bottomInset, leftInset, topInset, size.width, size.height],
   );
   useEffect(() => {
     frame(!window.matchMedia('(prefers-reduced-motion: reduce)').matches);
@@ -80,7 +125,7 @@ export function CameraRig({ selectedId, bottomInset, leftInset }: { selectedId: 
       dollyToCursor
       // SCREEN_PAN: vertical drags slide along the ground instead of lifting the view
       mouseButtons={{ left: ACTION.SCREEN_PAN, middle: ACTION.NONE, right: ACTION.SCREEN_PAN, wheel: ACTION.ZOOM }}
-      touches={{ one: ACTION.TOUCH_SCREEN_PAN, two: ACTION.TOUCH_ZOOM_TRUCK, three: ACTION.NONE }}
+      touches={{ one: ACTION.TOUCH_SCREEN_PAN, two: ACTION.NONE, three: ACTION.NONE }}
     />
   );
 }

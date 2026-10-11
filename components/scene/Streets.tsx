@@ -1,5 +1,5 @@
 import { useMemo } from 'react';
-import { Html } from '@react-three/drei';
+import { Label } from './Label';
 import { campus, type Point } from '@/lib/campus';
 import { ribbons } from './geometry';
 import { pointInPolygon } from './Sunken';
@@ -36,9 +36,12 @@ export function Streets() {
         const s = campus.streets[i];
         const mid = s.path[Math.floor(s.path.length / 2)];
         return (
-          <Html key={i} position={[mid[0], 0.5, mid[1]]} center zIndexRange={[10, 0]} className="pointer-events-none select-none whitespace-nowrap font-display text-[13px] uppercase tracking-wider text-white [text-shadow:1px_1px_0_#1b1b24,-1px_-1px_0_#1b1b24,1px_-1px_0_#1b1b24,-1px_1px_0_#1b1b24]">
-            {s.name}
-          </Html>
+          <Label
+            key={i}
+            position={[mid[0], 0.5, mid[1]]}
+            text={s.name}
+            className="whitespace-nowrap font-display text-[13px] uppercase tracking-wider text-white [text-shadow:1px_1px_0_#1b1b24,-1px_-1px_0_#1b1b24,1px_-1px_0_#1b1b24,-1px_1px_0_#1b1b24]"
+          />
         );
       })}
     </>
