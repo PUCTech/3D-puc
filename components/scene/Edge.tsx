@@ -29,7 +29,7 @@ function Pillar({ at: [x, z], height = 3 }: { at: Point; height?: number }) {
   );
 }
 
-// Main gate (Descubra Sampa photo): pale-yellow gatehouses with cobogó lattice inserts flanking a white metal gate.
+// Main gate (Street View, Jan 2024): white gatehouses with cobogó lattice inserts flanking a white metal gate.
 const GATE = { width: 3, house: 4, depth: 3, height: 2.8 };
 function Gatehouse({ at: [x, z], along: [ax, az] }: { at: Point; along: Point }) {
   const lattice = useMemo(() => {
@@ -45,12 +45,12 @@ function Gatehouse({ at: [x, z], along: [ax, az] }: { at: Point; along: Point })
         <group key={u} position-x={u}>
           <mesh position-y={GATE.height / 2} castShadow receiveShadow>
             <boxGeometry args={[GATE.house, GATE.height, GATE.depth]} />
-            <meshToonMaterial color="#e8dba0" gradientMap={toonRamp} />
+            <meshToonMaterial color="#f1efe9" gradientMap={toonRamp} />
           </mesh>
           {/* lattice insert on the street face (+z after rotation is the street side for this gate) */}
           <mesh position={[0, GATE.height * 0.6, -GATE.depth / 2 - 0.02]} rotation-y={Math.PI}>
             <planeGeometry args={[GATE.house * 0.6, GATE.height * 0.4]} />
-            <meshToonMaterial map={lattice} color="#f1e7b8" gradientMap={toonRamp} alphaTest={0.5} transparent side={THREE.DoubleSide} />
+            <meshToonMaterial map={lattice} color="#f4f2ec" gradientMap={toonRamp} alphaTest={0.5} transparent side={THREE.DoubleSide} />
           </mesh>
         </group>
       ))}

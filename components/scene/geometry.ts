@@ -27,9 +27,11 @@ export function blankShortWalls(g: THREE.BufferGeometry, maxLength: number) {
   return g;
 }
 
-// Flat polygon on the ground at height y.
-export function flatPolygon(points: Point[], y: number) {
-  const g = new THREE.ShapeGeometry(shapeOf(points));
+// Flat polygon on the ground at height y, optionally with holes (e.g. where the ground is sunken).
+export function flatPolygon(points: Point[], y: number, holes: Point[][] = []) {
+  const shape = shapeOf(points);
+  for (const h of holes) shape.holes.push(new THREE.Path(h.map(([x, z]) => new THREE.Vector2(x, -z))));
+  const g = new THREE.ShapeGeometry(shape);
   g.rotateX(-Math.PI / 2);
   g.translate(0, y, 0);
   return g;

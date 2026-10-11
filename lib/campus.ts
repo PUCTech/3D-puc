@@ -6,7 +6,8 @@ export type Point = [number, number];
 
 // kind is the room's use from the floor plan (classroom, stair, wc, …); names come from messages by kind.
 export type Room = { id: string; kind?: string; name?: Localized; footprint?: Point[] };
-export type Floor = { level: number; label?: Localized; height: number; rooms: Room[] };
+// estimated: no plan exists for this floor; its rooms are guessed from photos.
+export type Floor = { level: number; label?: Localized; height: number; rooms: Room[]; estimated?: boolean };
 export type Building = {
   id: string;
   osmId?: number;
@@ -23,7 +24,8 @@ export type Building = {
   style?: {
     wall?: string;
     roof?: string;
-    windows?: 'default' | 'shutter-white' | 'shutter-grey' | 'framed' | 'ribbon';
+    windows?: 'default' | 'shutter-white' | 'shutter-grey' | 'framed' | 'ribbon' | 'pane';
+    leanTo?: { from: Point; to: Point; width: number }; // tile lean-to roof along a wall, over a sunken level
     roofShape?: 'flat' | 'eave' | 'gable';
     blankEnds?: number; // walls shorter than this many meters have no windows (end walls of bar blocks)
     roofGarden?: boolean;
@@ -36,6 +38,8 @@ export type Campus = {
   buildings: Building[];
   // Generated site context (import script); optional so hand-written data stays valid.
   boundary?: Point[];
+  // Areas where the ground drops (e.g. the court level east of Prédio 2), depth in meters below street level.
+  sunken?: { polygon: Point[]; depth: number }[];
   areas?: { kind: string; polygon: Point[] }[]; // OSM leisure/landuse inside or near campus, e.g. "pitch", "garden"
   footways?: Point[][];
   context?: { footprint: Point[]; height: number }[]; // neighbouring city buildings
@@ -61,7 +65,12 @@ export const buildingHeight = (b: Building) =>
 
 // Height of the floors below `level` (ground and up): where that floor's slab sits.
 export const floorBase = (b: Building, level: number) =>
-  b.floors.filter((f) => f.level >= 0 && f.level < level).reduce((sum, f) => sum + f.height, 0);
+  level >= 0
+    ? b.floors.filter((f) => f.level >= 0 && f.level < level).reduce((sum, f) => sum + f.height, 0)
+    : -b.floors.filter((f) => f.level >= level && f.level < 0).reduce((sum, f) => sum + f.height, 0);
+
+// How far the building goes below street level (its basement floors).
+export const basementDepth = (b: Building) => b.floors.filter((f) => f.level < 0).reduce((sum, f) => sum + f.height, 0);
 
 export const findBuilding = (id: string | null | undefined, c: Campus = campus) =>
   id ? c.buildings.find((b) => b.id === id) : undefined;

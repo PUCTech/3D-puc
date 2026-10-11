@@ -100,7 +100,7 @@ export function BuildingDetails({ building, floor, onFloor, compact = false, den
                   </li>
                 ))}
               </ul>
-              {!dense && <p className="mt-3 text-xs leading-snug text-ink/55">{t('sheet.planNote')}</p>}
+              {!dense && <p className="mt-3 text-xs leading-snug text-ink/55">{current.estimated ? t('sheet.estimatedNote') : t('sheet.planNote')}</p>}
             </div>
           )}
         </section>

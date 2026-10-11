@@ -316,3 +316,29 @@ Sources: Rino Levi's Instituto Sedes Sapientiae ground and upper floor plans (re
 - The plans don't number rooms, so rooms are labeled by use only.
 - The UI says this is the original 1942 plan and current uses may differ.
 - Room partitions were measured from a 528 px plan, so expect roughly ±1 m.
+
+---
+
+# Terrain and new photos (`docs/consolacao/pictures/`, user-supplied screenshots)
+**Street View, Jan 2024 (gate on Marquês de Paranaguá 111)**
+- Gatehouses are **white**, not yellow (photo 08 / Descubra Sampa were older or warmer-lit). The PUC-SP crest sign sits on the left block's wall, with lattice panels and a white gate.
+- Changed the gatehouse color.
+
+**Prédio 2 corridor, Jul 2025**
+- Red terracotta tile floor along the cobogó.
+- Corridors in the floor view are now terracotta.
+
+**Patio, Oct 2022**
+- Confirms the white undulating canopies on cream columns, the stone path, benches, the palm, white shutters, and the yellow ground floor under the canopy.
+
+**Court, Mar 2018 (looking down on Prédio 2's east side)**
+- Prédio 2's east facade is **white** with large white multi-pane windows and a glass-block panel at the stair. Changed Prédio 2 to white walls with the new `pane` window type. The pink from photo 15 must belong to another face.
+- A **lower level** runs along the east wall under a **red clay-tile lean-to**, opening onto the **green basketball/futsal court**. The ground drops one storey east of Prédio 2 (confirmed by the user).
+
+**Implemented**
+- `sunken` zone, 3.4 m deep, from 16 to 39 m along Prédio 2's east wall and out to 23.5 m. The ground and paving have a hole there, with a lower floor and concrete retaining walls. The OSM pitch drops into it and gets court lines (outline, center line, center circle).
+- Prédio 2 gets **level −1** (3.4 m), extruded below street level. It only shows on the court side.
+- A tile lean-to along the east wall, on posts standing at court level.
+- Basement floor views draw through the ground (X-ray), so the plan reads.
+
+**Estimated:** level −1 rooms (no plan exists: a row of rooms facing the court plus a corridor). The UI says so. The pit's exact extent is estimated from the photo and the court position.

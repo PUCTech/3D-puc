@@ -19,7 +19,8 @@
     "rooms": "Rooms",
     "wholeBuilding": "Show whole building",
     "planNote": "Original 1942 plan (Rino Levi). Current uses may differ.",
-    "showFloor": "Show {floor} on the map"
+    "showFloor": "Show {floor} on the map",
+    "estimatedNote": "This floor’s layout is estimated from photos; there is no plan."
   },
   "floor": {
     "ground": "Ground floor",
