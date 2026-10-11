@@ -1,5 +1,5 @@
 import type { Metadata } from 'next';
-import { Geist, Geist_Mono } from 'next/font/google';
+import { Archivo_Narrow, Geist, Geist_Mono } from 'next/font/google';
 import { notFound } from 'next/navigation';
 import { NextIntlClientProvider, hasLocale } from 'next-intl';
 import { getTranslations, setRequestLocale } from 'next-intl/server';
@@ -8,6 +8,8 @@ import '../globals.css';
 
 const sans = Geist({ variable: '--font-geist-sans', subsets: ['latin'] });
 const mono = Geist_Mono({ variable: '--font-geist-mono', subsets: ['latin'] });
+// Condensed bold for the gate sign's lettering (drawn on a canvas in the 3D scene).
+const sign = Archivo_Narrow({ variable: '--font-sign', subsets: ['latin'], weight: ['700'] });
 
 export const dynamicParams = false;
 export const generateStaticParams = () => routing.locales.map((locale) => ({ locale }));
@@ -22,7 +24,7 @@ export default async function LocaleLayout({ children, params }: { children: Rea
   if (!hasLocale(routing.locales, locale)) notFound();
   setRequestLocale(locale);
   return (
-    <html lang={locale === 'pt' ? 'pt-BR' : 'en'} className={`${sans.variable} ${mono.variable}`}>
+    <html lang={locale === 'pt' ? 'pt-BR' : 'en'} className={`${sans.variable} ${mono.variable} ${sign.variable}`}>
       <body className="font-sans antialiased">
         <NextIntlClientProvider>{children}</NextIntlClientProvider>
       </body>

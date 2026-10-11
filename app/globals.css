@@ -1,4 +1,6 @@
 @import "tailwindcss";
+/* docs/ holds photos and PDFs, not code: keep Tailwind's class scan out of it */
+@source not "../docs";
 
 /* HUD design tokens. PUC Tech blue (puc / navy) carries the brand. Display = Geist Mono (buttons, tags, labels). */
 @theme inline {

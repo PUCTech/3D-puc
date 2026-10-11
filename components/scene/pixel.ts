@@ -87,3 +87,63 @@ export function wallTexture(wall: string, kind: WindowKind = 'default', floorHei
   t.colorSpace = THREE.SRGBColorSpace;
   return t;
 }
+
+// Vertical bars with see-through gaps (use with alphaTest): pedestrian gate, metal fences.
+export function barsTexture(color: string, barsPerMeter: number, width: number) {
+  const c = document.createElement('canvas');
+  c.width = 4;
+  c.height = 4;
+  const g = c.getContext('2d')!;
+  g.fillStyle = color;
+  g.fillRect(0, 0, 1, 4);
+  const t = new THREE.CanvasTexture(c);
+  t.magFilter = t.minFilter = THREE.NearestFilter;
+  t.wrapS = t.wrapT = THREE.RepeatWrapping;
+  t.repeat.set(width * barsPerMeter, 1);
+  t.colorSpace = THREE.SRGBColorSpace;
+  return t;
+}
+
+// The car gate (Street View, Jan 2023): two leaves of black diagonal bars meeting in a chevron, a frame,
+// a centre post and two horizontal rails.
+export function carGateTexture() {
+  const c = document.createElement('canvas');
+  c.width = 128;
+  c.height = 48;
+  const g = c.getContext('2d')!;
+  g.strokeStyle = '#141416';
+  g.lineWidth = 3;
+  g.save();
+  g.beginPath();
+  g.rect(0, 0, 64, 48);
+  g.clip();
+  for (let x = -48; x < 64; x += 10) {
+    g.beginPath();
+    g.moveTo(x, 0);
+    g.lineTo(x + 48, 48);
+    g.stroke();
+  }
+  g.restore();
+  g.save();
+  g.beginPath();
+  g.rect(64, 0, 64, 48);
+  g.clip();
+  for (let x = 64; x < 176; x += 10) {
+    g.beginPath();
+    g.moveTo(x, 0);
+    g.lineTo(x - 48, 48);
+    g.stroke();
+  }
+  g.restore();
+  g.fillStyle = '#141416';
+  g.fillRect(0, 0, 128, 3); // frame
+  g.fillRect(0, 45, 128, 3);
+  g.fillRect(0, 0, 3, 48);
+  g.fillRect(125, 0, 3, 48);
+  g.fillRect(62, 0, 4, 48); // centre post
+  g.fillRect(0, 22, 128, 3); // middle rail
+  const t = new THREE.CanvasTexture(c);
+  t.magFilter = t.minFilter = THREE.NearestFilter;
+  t.colorSpace = THREE.SRGBColorSpace;
+  return t;
+}

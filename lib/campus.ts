@@ -66,6 +66,8 @@ export type Campus = {
   // hand-written main entrance; `along` is the street direction at the gate (the gatehouses sit either side)
   entrance?: { at: Point; along: Point; label: string; path: Point[] };
   streetFences?: { path: Point[]; height: number }[]; // hand-placed from photos: concrete lattice on a low wall
+  streetBars?: { path: Point[]; height: number }[]; // black vertical-bar fence on a low wall (Street View 2023)
+  streetPots?: Point[]; // black sidewalk pots with cycads (Street View 2023)
   streetTrees?: Point[]; // hand-placed from photos: tall slender trees behind the street fence
   // hand-placed small objects from photos; angle = rotation around Y in radians (atan2(dz, dx) of their facing line)
   props?: { kind: 'lamp' | 'totem' | 'bench'; at: Point; angle: number }[];
