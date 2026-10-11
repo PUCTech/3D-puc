@@ -35,7 +35,7 @@ export function SearchBar({ onPick }: { onPick: (id: string) => void }) {
           {results.length === 0 && <li className="px-3 py-3 text-sm text-ink/60">{t('noResults')}</li>}
           {results.map((b) => (
             <li key={b.id} className="border-b-2 border-ink/10 last:border-b-0">
-              <button onClick={() => pick(b.id)} className="w-full px-3 py-2.5 text-left font-pixel text-base text-navy hover:bg-ice focus:bg-ice focus:outline-none">
+              <button onClick={() => pick(b.id)} className="w-full px-3 py-2.5 text-left text-base font-semibold text-navy hover:bg-ice focus:bg-ice focus:outline-none">
                 {b.name[locale]}
               </button>
             </li>

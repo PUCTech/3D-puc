@@ -19,8 +19,8 @@ export function BuildingList({ onPick, onClose, inline = false }: Props) {
             className="pixel-row group flex w-full items-center gap-3 px-3 py-2.5 text-left hover:bg-ice focus:bg-ice focus:outline-none"
           >
             <span className="pixel-chip grid h-7 w-7 shrink-0 place-items-center bg-puc text-[13px] text-white">{i + 1}</span>
-            <span className="flex-1 font-pixel text-lg text-navy">{b.name[locale]}</span>
-            <span className="font-pixel text-navy/40 transition-transform group-hover:translate-x-1">▶</span>
+            <span className="flex-1 text-base font-semibold text-navy">{b.name[locale]}</span>
+            <span className="font-display text-navy/40 transition-transform group-hover:translate-x-1">▶</span>
           </button>
         </li>
       ))}
@@ -29,7 +29,7 @@ export function BuildingList({ onPick, onClose, inline = false }: Props) {
   if (inline)
     return (
       <nav aria-label={t('title')}>
-        <h2 className="font-pixel text-sm uppercase tracking-widest text-ink/55">{t('title')}</h2>
+        <h2 className="font-display text-sm uppercase tracking-widest text-ink/55">{t('title')}</h2>
         <p className="mb-3 mt-1 text-xs text-ink/55">{t('hint')}</p>
         {items}
       </nav>
@@ -37,7 +37,7 @@ export function BuildingList({ onPick, onClose, inline = false }: Props) {
   return (
     <nav data-testid="building-list" aria-label={t('title')} className="pixel-box fixed inset-x-3 top-20 bottom-3 z-20 overflow-y-auto p-4">
       <div className="mb-3 flex items-center justify-between">
-        <h2 className="font-pixel text-xl text-navy">{t('title')}</h2>
+        <h2 className="text-xl font-extrabold tracking-tight text-navy">{t('title')}</h2>
         {onClose && (
           <button onClick={onClose} aria-label={t('close')} className="pixel-btn pixel-btn-paper grid h-9 w-9 place-items-center text-lg leading-none">
             ✕

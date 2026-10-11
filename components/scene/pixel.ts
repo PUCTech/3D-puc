@@ -1,7 +1,7 @@
 import * as THREE from 'three';
 
 // Pixel-art look: render at a fraction of the screen resolution, upscale without smoothing.
-export const PIXEL_DPR = 0.25; // 1 rendered pixel = 4×4 CSS pixels: chunky, dungeon-game pixels
+export const PIXEL_DPR = 0.5; // 1 rendered pixel = 2×2 CSS pixels: pixel-art feel, still crisp enough to read
 export const INK_WIDTH = 1.5 / PIXEL_DPR; // outline ≈ 1.5 rendered pixels: thinner breaks into dashes
 
 // 3-step light ramp: toon shading gives flat faces; bright shadows keep it colorful.

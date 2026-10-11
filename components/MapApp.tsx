@@ -17,7 +17,7 @@ import { useIsDesktop } from './ui/useIsDesktop';
 function Loading() {
   const t = useTranslations();
   return (
-    <div data-testid="scene-loading" className="grid h-full place-items-center font-pixel text-xl text-navy">
+    <div data-testid="scene-loading" className="grid h-full place-items-center font-display text-xl text-navy">
       <span>
         {t('loading')} <span className="pixel-blink">█</span>
       </span>
@@ -45,6 +45,9 @@ export function MapApp() {
   const pathname = usePathname();
   const params = useSearchParams();
   const selected = findBuilding(params.get('b')) ?? null; // unknown ids fall back to the overview
+  // ?f=<level> shows that floor's plan; ignored unless the selected building has that floor
+  const floorParam = params.get('f');
+  const selectedFloor = selected && floorParam !== null && selected.floors.some((f) => String(f.level) === floorParam) ? Number(floorParam) : null;
   // Server render assumes WebGL; the client reads the real value after hydration.
   const webglSupported = useSyncExternalStore(noSubscribe, hasWebGL, () => true);
   const [sceneFailed, setSceneFailed] = useState(false);
@@ -56,6 +59,11 @@ export function MapApp() {
   const select = (id: string | null) => {
     setListOpen(false);
     router.push(id ? `${pathname}?b=${encodeURIComponent(id)}` : pathname, { scroll: false });
+  };
+  const selectFloor = (level: number | null) => {
+    if (!selected) return;
+    const b = `?b=${encodeURIComponent(selected.id)}`;
+    router.push(level === null ? `${pathname}${b}` : `${pathname}${b}&f=${level}`, { scroll: false });
   };
 
   // Escape closes the topmost panel: the list first, then the sheet.
@@ -71,10 +79,10 @@ export function MapApp() {
 
   const scene = webgl ? (
     <SceneErrorBoundary onError={() => setSceneFailed(true)}>
-      <CampusScene selectedId={selected?.id ?? null} locale={locale} onSelect={select} />
+      <CampusScene selectedId={selected?.id ?? null} selectedFloor={selectedFloor} bottomInset={isDesktop || !selected ? 0 : selectedFloor !== null ? 0.42 : 0.2} locale={locale} onSelect={select} />
     </SceneErrorBoundary>
   ) : (
-    <p role="status" className="grid h-full place-items-center p-6 text-center font-pixel text-lg text-navy">
+    <p role="status" className="grid h-full place-items-center p-6 text-center font-display text-lg text-navy">
       {t('noWebgl')}
     </p>
   );
@@ -87,8 +95,8 @@ export function MapApp() {
         <aside className="pixel-box fixed bottom-4 left-4 top-4 z-20 flex w-[23.5rem] flex-col overflow-hidden">
           <header className="flex items-start justify-between gap-3 border-b-3 border-ink bg-navy px-5 py-4 text-white">
             <div>
-              <p className="font-pixel text-[13px] uppercase tracking-widest text-ice">{t('brand.place')}</p>
-              <h1 className="mt-1 font-pixel text-3xl leading-none">{t('brand.title')}</h1>
+              <p className="font-display text-[13px] uppercase tracking-widest text-ice">{t('brand.place')}</p>
+              <h1 className="mt-1 text-3xl font-extrabold leading-none tracking-tight">{t('brand.title')}</h1>
             </div>
             <LocaleSwitch />
           </header>
@@ -101,13 +109,13 @@ export function MapApp() {
                 <button onClick={() => select(null)} className="pixel-btn pixel-btn-paper mb-5 px-3 py-1 text-sm">
                   ◀ {t('list.back')}
                 </button>
-                <BuildingDetails key={selected.id} building={selected} />
+                <BuildingDetails key={selected.id} building={selected} floor={selectedFloor} onFloor={selectFloor} />
               </section>
             ) : (
               <BuildingList onPick={select} inline />
             )}
           </div>
-          <footer className="border-t-3 border-ink bg-ice/40 px-5 py-2 font-pixel text-[13px] text-navy/70">{t('brand.by')}</footer>
+          <footer className="border-t-3 border-ink bg-ice/40 px-5 py-2 font-display text-[13px] text-navy/70">{t('brand.by')}</footer>
         </aside>
         {webgl && <MapControls />}
       </main>
@@ -132,7 +140,7 @@ export function MapApp() {
         </div>
       </div>
       {(listOpen || !webgl) && <BuildingList onPick={select} onClose={webgl ? () => setListOpen(false) : undefined} />}
-      {selected && <BuildingSheet key={selected.id} building={selected} onClose={() => select(null)} />}
+      {selected && <BuildingSheet key={selected.id} building={selected} floor={selectedFloor} onFloor={selectFloor} onClose={() => select(null)} />}
     </main>
   );
 }

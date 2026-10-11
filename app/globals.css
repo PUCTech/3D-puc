@@ -1,6 +1,6 @@
 @import "tailwindcss";
 
-/* Pixel HUD design tokens. PUC Tech blue (puc / navy) carries the brand. */
+/* HUD design tokens. PUC Tech blue (puc / navy) carries the brand. Display = Geist Mono (buttons, tags, labels). */
 @theme inline {
   --color-ink: #1b1b24;
   --color-paper: #fdf6e3;
@@ -11,7 +11,7 @@
   --color-ground: #b7ab98;
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
-  --font-pixel: var(--font-pixelify);
+  --font-display: var(--font-geist-mono);
 }
 
 html, body {
@@ -29,7 +29,8 @@ html, body {
   }
   /* Button that "presses in": the shadow collapses on click. */
   .pixel-btn {
-    font-family: var(--font-pixel);
+    font-family: var(--font-display);
+    font-weight: 600;
     border: 3px solid var(--color-ink);
     box-shadow: 3px 3px 0 var(--color-ink);
     background: var(--color-puc);
@@ -42,7 +43,7 @@ html, body {
   .pixel-btn-paper:hover { background: var(--color-ice); }
   /* Small labelled chip: tags and map labels. */
   .pixel-chip {
-    font-family: var(--font-pixel);
+    font-family: var(--font-display);
     border: 2px solid var(--color-ink);
     box-shadow: 2px 2px 0 var(--color-ink);
   }

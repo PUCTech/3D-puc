@@ -22,15 +22,19 @@ const sphereOf = (buildings: Building[]) => {
 };
 const CAMPUS_SPHERE = sphereOf(campus.buildings);
 
-export function CameraRig({ selectedId }: { selectedId: string | null }) {
+// bottomInset: share of the screen covered by a bottom sheet (phones); the selection is framed above it.
+export function CameraRig({ selectedId, bottomInset }: { selectedId: string | null; bottomInset: number }) {
   const ref = useRef<CameraControls>(null);
   useEffect(() => {
     const controls = ref.current;
     if (!controls) return;
     const smooth = !window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     const b = findBuilding(selectedId);
-    controls.fitToSphere(b ? sphereOf([b]) : CAMPUS_SPHERE, smooth);
-  }, [selectedId]);
+    const sphere = b ? sphereOf([b]) : CAMPUS_SPHERE;
+    controls.fitToSphere(sphere, smooth);
+    // Positive y focal offset shifts the view up past the target, so the object sits higher on screen (above the sheet).
+    controls.setFocalOffset(0, b ? sphere.radius * bottomInset * 1.8 : 0, 0, smooth);
+  }, [selectedId, bottomInset]);
 
   // Zoom / recenter buttons (MapControls) talk to the camera through a window event.
   useEffect(() => {

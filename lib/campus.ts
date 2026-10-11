@@ -4,7 +4,8 @@ export type Locale = 'pt' | 'en';
 export type Localized = Record<Locale, string>;
 export type Point = [number, number];
 
-export type Room = { id: string; name?: Localized; footprint?: Point[] };
+// kind is the room's use from the floor plan (classroom, stair, wc, …); names come from messages by kind.
+export type Room = { id: string; kind?: string; name?: Localized; footprint?: Point[] };
 export type Floor = { level: number; label?: Localized; height: number; rooms: Room[] };
 export type Building = {
   id: string;
@@ -16,6 +17,8 @@ export type Building = {
   baseHeight?: number;
   floors: Floor[];
   entrances?: Point[];
+  // Massing parts when one extrusion is wrong (e.g. the Auditório: two storeys + a one-storey terrace wing).
+  parts?: { footprint: Point[]; height: number; roofGarden?: boolean }[];
   // hand-written look; cobogoWall = the wall segment covered by a cobogó (concrete grid) screen
   style?: {
     wall?: string;
@@ -55,6 +58,10 @@ export const campus = data as unknown as Campus; // JSON infers number[][], not 
 
 export const buildingHeight = (b: Building) =>
   b.floors.filter((f) => f.level >= 0).reduce((sum, f) => sum + f.height, 0);
+
+// Height of the floors below `level` (ground and up): where that floor's slab sits.
+export const floorBase = (b: Building, level: number) =>
+  b.floors.filter((f) => f.level >= 0 && f.level < level).reduce((sum, f) => sum + f.height, 0);
 
 export const findBuilding = (id: string | null | undefined, c: Campus = campus) =>
   id ? c.buildings.find((b) => b.id === id) : undefined;
