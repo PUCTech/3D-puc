@@ -22,7 +22,7 @@ export function BuildingDetails({ building, compact = false }: { building: Build
           <span className="pixel-chip bg-ice px-2 py-0.5 text-[13px] uppercase tracking-wide text-navy">{t('sheet.entrances', { count: building.entrances.length })}</span>
         )}
       </div>
-      <h2 id="building-title" ref={heading} tabIndex={-1} className="mt-3 font-pixel text-3xl font-bold leading-none text-navy focus:outline-none">
+      <h2 id="building-title" ref={heading} tabIndex={-1} className="mt-3 text-3xl font-extrabold leading-none tracking-tight text-navy focus:outline-none">
         {building.name[locale]}
       </h2>
       {building.description && (
@@ -30,14 +30,14 @@ export function BuildingDetails({ building, compact = false }: { building: Build
       )}
       {!compact && (
         <section className="mt-5">
-          <h3 className="font-pixel text-sm uppercase tracking-widest text-ink/55">{t('sheet.floorList')}</h3>
+          <h3 className="font-display text-sm uppercase tracking-widest text-ink/55">{t('sheet.floorList')}</h3>
           <ol className="mt-2 space-y-2">
             {[...building.floors]
               .sort((a, b) => b.level - a.level)
               .map((f, i) => (
                 <li key={f.level} className={`pixel-row flex items-center justify-between px-3 py-2 text-sm ${i === 0 ? 'bg-ice' : ''}`}>
                   <span>{floorName(f)}</span>
-                  <span className="font-pixel text-[13px] text-ink/45">{f.level >= 0 ? `${f.level}` : `S${-f.level}`}</span>
+                  <span className="font-display text-[13px] text-ink/45">{f.level >= 0 ? `${f.level}` : `S${-f.level}`}</span>
                 </li>
               ))}
           </ol>

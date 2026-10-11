@@ -17,7 +17,7 @@ import { useIsDesktop } from './ui/useIsDesktop';
 function Loading() {
   const t = useTranslations();
   return (
-    <div data-testid="scene-loading" className="grid h-full place-items-center font-pixel text-xl text-navy">
+    <div data-testid="scene-loading" className="grid h-full place-items-center font-display text-xl text-navy">
       <span>
         {t('loading')} <span className="pixel-blink">█</span>
       </span>
@@ -74,7 +74,7 @@ export function MapApp() {
       <CampusScene selectedId={selected?.id ?? null} locale={locale} onSelect={select} />
     </SceneErrorBoundary>
   ) : (
-    <p role="status" className="grid h-full place-items-center p-6 text-center font-pixel text-lg text-navy">
+    <p role="status" className="grid h-full place-items-center p-6 text-center font-display text-lg text-navy">
       {t('noWebgl')}
     </p>
   );
@@ -87,8 +87,8 @@ export function MapApp() {
         <aside className="pixel-box fixed bottom-4 left-4 top-4 z-20 flex w-[23.5rem] flex-col overflow-hidden">
           <header className="flex items-start justify-between gap-3 border-b-3 border-ink bg-navy px-5 py-4 text-white">
             <div>
-              <p className="font-pixel text-[13px] uppercase tracking-widest text-ice">{t('brand.place')}</p>
-              <h1 className="mt-1 font-pixel text-3xl leading-none">{t('brand.title')}</h1>
+              <p className="font-display text-[13px] uppercase tracking-widest text-ice">{t('brand.place')}</p>
+              <h1 className="mt-1 text-3xl font-extrabold leading-none tracking-tight">{t('brand.title')}</h1>
             </div>
             <LocaleSwitch />
           </header>
@@ -107,7 +107,7 @@ export function MapApp() {
               <BuildingList onPick={select} inline />
             )}
           </div>
-          <footer className="border-t-3 border-ink bg-ice/40 px-5 py-2 font-pixel text-[13px] text-navy/70">{t('brand.by')}</footer>
+          <footer className="border-t-3 border-ink bg-ice/40 px-5 py-2 font-display text-[13px] text-navy/70">{t('brand.by')}</footer>
         </aside>
         {webgl && <MapControls />}
       </main>
