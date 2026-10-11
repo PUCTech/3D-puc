@@ -429,3 +429,10 @@ Frames sampled every 2 s.
   - selecting a street-level-only building leaves the lower view instead of aiming the camera at a hidden building;
   - turning the lower view on clears such a selection;
   - the lane shows from the top of the slope down.
+
+## Branding
+**Gate sign** (Street View, Jan 2024, `pictures/Screenshot 2026-10-11 at 01.37.51.png`)
+- The left (north) gatehouse's street face carries the PUC-SP wall sign: crest + "PUC-SP" (from `docs/svg/brasao-pucsp-assinatura-alternativa-RGB.png`, downscaled to `public/brand/pucsp-sign.png`), "Campus Marquês de Paranaguá", and "111" in blue.
+- Fix: the gatehouse lattice insert sat on the campus-side face. It's now on the street face of the right block.
+
+**Credit:** a "Feito por / Built by PUC Tech" strip with the league wordmark (`public/brand/puctech.svg`), linking to puctech.com.br. It's at the bottom of the desktop sidebar and of the phone building list.

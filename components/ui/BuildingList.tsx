@@ -1,6 +1,7 @@
 'use client';
 import { useLocale, useTranslations } from 'next-intl';
 import { campus, type Locale } from '@/lib/campus';
+import { PucTechCredit } from './PucTechCredit';
 
 type Props = { onPick: (id: string) => void; onClose?: () => void; inline?: boolean };
 
@@ -35,7 +36,7 @@ export function BuildingList({ onPick, onClose, inline = false }: Props) {
       </nav>
     );
   return (
-    <nav data-testid="building-list" aria-label={t('title')} className="pixel-box fixed inset-x-3 top-20 bottom-3 z-20 overflow-y-auto p-4">
+    <nav data-testid="building-list" aria-label={t('title')} className="pixel-box fixed inset-x-3 top-20 bottom-3 z-20 flex flex-col overflow-y-auto p-4">
       <div className="mb-3 flex items-center justify-between">
         <h2 className="text-xl font-extrabold tracking-tight text-navy">{t('title')}</h2>
         {onClose && (
@@ -45,6 +46,7 @@ export function BuildingList({ onPick, onClose, inline = false }: Props) {
         )}
       </div>
       {items}
+      <PucTechCredit className="-mx-4 -mb-4 mt-auto border-t-3 border-ink" />
     </nav>
   );
 }

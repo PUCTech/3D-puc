@@ -1,4 +1,4 @@
-import { useMemo } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import * as THREE from 'three';
 import { Html } from '@react-three/drei';
 import { campus, type Point } from '@/lib/campus';
@@ -29,16 +29,51 @@ function Pillar({ at: [x, z], height = 3 }: { at: Point; height?: number }) {
   );
 }
 
-// Main gate (Street View, Jan 2024): white gatehouses with cobogó lattice inserts flanking a white metal gate.
+// Main gate (Street View, Jan 2024): white gatehouses flanking a white metal gate. The left (north) block carries the
+// wall sign: PUC-SP crest + "PUC-SP", "Campus Marquês de Paranaguá" and the number 111 in blue (photo 01.37.51).
 const GATE = { width: 3, house: 4, depth: 3, height: 2.8 };
+const SIGN = { width: 3.8, height: 1.45 }; // meters: fills most of the wall, readable at map zoom
+
+// Draws the sign on a canvas once the crest image (public/brand/pucsp-sign.png: crest + "PUC-SP") has loaded.
+function useSignTexture() {
+  const [texture, setTexture] = useState<THREE.CanvasTexture | null>(null);
+  useEffect(() => {
+    const img = new Image();
+    img.src = '/brand/pucsp-sign.png';
+    img.onload = () => {
+      const c = document.createElement('canvas');
+      c.width = 680;
+      c.height = 260;
+      const g = c.getContext('2d')!;
+      const h = 190; // crest + "PUC-SP" block
+      const w = (img.width / img.height) * h;
+      g.drawImage(img, 10, 10, w, h);
+      g.fillStyle = '#1d1d1f';
+      g.font = 'bold 30px "Arial Narrow", Arial, sans-serif';
+      g.fillText('Campus Marquês de Paranaguá', 150, 240);
+      g.fillStyle = '#2b4f9e';
+      g.font = 'bold 64px Arial, sans-serif';
+      g.fillText('111', 570, 140);
+      const t = new THREE.CanvasTexture(c);
+      t.colorSpace = THREE.SRGBColorSpace;
+      t.anisotropy = 4;
+      setTexture(t);
+    };
+  }, []);
+  return texture;
+}
+
 function Gatehouse({ at: [x, z], along: [ax, az] }: { at: Point; along: Point }) {
   const lattice = useMemo(() => {
     const t = latticeTexture();
     t.repeat.set(GATE.house * 2, 4);
     return t;
   }, []);
+  const sign = useSignTexture();
+  // Local frame: x along the street (south = +x), +z toward the street (west).
   const angle = -Math.atan2(az, ax);
   const offset = GATE.width / 2 + GATE.house / 2;
+  const face = GATE.depth / 2 + 0.03;
   return (
     <group position={[x, 0, z]} rotation-y={angle}>
       {[-offset, offset].map((u) => (
@@ -47,11 +82,19 @@ function Gatehouse({ at: [x, z], along: [ax, az] }: { at: Point; along: Point })
             <boxGeometry args={[GATE.house, GATE.height, GATE.depth]} />
             <meshToonMaterial color="#f1efe9" gradientMap={toonRamp} />
           </mesh>
-          {/* lattice insert on the street face (+z after rotation is the street side for this gate) */}
-          <mesh position={[0, GATE.height * 0.6, -GATE.depth / 2 - 0.02]} rotation-y={Math.PI}>
-            <planeGeometry args={[GATE.house * 0.6, GATE.height * 0.4]} />
-            <meshToonMaterial map={lattice} color="#f4f2ec" gradientMap={toonRamp} alphaTest={0.5} transparent side={THREE.DoubleSide} />
-          </mesh>
+          {u < 0 ? (
+            sign && (
+              <mesh position={[0, GATE.height * 0.55, face]}>
+                <planeGeometry args={[SIGN.width, SIGN.height]} />
+                <meshBasicMaterial map={sign} transparent toneMapped={false} />
+              </mesh>
+            )
+          ) : (
+            <mesh position={[0, GATE.height * 0.6, face]}>
+              <planeGeometry args={[GATE.house * 0.6, GATE.height * 0.4]} />
+              <meshToonMaterial map={lattice} color="#f4f2ec" gradientMap={toonRamp} alphaTest={0.5} transparent side={THREE.DoubleSide} />
+            </mesh>
+          )}
         </group>
       ))}
       <mesh position-y={1.2}>
@@ -94,7 +137,7 @@ export function Edge() {
             </mesh>
           )}
           <Gatehouse at={entrance.at} along={entrance.along} />
-          <Html position={[entrance.at[0], 4.2, entrance.at[1]]} center zIndexRange={[10, 0]} className="pointer-events-none select-none">
+          <Html position={[entrance.at[0], 6.5, entrance.at[1]]} center zIndexRange={[10, 0]} className="pointer-events-none select-none">
             {/* white plaque with dark lettering, as on the real gate (Descubra Sampa photo) */}
             <span className="block whitespace-nowrap rounded-sm border border-[#555] bg-[#f7f6f1] px-1.5 py-0.5 font-display text-[13px] uppercase tracking-wider text-[#2a2a2a] shadow-[2px_2px_0_#000]">
               {entrance.label}

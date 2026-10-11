@@ -43,7 +43,9 @@
   "brand": {
     "title": "Campus map",
     "place": "PUC-SP · Consolação",
-    "by": "by PUC Tech"
+    "by": "by PUC Tech",
+    "madeBy": "Built by",
+    "byLabel": "Built by PUC Tech, PUC-SP’s science and technology league (opens their site)"
   },
   "map": {
     "zoomIn": "Zoom in",

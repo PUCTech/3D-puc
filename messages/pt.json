@@ -43,7 +43,9 @@
   "brand": {
     "title": "Mapa do campus",
     "place": "PUC-SP · Consolação",
-    "by": "por PUC Tech"
+    "by": "por PUC Tech",
+    "madeBy": "Feito por",
+    "byLabel": "Feito por PUC Tech, a liga acadêmica de ciência e tecnologia da PUC-SP (abre o site)"
   },
   "map": {
     "zoomIn": "Aproximar",
