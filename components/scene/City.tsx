@@ -2,7 +2,8 @@ import { useMemo } from 'react';
 import * as THREE from 'three';
 import { campus } from '@/lib/campus';
 import { extrude, mergeGeometries } from './geometry';
-import { toonRamp, wallTexture } from './pixel';
+import { toonRamp, wallTexture, windowGlowTexture } from './pixel';
+import { useNight } from './night';
 import { hideOccluders, tagObject } from './occlusion';
 
 // Muted concrete tones seen behind the campus in every photo (03, 07, tour 04, Descubra Sampa gate):
@@ -33,10 +34,12 @@ export function City() {
     return parts.length ? mergeGeometries(parts) : null;
   }, []);
   const walls = useMemo(() => wallTexture('#ffffff'), []);
+  const glow = useMemo(() => windowGlowTexture(), []);
+  const night = useNight();
   if (!geometry) return null;
   return (
     <mesh geometry={geometry} castShadow receiveShadow>
-      <meshToonMaterial vertexColors map={walls} gradientMap={toonRamp} onBeforeCompile={hideOccluders} />
+      <meshToonMaterial vertexColors map={walls} gradientMap={toonRamp} onBeforeCompile={hideOccluders} emissive="#ffffff" emissiveMap={glow} emissiveIntensity={night ? 1.1 : 0} />
     </mesh>
   );
 }

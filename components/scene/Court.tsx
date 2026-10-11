@@ -3,6 +3,7 @@ import * as THREE from 'three';
 import type { Point } from '@/lib/campus';
 import { mergeGeometries } from './geometry';
 import { toonRamp } from './pixel';
+import { useNight } from './night';
 
 // Multi-sport court from the drone video (29–33 s) and the 2018 court photo:
 // maroon border band, green field, futsal + basketball markings, goals, hoops, chain-link fence, floodlights.
@@ -99,6 +100,7 @@ function Hoop({ x, flip }: { x: number; flip: boolean }) {
 }
 
 export function Court({ polygon, y }: { polygon: Point[]; y: number }) {
+  const night = useNight();
   const { c, angle, L, W } = useMemo(() => frameOf(polygon), [polygon]);
   const [fl, fw] = [L - 2 * BORDER, W - 2 * BORDER];
   const lines = useMemo(() => markings(fl, fw), [fl, fw]);
@@ -155,10 +157,12 @@ export function Court({ polygon, y }: { polygon: Point[]; y: number }) {
           </mesh>
           <mesh position={[0, 9, -sz * 0.3]}>
             <boxGeometry args={[1.2, 0.3, 0.5]} />
-            <meshToonMaterial color="#f2f2ee" gradientMap={toonRamp} />
+            <meshToonMaterial color="#f2f2ee" emissive="#ffffff" emissiveIntensity={night ? 2 : 0} gradientMap={toonRamp} />
           </mesh>
         </group>
       ))}
+      {/* one cool white light over the field stands in for the four floodlights (point lights are costly on phones) */}
+      {night && <pointLight position-y={11} color="#eef4ff" intensity={420} distance={45} decay={2} />}
     </group>
   );
 }

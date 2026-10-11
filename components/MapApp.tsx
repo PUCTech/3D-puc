@@ -14,6 +14,7 @@ import { BuildingDetails } from './ui/BuildingDetails';
 import { MapControls } from './ui/MapControls';
 import { useIsDesktop } from './ui/useIsDesktop';
 import { LevelToggle } from './ui/LevelToggle';
+import { NightToggle } from './ui/NightToggle';
 import { PucTechCredit } from './ui/PucTechCredit';
 import { History } from './ui/History';
 import { historyFor } from '@/lib/history';
@@ -77,9 +78,16 @@ export function MapApp() {
     historyScroll.current?.scrollTo({ top: 0 });
   }, [selected?.id, selectedFloor]);
 
+  // Navigation keeps the lighting choice (?noite=1) across picks.
+  const go = (query: string) => {
+    const q = new URLSearchParams(query);
+    if (params.get('noite') === '1') q.set('noite', '1');
+    const s = q.toString();
+    router.push(s ? `${pathname}?${s}` : pathname, { scroll: false });
+  };
   const select = (id: string | null) => {
     setSnap(id ? 'half' : 'peek'); // a pick opens the building; closing goes back to the search peek
-    router.push(id ? `${pathname}?b=${encodeURIComponent(id)}` : pathname, { scroll: false });
+    go(id ? `b=${encodeURIComponent(id)}` : '');
   };
   // Lower-level view: ?nivel=inferior, or implied by picking a basement floor.
   // A selected street-level-only building wins over the lower view (it would be hidden there).
@@ -97,26 +105,35 @@ export function MapApp() {
     const s = q.toString();
     router.push(s ? `${pathname}?${s}` : pathname, { scroll: false });
   };
+  // Night lighting: ?noite=1, kept in the URL like the level so a shared link shows the same view.
+  const night = params.get('noite') === '1';
+  const setNight = (on: boolean) => {
+    const q = new URLSearchParams(params.toString());
+    if (on) q.set('noite', '1');
+    else q.delete('noite');
+    const s = q.toString();
+    router.replace(s ? `${pathname}?${s}` : pathname, { scroll: false });
+  };
   const selectFloor = (level: number | null) => {
     if (!selected) return;
-    const b = `?b=${encodeURIComponent(selected.id)}`;
-    router.push(level === null ? `${pathname}${b}` : `${pathname}${b}&f=${level}`, { scroll: false });
+    const b = `b=${encodeURIComponent(selected.id)}`;
+    go(level === null ? b : `${b}&f=${level}`);
   };
 
   // Escape closes the building first, then lowers the phone sheet.
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
       if (e.key !== 'Escape') return;
-      if (selected) router.push(pathname, { scroll: false });
+      if (selected) router.push(params.get('noite') === '1' ? `${pathname}?noite=1` : pathname, { scroll: false });
       setSnap('peek');
     };
     window.addEventListener('keydown', onKey);
     return () => window.removeEventListener('keydown', onKey);
-  }, [selected, router, pathname]);
+  }, [selected, router, pathname, params]);
 
   const scene = webgl ? (
     <SceneErrorBoundary onError={() => setSceneFailed(true)}>
-      <CampusScene selectedId={selected?.id ?? null} selectedFloor={selectedFloor} lower={lower} bottomInset={isDesktop ? 0 : sheetHeight} leftInset={isDesktop ? (showHistory ? PANELS_WIDE : PANELS) : 0} topInset={isDesktop ? 0 : PHONE_TOP_BAR} locale={locale} onSelect={select} onContextLost={() => setSceneFailed(true)} phone={!isDesktop} />
+      <CampusScene selectedId={selected?.id ?? null} selectedFloor={selectedFloor} lower={lower} bottomInset={isDesktop ? 0 : sheetHeight} leftInset={isDesktop ? (showHistory ? PANELS_WIDE : PANELS) : 0} topInset={isDesktop ? 0 : PHONE_TOP_BAR} locale={locale} onSelect={select} onContextLost={() => setSceneFailed(true)} phone={!isDesktop} night={night} />
     </SceneErrorBoundary>
   ) : (
     <p role="status" className="grid h-full place-items-center p-6 text-center font-display text-lg text-navy">
@@ -176,7 +193,12 @@ export function MapApp() {
           </aside>
         )}
         {webgl && <MapControls />}
-        {webgl && <LevelToggle lower={lower} onChange={setLower} className="fixed right-5 top-5 z-20" />}
+        {webgl && (
+          <div className="fixed right-5 top-5 z-20 flex gap-2">
+            <NightToggle night={night} onChange={setNight} />
+            <LevelToggle lower={lower} onChange={setLower} />
+          </div>
+        )}
       </main>
     );
 
@@ -204,6 +226,7 @@ export function MapApp() {
       {scene}
       {webgl && (
         <div className="fixed right-3 top-[max(0.75rem,env(safe-area-inset-top))] z-10 flex gap-2">
+          <NightToggle night={night} onChange={setNight} />
           <LevelToggle lower={lower} onChange={setLower} />
           <LocaleSwitch />
         </div>

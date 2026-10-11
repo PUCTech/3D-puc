@@ -5,6 +5,7 @@ import { campus, type Point } from '@/lib/campus';
 import { mergeGeometries, ribbons } from './geometry';
 import { barsTexture, toonRamp } from './pixel';
 import { latticeTexture } from './StreetFence';
+import { useNight } from './night';
 
 // Upright strips along a path: walls (thick, opaque) and fences (thin, see-through bars).
 function barrier(path: Point[], height: number, thickness: number) {
@@ -119,6 +120,7 @@ export function Edge() {
   const walls = useMemo(() => (campus.barriers ?? []).filter((b) => b.kind === 'wall').map((b) => barrier(b.path, b.height, 0.4)), []);
   const fences = useMemo(() => (campus.barriers ?? []).filter((b) => b.kind !== 'wall').map((b) => barrier(b.path, b.height, 0.08)), []);
   const entrance = campus.entrance;
+  const night = useNight();
   const [narrow] = useState(() => window.matchMedia('(max-width: 639px)').matches);
   const walk = useMemo(() => (entrance ? ribbons([entrance.path], 3.5, 0.045) : null), [entrance]);
   return (
@@ -147,6 +149,7 @@ export function Edge() {
             </mesh>
           )}
           <Gatehouse at={entrance.at} along={entrance.along} />
+          {night && <pointLight position={[entrance.at[0], 4, entrance.at[1]]} color="#ffe1b0" intensity={60} distance={18} decay={2} />}
           {/* white plaque with dark lettering, as on the real gate (Descubra Sampa photo); phones show only "PUC-SP" */}
           <Label
             position={[entrance.at[0], 6.5, entrance.at[1]]}

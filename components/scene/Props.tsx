@@ -1,8 +1,10 @@
 import { campus } from '@/lib/campus';
 import { toonRamp } from './pixel';
+import { useNight } from './night';
 
 // Small objects from the photos: lamp posts (14), the PUC-SP totem sign (CCET photo), concrete benches (tour 01).
 function Lamp() {
+  const night = useNight();
   return (
     <>
       <mesh position-y={2.2} castShadow>
@@ -11,8 +13,9 @@ function Lamp() {
       </mesh>
       <mesh position-y={4.5}>
         <boxGeometry args={[0.45, 0.35, 0.3]} />
-        <meshToonMaterial color="#f4f4ef" emissive="#fff6d0" emissiveIntensity={0.3} gradientMap={toonRamp} />
+        <meshToonMaterial color="#f4f4ef" emissive="#fff6d0" emissiveIntensity={night ? 2.5 : 0.3} gradientMap={toonRamp} />
       </mesh>
+      {night && <pointLight position-y={4.2} color="#ffd9a0" intensity={40} distance={16} decay={2} />}
     </>
   );
 }

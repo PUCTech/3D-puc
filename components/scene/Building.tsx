@@ -4,7 +4,8 @@ import * as THREE from 'three';
 import { Edges } from '@react-three/drei';
 import { useFrame, type ThreeEvent } from '@react-three/fiber';
 import { basementDepth, buildingHeight, floorBase, footprintCenter, type Building as B, type Locale, type Point } from '@/lib/campus';
-import { INK_WIDTH, toonRamp, wallTexture } from './pixel';
+import { INK_WIDTH, toonRamp, wallTexture, windowGlowTexture } from './pixel';
+import { useNight } from './night';
 import { blankShortWalls, extrude, flatPolygon, mergeGeometries } from './geometry';
 import { Plants } from './Plants';
 import { Cobogo } from './Cobogo';
@@ -81,6 +82,8 @@ export function Building({ building, selected, dimmed, near, locale, floorLevel,
   const style = building.style ?? {};
   const floorHeight = building.floors.find((f) => f.level >= 0)?.height ?? 3.5;
   const walls = useMemo(() => wallTexture(style.wall ?? WALL, style.windows, floorHeight), [style.wall, style.windows, floorHeight]);
+  const glow = useMemo(() => windowGlowTexture(style.windows, floorHeight), [style.windows, floorHeight]);
+  const night = useNight();
   const roofColor = useMemo(() => new THREE.Color(style.roof ?? ROOF), [style.roof]);
   const gardens = useMemo(
     () =>
@@ -117,7 +120,7 @@ export function Building({ building, selected, dimmed, near, locale, floorLevel,
           <mesh geometry={geometries[i]} castShadow receiveShadow {...handlers}>
             {/* ExtrudeGeometry groups: 0 = caps (roof/floor), 1 = walls */}
             <meshToonMaterial attach="material-0" color={selected ? SELECTED_ROOF : roofColor} gradientMap={toonRamp} transparent opacity={opacity} />
-            <meshToonMaterial attach="material-1" map={walls} gradientMap={toonRamp} transparent opacity={opacity} />
+            <meshToonMaterial attach="material-1" map={walls} gradientMap={toonRamp} transparent opacity={opacity} emissive="#ffffff" emissiveMap={glow} emissiveIntensity={night ? 1.4 : 0} />
             {/* Ink outline: the main cartoon cue */}
             {!dimmed && <Edges threshold={15} color="#1b1b24" lineWidth={INK_WIDTH} />}
           </mesh>
