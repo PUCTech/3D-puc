@@ -49,7 +49,8 @@
     "zoomIn": "Zoom in",
     "zoomOut": "Zoom out",
     "recenter": "Recenter map",
-    "controls": "Map controls"
+    "controls": "Map controls",
+    "parking": "Parking"
   },
   "room": {
     "classroom": "Classroom",

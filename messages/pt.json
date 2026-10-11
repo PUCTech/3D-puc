@@ -49,7 +49,8 @@
     "zoomIn": "Aproximar",
     "zoomOut": "Afastar",
     "recenter": "Centralizar mapa",
-    "controls": "Controles do mapa"
+    "controls": "Controles do mapa",
+    "parking": "Estacionamento"
   },
   "room": {
     "classroom": "Sala de aula",

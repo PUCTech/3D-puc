@@ -401,3 +401,22 @@ Frames sampled every 2 s.
   - **Ground:** drops to the lower level, and the city shifts down with it.
   - **Prédio 2:** opens at Subsolo 1 with its rooms, drawn normally (no X-ray needed).
   - **Shows on one plane:** the court, DTI, Prédio 3, the lower woods and the basement.
+
+## Parking lane (user + photo `pictures/WhatsApp Image 2025-10-29…`, satellite screenshot 01.17.04)
+**Layout (user)**
+- The car gate is on R. Marquês de Paranaguá, at the OSM gate in the south-west corner.
+- The lane runs east along the Auditório, slopes down to the lower level, and ends at Prédio 3.
+- Cars park on both sides. A railed pedestrian ramp beside the Auditório goes down to the lower level.
+
+**Modeled**
+- A 7.5 m concrete lane. It slopes over 27 m (~12%) from the Auditório's mid-length down to the lower level at Prédio 2's south end.
+- Painted bays, and one accessible (blue) bay near the gate.
+- 24 low-poly parallel-parked cars, in the photo's colors (silver, greys, black, white, a red one). Cars on the slope are pitched.
+- A 1.7 m pedestrian ramp with white posts and handrails.
+- The lower zone was extended over the slope and past the OSM boundary on the south. The concrete retaining wall on the lane's south side is the lower zone's edge, as in the photo. The street-level paving and fence stop at the car gate.
+
+**Estimated**
+- Where the slope starts and ends, the lane width, and the car positions.
+- The OSM boundary is ~6 m short on the south here; the lane runs past it.
+
+`campus.json` is ~101 KB; the size budget was raised to 128 KB (gzipped it's ~25 KB).

@@ -40,7 +40,19 @@ export type Campus = {
   boundary?: Point[];
   // Areas where the ground drops (e.g. the court level east of Prédio 2), depth in meters below street level.
   sunken?: { polygon: Point[]; depth: number }[];
-  upperLot?: Point[]; // street-level part of the campus lot (boundary minus sunken zones), so paving needs no holes
+  upperLot?: Point[];
+  // Parking lane: axis from the car gate (`from`) to its end; slope = [start, end] distances along it where it drops `depth` m.
+  // Cars: d = distance along the axis, side = -1 | 1 (which row), color.
+  parking?: {
+    from: Point;
+    to: Point;
+    width: number;
+    slope: number[];
+    depth: number;
+    ramp?: { from: Point; to: Point; width: number };
+    accessible?: { d: number; side: number }[];
+    cars: { d: number; side: number; color: string }[];
+  }; // street-level part of the campus lot (boundary minus sunken zones), so paving needs no holes
   areas?: { kind: string; polygon: Point[] }[]; // OSM leisure/landuse inside or near campus, e.g. "pitch", "garden"
   footways?: Point[][];
   context?: { footprint: Point[]; height: number }[]; // neighbouring city buildings

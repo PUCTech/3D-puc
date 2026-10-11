@@ -10,6 +10,7 @@ import { PIXEL_DPR } from './pixel';
 import { City } from './City';
 import { Site } from './Site';
 import { Marquees } from './Marquees';
+import { Parking } from './Parking';
 import { Edge } from './Edge';
 import { Furniture } from './Furniture';
 import { StreetFence } from './StreetFence';
@@ -76,6 +77,7 @@ export default function CampusScene({ selectedId, selectedFloor, lower, bottomIn
       />
       <Ground lower={lower} onClear={() => onSelect(null)} />
       <Site lower={lower} />
+      <Parking lower={lower} />
       {/* the city keeps its place relative to the ground */}
       <group position-y={lower ? -LOWER_DEPTH : 0}>
         <City />
