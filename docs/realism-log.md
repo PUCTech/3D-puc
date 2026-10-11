@@ -292,3 +292,27 @@ Randomness is seeded per plant (mulberry32), so the scene is identical on every 
 **Considered and skipped:** 3D window sills. The wall texture coordinates follow world axes, so sills would drift off the painted windows on angled walls.
 
 **Still unverified for lack of photos:** Prédio 3, Prédio 10, the Auditório roof, and the exact positions of the canopy, path and plants.
+
+---
+
+# Floors from the plans (`docs/consolacao/`)
+Sources: Rino Levi's Instituto Sedes Sapientiae ground and upper floor plans (redrawn by Ana Paula Koury, via Vitruvius), plus the section and elevation of the classroom block. See `docs/consolacao/README.md`.
+
+**Plan → model orientation**
+- Plan up = east, plan right = south, plan bottom = Rua Marquês de Paranaguá.
+- This matches the photos: the cobogó corridor faces the patio (west), the Auditório attaches to Prédio 2's south end, and the entrance is on the street.
+
+**Rooms** (123 rooms, stored per floor as world-space polygons; names come from their kind)
+
+| Building | Ground floor | Upper floors |
+|---|---|---|
+| Prédio 2 (classroom block) | rooms on the east (70% of the depth), corridor along the cobogó; toilet blocks at both ends, stair hall at ~70% | the upper plan: six classrooms and the stair hall, used for floors 1 and 2 |
+| Prédio 1 (former dormitory) | rooms, toilets and a pantry either side of a central corridor; a columned lounge at the south end | 18 bedrooms, a bathroom block and the stair, used for floors 1–3 |
+| Auditório | foyer, stage, fan-shaped seating, and the entrance at the curved street front | offices, a numbered room, book stacks and the library, plus the **terrace** over the west 38% |
+
+**Massing:** the Auditório is now two parts, a 2-storey library wing (east) and a 1-storey hall wing (west) with the planted terrace on its roof. The user confirmed the terrace.
+
+**Honesty notes**
+- The plans don't number rooms, so rooms are labeled by use only.
+- The UI says this is the original 1942 plan and current uses may differ.
+- Room partitions were measured from a 528 px plan, so expect roughly ±1 m.

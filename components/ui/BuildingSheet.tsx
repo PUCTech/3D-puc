@@ -5,9 +5,12 @@ import type { Building } from '@/lib/campus';
 import { BuildingDetails } from './BuildingDetails';
 
 // Phone bottom sheet: peek (name + tag) → drag/tap the handle to expand to floors.
-export function BuildingSheet({ building, onClose }: { building: Building; onClose: () => void }) {
+type Props = { building: Building; floor: number | null; onFloor: (level: number | null) => void; onClose: () => void };
+
+export function BuildingSheet({ building, floor, onFloor, onClose }: Props) {
   const t = useTranslations('sheet');
   const [expanded, setExpanded] = useState(false);
+  const floorView = floor !== null; // keep the sheet short so the cut floor stays visible above it
   const dragStart = useRef<number | null>(null);
 
   const onPointerUp = (y: number) => {
@@ -23,7 +26,7 @@ export function BuildingSheet({ building, onClose }: { building: Building; onClo
     <section
       data-testid="building-sheet"
       aria-labelledby="building-title"
-      className="pixel-box fixed inset-x-0 bottom-0 z-20 max-h-[75dvh] overflow-y-auto border-x-0 border-b-0 px-5 pb-6 pt-1 shadow-[0_-4px_0_var(--color-ink)]"
+      className={`pixel-box fixed inset-x-0 bottom-0 z-20 overflow-y-auto ${floorView ? 'max-h-[42dvh]' : 'max-h-[75dvh]'} border-x-0 border-b-0 px-5 pb-6 pt-1 shadow-[0_-4px_0_var(--color-ink)]`}
     >
       <button
         aria-label={expanded ? t('collapse') : t('expand')}
@@ -38,7 +41,7 @@ export function BuildingSheet({ building, onClose }: { building: Building; onClo
       <button onClick={onClose} aria-label={t('close')} className="pixel-btn pixel-btn-paper absolute right-4 top-4 grid h-9 w-9 place-items-center text-lg leading-none">
         ✕
       </button>
-      <BuildingDetails key={building.id} building={building} compact={!expanded} />
+      <BuildingDetails key={building.id} building={building} floor={floor} onFloor={onFloor} compact={!expanded && !floorView} dense={floorView} />
     </section>
   );
 }

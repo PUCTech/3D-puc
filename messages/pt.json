@@ -15,7 +15,11 @@
     "close": "Fechar",
     "expand": "Mostrar mais",
     "collapse": "Mostrar menos",
-    "floorList": "Andares"
+    "floorList": "Andares",
+    "rooms": "Ambientes",
+    "wholeBuilding": "Ver prédio inteiro",
+    "planNote": "Planta original de 1942 (Rino Levi). Usos atuais podem ser diferentes.",
+    "showFloor": "Ver {floor} no mapa"
   },
   "floor": {
     "ground": "Térreo",
@@ -45,5 +49,25 @@
     "zoomOut": "Afastar",
     "recenter": "Centralizar mapa",
     "controls": "Controles do mapa"
+  },
+  "room": {
+    "classroom": "Sala de aula",
+    "office": "Escritório",
+    "support": "Apoio",
+    "wc": "Sanitários",
+    "stair": "Escada",
+    "corridor": "Corredor",
+    "foyer": "Foyer",
+    "stage": "Palco",
+    "auditorium": "Plateia",
+    "library": "Biblioteca",
+    "stacks": "Acervo",
+    "terrace": "Terraço",
+    "lounge": "Salão",
+    "bedroom": "Quarto",
+    "meeting": "Sala de reunião",
+    "room": "Sala",
+    "entrance": "Entrada",
+    "bar": "Copa"
   }
 }

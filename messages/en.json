@@ -15,7 +15,11 @@
     "close": "Close",
     "expand": "Show more",
     "collapse": "Show less",
-    "floorList": "Floors"
+    "floorList": "Floors",
+    "rooms": "Rooms",
+    "wholeBuilding": "Show whole building",
+    "planNote": "Original 1942 plan (Rino Levi). Current uses may differ.",
+    "showFloor": "Show {floor} on the map"
   },
   "floor": {
     "ground": "Ground floor",
@@ -45,5 +49,25 @@
     "zoomOut": "Zoom out",
     "recenter": "Recenter map",
     "controls": "Map controls"
+  },
+  "room": {
+    "classroom": "Classroom",
+    "office": "Office",
+    "support": "Support room",
+    "wc": "Restrooms",
+    "stair": "Stairs",
+    "corridor": "Corridor",
+    "foyer": "Foyer",
+    "stage": "Stage",
+    "auditorium": "Auditorium seating",
+    "library": "Library",
+    "stacks": "Book stacks",
+    "terrace": "Terrace",
+    "lounge": "Lounge",
+    "bedroom": "Bedroom",
+    "meeting": "Meeting room",
+    "room": "Room",
+    "entrance": "Entrance",
+    "bar": "Pantry"
   }
 }

@@ -45,6 +45,9 @@ export function MapApp() {
   const pathname = usePathname();
   const params = useSearchParams();
   const selected = findBuilding(params.get('b')) ?? null; // unknown ids fall back to the overview
+  // ?f=<level> shows that floor's plan; ignored unless the selected building has that floor
+  const floorParam = params.get('f');
+  const selectedFloor = selected && floorParam !== null && selected.floors.some((f) => String(f.level) === floorParam) ? Number(floorParam) : null;
   // Server render assumes WebGL; the client reads the real value after hydration.
   const webglSupported = useSyncExternalStore(noSubscribe, hasWebGL, () => true);
   const [sceneFailed, setSceneFailed] = useState(false);
@@ -56,6 +59,11 @@ export function MapApp() {
   const select = (id: string | null) => {
     setListOpen(false);
     router.push(id ? `${pathname}?b=${encodeURIComponent(id)}` : pathname, { scroll: false });
+  };
+  const selectFloor = (level: number | null) => {
+    if (!selected) return;
+    const b = `?b=${encodeURIComponent(selected.id)}`;
+    router.push(level === null ? `${pathname}${b}` : `${pathname}${b}&f=${level}`, { scroll: false });
   };
 
   // Escape closes the topmost panel: the list first, then the sheet.
@@ -71,7 +79,7 @@ export function MapApp() {
 
   const scene = webgl ? (
     <SceneErrorBoundary onError={() => setSceneFailed(true)}>
-      <CampusScene selectedId={selected?.id ?? null} locale={locale} onSelect={select} />
+      <CampusScene selectedId={selected?.id ?? null} selectedFloor={selectedFloor} bottomInset={isDesktop || !selected ? 0 : selectedFloor !== null ? 0.42 : 0.2} locale={locale} onSelect={select} />
     </SceneErrorBoundary>
   ) : (
     <p role="status" className="grid h-full place-items-center p-6 text-center font-display text-lg text-navy">
@@ -101,7 +109,7 @@ export function MapApp() {
                 <button onClick={() => select(null)} className="pixel-btn pixel-btn-paper mb-5 px-3 py-1 text-sm">
                   ◀ {t('list.back')}
                 </button>
-                <BuildingDetails key={selected.id} building={selected} />
+                <BuildingDetails key={selected.id} building={selected} floor={selectedFloor} onFloor={selectFloor} />
               </section>
             ) : (
               <BuildingList onPick={select} inline />
@@ -132,7 +140,7 @@ export function MapApp() {
         </div>
       </div>
       {(listOpen || !webgl) && <BuildingList onPick={select} onClose={webgl ? () => setListOpen(false) : undefined} />}
-      {selected && <BuildingSheet key={selected.id} building={selected} onClose={() => select(null)} />}
+      {selected && <BuildingSheet key={selected.id} building={selected} floor={selectedFloor} onFloor={selectFloor} onClose={() => select(null)} />}
     </main>
   );
 }

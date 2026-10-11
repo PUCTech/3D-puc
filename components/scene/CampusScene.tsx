@@ -20,7 +20,7 @@ import { GROUND_COLOR } from './Ground';
 const STREET_TREES = (campus.streetTrees ?? []).map((at) => ({ kind: 'slender' as const, at }));
 const NEAR_ZOOM = 6; // orthographic zoom = CSS px per meter; zoomed in past this, every building gets a label
 
-function Buildings({ selectedId, locale, onSelect }: Props) {
+function Buildings({ selectedId, selectedFloor, locale, onSelect }: Props) {
   const [near, setNear] = useState(false);
   useFrame(({ camera }) => {
     const n = camera.zoom > NEAR_ZOOM;
@@ -33,15 +33,16 @@ function Buildings({ selectedId, locale, onSelect }: Props) {
       selected={b.id === selectedId}
       dimmed={selectedId !== null && b.id !== selectedId}
       near={near}
+      floorLevel={b.id === selectedId ? selectedFloor : null}
       locale={locale}
       onSelect={() => onSelect(b.id)}
     />
   ));
 }
 
-type Props = { selectedId: string | null; locale: Locale; onSelect: (id: string | null) => void };
+type Props = { selectedId: string | null; selectedFloor: number | null; bottomInset?: number; locale: Locale; onSelect: (id: string | null) => void };
 
-export default function CampusScene({ selectedId, locale, onSelect }: Props) {
+export default function CampusScene({ selectedId, selectedFloor, bottomInset = 0, locale, onSelect }: Props) {
   return (
     <Canvas
       orthographic
@@ -76,8 +77,8 @@ export default function CampusScene({ selectedId, locale, onSelect }: Props) {
       <StreetFence />
       <CampusProps />
       <Plants plants={STREET_TREES} />
-      <Buildings selectedId={selectedId} locale={locale} onSelect={onSelect} />
-      <CameraRig selectedId={selectedId} />
+      <Buildings selectedId={selectedId} selectedFloor={selectedFloor} locale={locale} onSelect={onSelect} />
+      <CameraRig selectedId={selectedId} bottomInset={bottomInset} />
     </Canvas>
   );
 }
