@@ -19,6 +19,7 @@ import { Plants } from './Plants';
 import { GROUND_COLOR } from './Ground';
 import { setOcclusionTarget } from './occlusion';
 import { NightContext } from './night';
+import { NightLights } from './NightLights';
 
 const STREET_TREES = (campus.streetTrees ?? []).map((at) => ({ kind: 'slender' as const, at }));
 const NIGHT_SKY = '#141a2b';
@@ -130,6 +131,7 @@ export default function CampusScene({ selectedId, selectedFloor, lower, bottomIn
           <StreetFence />
           <CampusProps />
           <Plants plants={STREET_TREES} />
+          {night && <NightLights />}
         </>
       )}
       <Buildings selectedId={selectedId} selectedFloor={selectedFloor} lower={lower} locale={locale} onSelect={onSelect} />
