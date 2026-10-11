@@ -198,8 +198,9 @@ export function MapApp() {
     <SearchBar onPick={select} inline onFocus={() => setSnap('full')} />
   );
   return (
-    // h-lvh: the large viewport, so the map also runs under Safari's floating toolbar.
-    <main className="fixed inset-x-0 top-0 h-lvh overflow-hidden bg-ground">
+    // In-flow (absolute, not fixed) and h-lvh: iOS Safari keeps fixed elements out of the strip under its floating
+    // toolbar and paints the page background there; in-flow content runs under it, so the map fills the screen.
+    <main className="absolute inset-x-0 top-0 h-lvh overflow-hidden bg-ground">
       {scene}
       {webgl && (
         <div className="fixed right-3 top-[max(0.75rem,env(safe-area-inset-top))] z-10 flex gap-2">

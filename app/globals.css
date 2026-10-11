@@ -18,6 +18,8 @@
 
 html, body {
   height: 100%;
+  overflow: hidden; /* the app is one screen: no page scroll or rubber-band under the map */
+  overscroll-behavior: none;
   background: var(--color-ground);
   color: var(--color-ink);
 }
