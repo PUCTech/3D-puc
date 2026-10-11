@@ -3,6 +3,7 @@ import * as THREE from 'three';
 import type { Point } from '@/lib/campus';
 import { mergeGeometries } from './geometry';
 import { toonRamp } from './pixel';
+import { hideOccluders, tagObject } from './occlusion';
 
 // Custom low-poly plant models, one per species seen in the campus photos
 // (see docs/realism-log.md): Canary palm (07), slender multi-stem street trees (14),
@@ -137,6 +138,8 @@ function dracaena(r: () => number): Part[] {
 }
 
 const BUILDERS: Record<PlantKind, (r: () => number) => Part[]> = { palm, slender, shade, monstera, dracaena };
+// Rough [radius, height] of each kind, for hiding plants in front of the selection (occlusion.ts).
+const SIZE: Record<PlantKind, [number, number]> = { palm: [4, 10], slender: [2, 13], shade: [3.5, 9], monstera: [1.2, 1.6], dracaena: [1, 2.8] };
 
 // All plants of a group merged into one vertex-colored mesh.
 function buildPlants(plants: Plant[], scale: number) {
@@ -152,7 +155,7 @@ function buildPlants(plants: Plant[], scale: number) {
       const colors = new Float32Array(g.getAttribute('position').count * 3);
       for (let v = 0; v < colors.length; v += 3) colors.set([c.r, c.g, c.b], v);
       g.setAttribute('color', new THREE.BufferAttribute(colors, 3));
-      pieces.push(g);
+      pieces.push(tagObject(g, p.at[0], p.at[1], SIZE[p.kind][0] * scale, SIZE[p.kind][1] * scale));
     }
   });
   return pieces.length ? mergeGeometries(pieces) : null;
@@ -163,7 +166,7 @@ export function Plants({ plants, scale = 1 }: { plants: Plant[]; scale?: number 
   if (!geometry) return null;
   return (
     <mesh geometry={geometry} castShadow receiveShadow>
-      <meshToonMaterial vertexColors gradientMap={toonRamp} side={THREE.DoubleSide} />
+      <meshToonMaterial vertexColors gradientMap={toonRamp} side={THREE.DoubleSide} onBeforeCompile={hideOccluders} />
     </mesh>
   );
 }

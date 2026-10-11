@@ -453,3 +453,17 @@ Frames sampled every 2 s.
 - Wavy canopy: no leg along Prédio 2's west wall (user, Oct 2026). It only runs along Prédio 1 and the Auditório.
 - Entrance canopy meets the Prédio 1–Auditório canopy at 90° (user screenshot 11.42.44). Both follow the street grid; the entrance walk runs straight in from the gate.
 - Correction: the entrance canopy is the Auditório north-wall canopy carried straight out to the gate; the Prédio 1 canopy meets it at 90°. The gate moved ~5.5 m south to line up with it, and the street fences, pots, tree, lamp and totem moved with it.
+
+## History wiki (Oct 2026)
+
+- 1943 photos: *Acrópole* nº 64, Aug 1943, pp. 65–72 ("Faculdade de Filosofia do Instituto Sedes Sapientiae"), photos by Leon Liberman, from the FAU-USP digital archive (https://www.acropole.fau.usp.br/edicao/64, `large/021–028.jpg`). Brazilian law 9.610/98 art. 44 protects photographs for 70 years from 1 January after publication, so these have been public domain in Brazil since 2014. The FAU-USP watermark stays visible.
+- 1930 map: SARA Brasil *Mappa Topographico do Municipio de São Paulo*, sheets 50/10 and 51/6, stitched at grid lines X −2000. Downloaded from GeoSampa (`downloadArquivo.aspx?orig=DownloadMapaArticulacao&arqTipo=MAPA_ARTICULACAO&arq=Sara_Brasil_1930\<sheet>.zip`).
+- GeoSampa 1940 (`Fotos_Aereas_1940\FM5-079.jpg`) and 1954 (`Fotos_Aereas_1954\FX05-237.jpg`) aerials also download, but they are unrectified. The lot was not located on them, so they aren't used.
+- How 1943 uses map to today's buildings (Acrópole's own walk-through: restaurant left of the gate, conference room right, hall at the back):
+  - Prédio 1 = Casa das Estudantes (restaurant below, rooms above).
+  - Auditório = conference hall.
+  - Prédio 2 = classrooms, hall and the glazed corridor.
+- Assumptions:
+  - The chapel, library and "terraço suspenso" are placed on the Auditório upper floor. They are "left of the hall", which is the auditorium side.
+  - The "terraço em frente ao campo de tênis" is placed on Prédio 2's lower level, beside today's court.
+  - The reading room has no stated location, so it sits under the site entry.

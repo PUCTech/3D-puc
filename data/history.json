@@ -1,0 +1,163 @@
+{
+  "site": {
+    "title": { "pt": "O terreno", "en": "The site" },
+    "text": {
+      "pt": "Em 1930 este terreno ainda era o parque do Colégio Des Oiseaux, das Cônegas de Santo Agostinho, cujo prédio dava para a Rua Caio Prado. A Faculdade de Filosofia Sedes Sapientiae, fundada pelas cônegas em 1933, funcionou no colégio até ganhar prédio próprio aqui: projeto de Rino Levi, terminado em junho de 1942.",
+      "en": "In 1930 this lot was still the park of the Colégio Des Oiseaux, run by the Canonesses of Saint Augustine, whose building faced Rua Caio Prado. The Sedes Sapientiae Faculty of Philosophy, founded by the canonesses in 1933, was housed in the school until it got its own building here: designed by Rino Levi and finished in June 1942."
+    },
+    "facts": [
+      {
+        "pt": "Construído entre 1940 e 1942 pela Camargo & Mesquita, em plena Segunda Guerra, quando faltava aço importado.",
+        "en": "Built from 1940 to 1942 by Camargo & Mesquita, in the middle of World War II, when imported steel was scarce."
+      },
+      {
+        "pt": "Em 1943 a revista Acrópole contava 500 alunas: a faculdade era feminina.",
+        "en": "In 1943 Acrópole magazine counted 500 students, all women: it was a women's college."
+      },
+      {
+        "pt": "Ninguém atravessava o portão sem marcar a ficha no relógio-ponto. Ciências entravam às 8h; Filosofia, Letras, História e Geografia e Pedagogia, às 13h.",
+        "en": "Nobody went through the gate without clocking in. Science students arrived at 8 am; Philosophy, Letters, History and Geography, and Pedagogy at 1 pm."
+      },
+      {
+        "pt": "Entre os prédios, um bosque de pinheiros onde as alunas estudavam ao ar livre. O jardim do pátio é atribuído a Burle Marx, amigo de Levi.",
+        "en": "Between the buildings was a pine grove where students studied outdoors. The patio garden is attributed to Burle Marx, a friend of Levi's."
+      },
+      {
+        "pt": "Incorporada à PUC-SP em 1946. Desde os anos 1970 o prédio abriga o Centro de Ciências Matemáticas, Físicas e Tecnológicas.",
+        "en": "Joined PUC-SP in 1946. Since the 1970s the building has housed the Centre for Mathematical, Physical and Technological Sciences."
+      },
+      {
+        "pt": "Tombado pelo CONDEPHAAT em 2010 (auditório, antigo pensionato, bloco de ensino e pátio interno) e pelo CONPRESP em 2015.",
+        "en": "Listed as heritage by CONDEPHAAT in 2010 (auditorium, former residence hall, teaching block and inner patio) and by CONPRESP in 2015."
+      }
+    ],
+    "photos": [
+      { "src": "/history/1930-mapa-sara.jpg", "year": 1930, "credit": "SARA Brasil · GeoSampa", "caption": { "pt": "O terreno em 1930: parque do Colégio Des Oiseaux, entre a Rua Marquês de Paranaguá (à esquerda) e a Rua Caio Prado.", "en": "The lot in 1930: the park of the Colégio Des Oiseaux, between Rua Marquês de Paranaguá (left) and Rua Caio Prado." } },
+      { "src": "/history/1943-fachada.jpg", "year": 1943, "credit": "Leon Liberman · Acrópole 64", "caption": { "pt": "Fachada principal na Rua Marquês de Paranaguá, 111, com o panorama da cidade.", "en": "Main front on Rua Marquês de Paranaguá, 111, with the city behind." } },
+      { "src": "/history/1943-estudo-ar-livre.jpg", "year": 1943, "credit": "Leon Liberman · Acrópole 64", "caption": { "pt": "Estudo ao ar livre sob os pinheiros.", "en": "Studying outdoors under the pines." } },
+      { "src": "/history/1943-sala-leitura.jpg", "year": 1943, "credit": "Leon Liberman · Acrópole 64", "caption": { "pt": "Sala de leitura: depois das aulas, revistas e jornais do dia.", "en": "Reading room: magazines and the day's papers after class." } }
+    ]
+  },
+  "buildings": {
+    "predio-1": {
+      "title": { "pt": "Antigo pensionato · Casa das Estudantes", "en": "Former residence hall · Casa das Estudantes" },
+      "text": {
+        "pt": "O bloco junto à rua era a Casa das Estudantes: restaurante no térreo e, em cima, quartos individuais ao longo de um corredor. No tombamento de 2010 ele aparece como \"antigo pensionato\".",
+        "en": "The block by the street was the Casa das Estudantes (students' house): a restaurant on the ground floor and single rooms along a corridor above. The 2010 heritage listing calls it the \"former residence hall\"."
+      },
+      "facts": [
+        { "pt": "Cada aluna tinha seu quarto, onde passaria 3 ou 4 anos.", "en": "Every student had her own room, for her 3 or 4 years there." },
+        { "pt": "O jantar era às 6h30, no restaurante do térreo.", "en": "Dinner was at 6:30 pm, in the ground-floor restaurant." },
+        { "pt": "Daqui sai o pórtico de concreto ondulado que contorna o pátio, uma das marcas do projeto.", "en": "The wavy concrete portico that wraps the patio starts here, one of the design's signatures." }
+      ],
+      "photos": [
+        { "src": "/history/1943-portico.jpg", "year": 1943, "credit": "Leon Liberman · Acrópole 64", "caption": { "pt": "Vista parcial do pórtico ondulado.", "en": "Part of the wavy portico." } }
+      ],
+      "floors": [
+        {
+          "levels": [0],
+          "title": { "pt": "Térreo em 1943: o restaurante", "en": "Ground floor in 1943: the restaurant" },
+          "text": { "pt": "À esquerda de quem entrava pelo portão ficava o restaurante, com mesas postas e cortinas floridas, servido por uma cozinha completa.", "en": "To the left of the gate was the restaurant, with laid tables and flowered curtains, served by a full kitchen." },
+          "photos": [
+            { "src": "/history/1943-restaurante.jpg", "year": 1943, "credit": "Leon Liberman · Acrópole 64", "caption": { "pt": "Restaurante.", "en": "Restaurant." } },
+            { "src": "/history/1943-cozinha.jpg", "year": 1943, "credit": "Leon Liberman · Acrópole 64", "caption": { "pt": "A cozinha.", "en": "The kitchen." } }
+          ]
+        },
+        {
+          "levels": [1, 2, 3],
+          "title": { "pt": "Andares em 1943: os quartos", "en": "Upper floors in 1943: the rooms" },
+          "text": { "pt": "Um corredor com quartos individuais dos dois lados, terminando em uma parede de blocos de vidro.", "en": "A corridor with single rooms on both sides, ending in a glass-block wall." },
+          "photos": [
+            { "src": "/history/1943-corredor-casa-estudante.jpg", "year": 1943, "credit": "Leon Liberman · Acrópole 64", "caption": { "pt": "Corredor da Casa do Estudante.", "en": "Corridor of the students' house." } },
+            { "src": "/history/1943-quarto-estudante.jpg", "year": 1943, "credit": "Leon Liberman · Acrópole 64", "caption": { "pt": "Quarto de estudante.", "en": "A student's room." } }
+          ]
+        }
+      ]
+    },
+    "predio-2": {
+      "title": { "pt": "Bloco de ensino", "en": "Teaching block" },
+      "text": {
+        "pt": "As aulas ficavam neste bloco comprido. Os corredores voltados para o pátio são fechados por uma grelha de concreto com vidro, os \"vitrais\" que, segundo a Acrópole, davam \"uma claridade extraordinária a todo o edifício\".",
+        "en": "Classes were held in this long block. Its corridors facing the patio are closed by a concrete-and-glass grid, the \"stained glass\" that, Acrópole wrote, gave \"an extraordinary brightness to the whole building\"."
+      },
+      "facts": [
+        { "pt": "Em 1943 eram 16 salas: anfiteatros, laboratórios de Física e clínicas de Pedagogia e Psicologia.", "en": "In 1943 there were 16 classrooms: lecture theatres, physics labs and pedagogy and psychology clinics." },
+        { "pt": "Os caixilhos de concreto foram fornecidos pela Neo-Rex do Brasil.", "en": "The concrete window frames were supplied by Neo-Rex do Brasil." },
+        { "pt": "Paredes revestidas de \"cimentone\" creme e piso de cerâmica vermelha.", "en": "Walls finished in cream \"cimentone\" render, red ceramic floors." },
+        { "pt": "As janelas das salas se abriam para o parque, a uns 100 m da Rua Caio Prado.", "en": "Classroom windows opened onto the park, about 100 m from Rua Caio Prado." }
+      ],
+      "photos": [
+        { "src": "/history/1943-corredores-aulas.jpg", "year": 1943, "credit": "Leon Liberman · Acrópole 64", "caption": { "pt": "Vista externa dos corredores das aulas.", "en": "The classroom corridors from outside." } },
+        { "src": "/history/1943-vista-noturna.jpg", "year": 1943, "credit": "Leon Liberman · Acrópole 64", "caption": { "pt": "Vista noturna do pátio.", "en": "The patio at night." } },
+        { "src": "/history/1943-laboratorio-fisica.jpg", "year": 1943, "credit": "Leon Liberman · Acrópole 64", "caption": { "pt": "Laboratório de Física.", "en": "Physics lab." } }
+      ],
+      "floors": [
+        {
+          "levels": [-1],
+          "title": { "pt": "Subsolo em 1943: a quadra", "en": "Lower level in 1943: the court" },
+          "text": { "pt": "\"Descendo a escada chega-se à quadra de tênis e de volley-ball.\" Enquanto um grupo treinava, outras assistiam da galeria. A quadra de hoje fica ao lado deste subsolo.", "en": "\"Down the stairs one reaches the tennis and volleyball court.\" While one group trained, others watched from the gallery. Today's court is next to this level." },
+          "photos": [
+            { "src": "/history/1943-terraco-tenis.jpg", "year": 1943, "credit": "Leon Liberman · Acrópole 64", "caption": { "pt": "Terraço em frente ao campo de tênis.", "en": "Terrace facing the tennis court." } }
+          ]
+        },
+        {
+          "levels": [0],
+          "title": { "pt": "Térreo em 1943: o hall", "en": "Ground floor in 1943: the hall" },
+          "text": { "pt": "No fundo do pátio ficava a porta do hall, com o guichê de informações. Atrás dele, a sala de recepção com piano, rádio e toca-discos, cujas portas se abriam à noite para as reuniões de \"família\".", "en": "At the back of the patio was the hall door, with the information desk. Behind it, a reception room with a piano, radio and record player, whose doors opened at night for \"family\" gatherings." },
+          "photos": [
+            { "src": "/history/1943-hall.jpg", "year": 1943, "credit": "Leon Liberman · Acrópole 64", "caption": { "pt": "Hall e guichê de informações.", "en": "Hall and information desk." } },
+            { "src": "/history/1943-entrada-hall.jpg", "year": 1943, "credit": "Leon Liberman · Acrópole 64", "caption": { "pt": "Entrada com acesso ao hall.", "en": "Entrance to the hall." } }
+          ]
+        },
+        {
+          "levels": [1],
+          "title": { "pt": "1º andar em 1943: o corredor envidraçado", "en": "First floor in 1943: the glazed corridor" },
+          "text": { "pt": "O corredor corre ao longo da grelha de vidro. Perpendicular a ele ficava a ala da administração: sala dos professores, secretaria e diretoria, de onde se acompanhava \"todo o movimento do Instituto\".", "en": "The corridor runs along the glass grid. At right angles to it was the administration wing: staff room, secretariat and directorate, from where one could follow \"all the comings and goings of the Institute\"." },
+          "photos": [
+            { "src": "/history/1943-corredor-envidracado.jpg", "year": 1943, "credit": "Leon Liberman · Acrópole 64", "caption": { "pt": "Um detalhe do corredor envidraçado.", "en": "The glazed corridor." } },
+            { "src": "/history/1943-ala-administracao.jpg", "year": 1943, "credit": "Leon Liberman · Acrópole 64", "caption": { "pt": "Aspecto parcial da ala da administração.", "en": "Part of the administration wing." } }
+          ]
+        }
+      ]
+    },
+    "auditorio": {
+      "title": { "pt": "Bloco do auditório", "en": "Auditorium block" },
+      "text": {
+        "pt": "À direita de quem entrava ficava a sala de conferências. Rino Levi, que já tinha projetado cinemas como o Ufa-Palace (1936) e o Universo (1938), desenhou as paredes e o forro para controlar a acústica. Em cima, o terraço-jardim, o primeiro teto-jardim da obra de Levi.",
+        "en": "To the right of the entrance was the conference hall. Rino Levi, who had already designed cinemas such as the Ufa-Palace (1936) and the Universo (1938), shaped its walls and ceiling for acoustics. On top sits the roof garden, the first in Levi's work."
+      },
+      "facts": [
+        { "pt": "Na foto de 1943, a cobertura tem o terraço com guarda-corpo e um pavilhão envidraçado.", "en": "In the 1943 photo the roof has the railed terrace and a glazed pavilion." },
+        { "pt": "Tombado em 2010 como \"bloco do auditório\".", "en": "Listed in 2010 as the \"auditorium block\"." }
+      ],
+      "photos": [
+        { "src": "/history/1943-fachada.jpg", "year": 1943, "credit": "Leon Liberman · Acrópole 64", "caption": { "pt": "O bloco do auditório (à direita) com o terraço na cobertura.", "en": "The auditorium block (right) with its roof terrace." } }
+      ],
+      "floors": [
+        {
+          "levels": [0],
+          "title": { "pt": "Térreo em 1943: o auditório", "en": "Ground floor in 1943: the auditorium" },
+          "text": { "pt": "Palco com piano de cauda, plateia e arandelas nas paredes. Era o \"local bem aperfeiçoado para as conferências e concertos\" que o programa pedia.", "en": "A stage with a grand piano, rows of seats and wall lamps: the \"well-tuned room for lectures and concerts\" the brief asked for." },
+          "photos": [
+            { "src": "/history/1943-auditorio-frente.jpg", "year": 1943, "credit": "Leon Liberman · Acrópole 64", "caption": { "pt": "Auditório, vista de frente.", "en": "Auditorium, towards the stage." } },
+            { "src": "/history/1943-auditorio-fundos.jpg", "year": 1943, "credit": "Leon Liberman · Acrópole 64", "caption": { "pt": "Auditório, vista dos fundos.", "en": "Auditorium, towards the back." } }
+          ]
+        },
+        {
+          "levels": [1],
+          "title": { "pt": "Andar superior em 1943: capela e terraço", "en": "Upper floor in 1943: chapel and terrace" },
+          "text": { "pt": "A Acrópole descreve a capela e a biblioteca \"inteiramente isoladas, tendo em frente o terraço suspenso, o que dá a ilusão de ao ar livre\".", "en": "Acrópole describes the chapel and library as \"entirely secluded, facing the suspended terrace, which gives the illusion of being outdoors\"." },
+          "photos": [
+            { "src": "/history/1943-terraco-superior.jpg", "year": 1943, "credit": "Leon Liberman · Acrópole 64", "caption": { "pt": "Detalhe do terraço superior.", "en": "The upper terrace." } }
+          ]
+        }
+      ]
+    }
+  },
+  "sources": [
+    { "label": "Acrópole nº 64, ago. 1943, p. 65–72 (FAU-USP)", "url": "https://www.acropole.fau.usp.br/edicao/64" },
+    { "label": "Mappa Topographico SARA Brasil, 1930, folhas 50/10 e 51/6 (GeoSampa)", "url": "https://geosampa.prefeitura.sp.gov.br/" },
+    { "label": "Prédio do Instituto Sedes Sapientiae (Wikipédia)", "url": "https://pt.wikipedia.org/wiki/Pr%C3%A9dio_do_Instituto_Sedes_Sapientiae" },
+    { "label": "Vitruvius, Minha Cidade 216.04", "url": "https://vitruvius.com.br/revistas/read/minhacidade/18.216/7066" }
+  ]
+}

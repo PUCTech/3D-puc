@@ -3,13 +3,24 @@ import { useEffect, useRef } from 'react';
 import { useLocale, useTranslations } from 'next-intl';
 import type { Building, Floor, Locale } from '@/lib/campus';
 import { ROOM_COLORS } from '@/components/scene/FloorPlan';
+import type { HistoryEntry } from '@/lib/history';
+import { History } from './History';
 
 // compact: phone peek (tag + title). dense: phone floor view (floors as a chip row, so the plan stays visible).
-type Props = { building: Building; floor: number | null; onFloor: (level: number | null) => void; compact?: boolean; dense?: boolean };
+// history: shown inline below the floors (phone sheet). onHistory: a button that opens it elsewhere (desktop side panel).
+type Props = {
+  building: Building;
+  floor: number | null;
+  onFloor: (level: number | null) => void;
+  compact?: boolean;
+  dense?: boolean;
+  history?: HistoryEntry[];
+  onHistory?: () => void;
+};
 
 // The building's content, shared by the phone bottom sheet and the desktop sidebar.
 // Floor rows are buttons: picking one cuts the 3D building at that floor and lists its rooms.
-export function BuildingDetails({ building, floor, onFloor, compact = false, dense = false }: Props) {
+export function BuildingDetails({ building, floor, onFloor, compact = false, dense = false, history, onHistory }: Props) {
   const t = useTranslations();
   const locale = useLocale() as Locale;
   const heading = useRef<HTMLHeadingElement>(null);
@@ -37,6 +48,11 @@ export function BuildingDetails({ building, floor, onFloor, compact = false, den
       </h2>
       {building.description && (
         <p className={`mt-3 text-sm leading-relaxed text-ink/75 ${compact ? 'line-clamp-2' : ''}`}>{building.description[locale]}</p>
+      )}
+      {onHistory && (
+        <button onClick={onHistory} className="pixel-btn mt-4 px-3 py-1.5 text-sm">
+          {t('history.open')} ▶
+        </button>
       )}
       {!compact && (
         <section className="mt-5">
@@ -103,6 +119,12 @@ export function BuildingDetails({ building, floor, onFloor, compact = false, den
               {!dense && <p className="mt-3 text-xs leading-snug text-ink/55">{current.estimated ? t('sheet.estimatedNote') : t('sheet.planNote')}</p>}
             </div>
           )}
+        </section>
+      )}
+      {!compact && !!history?.length && (
+        <section className="mt-6 border-t-3 border-ink pt-4">
+          <h3 className="mb-3 font-display text-[13px] uppercase tracking-widest text-ink/55">{t('history.title')}</h3>
+          <History entries={history} name={building.name[locale]} />
         </section>
       )}
     </div>
