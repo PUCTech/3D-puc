@@ -33,9 +33,10 @@ export function Site() {
   const gardens = useMemo(
     () =>
       (campus.gardens ?? []).map((g) => ({
-        geometry: flatPolygon(g.polygon, 0.06),
-        earth: (g.earth ?? []).map((e) => flatPolygon(e, 0.07)),
-        path: g.path ? ribbons([g.path], 1.6, 0.08) : null,
+        y: -(g.depth ?? 0),
+        geometry: flatPolygon(g.polygon, -(g.depth ?? 0) + 0.06),
+        earth: (g.earth ?? []).map((e) => flatPolygon(e, -(g.depth ?? 0) + 0.07)),
+        path: g.path ? ribbons([g.path], 1.6, -(g.depth ?? 0) + 0.08) : null,
         plants: g.plants ?? [],
       })),
     [],
@@ -69,10 +70,12 @@ export function Site() {
               <meshLambertMaterial color="#cfc6b2" />
             </mesh>
           )}
-          <Plants plants={g.plants} />
+          <group position-y={g.y}>
+            <Plants plants={g.plants} />
+          </group>
         </group>
       ))}
-      {areas.map((a, i) => (
+      {areas.filter((a) => !(a.sunk && a.kind === 'pitch')).map((a, i) => (
         <mesh key={i} geometry={a.geometry} receiveShadow>
           <meshLambertMaterial color={AREA_COLORS[a.kind] ?? '#82d05c'} />
         </mesh>

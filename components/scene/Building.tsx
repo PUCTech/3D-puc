@@ -64,7 +64,7 @@ export function Building({ building, selected, dimmed, near, locale, floorLevel,
     [bodies],
   );
   const [cx, cz] = footprintCenter(building);
-  const opacity = dimmed ? 0.45 : 1;
+  const opacity = dimmed ? 0.2 : 1; // faint, so lower-level places (the court) read through tall neighbours
   const [hovered, setHovered] = useState(false);
   // In floor view the room labels take over; the name is already in the panel.
   const showLabel = !floor && (selected || hovered || (!dimmed && (near || fullHeight >= LANDMARK_HEIGHT)));

@@ -375,3 +375,21 @@ Frames sampled every 2 s.
 **Prédio 2, Subsolo 1** (uses reported by the user; partitions estimated)
 - Library, library, the stair hall (same position as the upper floors), then the canteen (cantina) to the south.
 - A corridor runs along the west.
+
+## Court and lower level (drone video, 29–33 s)
+**Court**
+- Multi-sport: a maroon border band around a green field, with white futsal and basketball markings (center circle, penalty arcs, keys, free-throw circles).
+- Goals, hoops with backboards, a 4 m chain-link fence on posts, and floodlights on the corners (as in the 2018 photo).
+- New component: `Court.tsx`.
+
+**Roofs swapped**
+- DTI, the pavilion at the court's south end, has the **terracotta hip** roof.
+- Prédio 3, the long block on the court's east, has the **dark slate hip** roof.
+
+**Lean-to:** now runs the full length of Prédio 2's east wall, as in the video.
+
+**Lower-level planting**
+- Dense tree canopy east and south of the buildings ("Bosque"), a planted strip north of the court, and a hedge strip behind the court's east fence.
+- Gardens now take a `depth`, to sit on the sunken level.
+
+**Faded buildings** drop to 20% opacity when something else is selected. Prédio 2 blocks the court from the fixed camera, so this lets the court read through.
