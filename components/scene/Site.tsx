@@ -9,7 +9,8 @@ const AREA_COLORS: Record<string, string> = { pitch: '#3fae4f', garden: '#6cc24a
 // Ground layers, stacked a few cm apart so they don't z-fight.
 export function Site() {
   const sunken = useMemo(() => campus.sunken ?? [], []);
-  const lot = useMemo(() => (campus.boundary ? flatPolygon(campus.boundary, 0.03, sunken.map((s) => s.polygon)) : null), [sunken]);
+  const lotOutline = campus.upperLot ?? campus.boundary;
+  const lot = useMemo(() => (lotOutline ? flatPolygon(lotOutline, 0.03) : null), [lotOutline]);
   // Areas inside a sunken zone (the court) sit on its lower floor.
   const areas = useMemo(
     () =>
@@ -21,7 +22,14 @@ export function Site() {
       }),
     [sunken],
   );
-  const footways = useMemo(() => ribbons(campus.footways ?? [], 2.5, 0.04), []);
+  // Footways inside a sunken zone are drawn on its lower floor.
+  const footways = useMemo(() => {
+    const all = campus.footways ?? [];
+    const depthOf = (path: [number, number][]) => sunken.find((s) => pointInPolygon(path[Math.floor(path.length / 2)], s.polygon))?.depth ?? 0;
+    const upper = all.filter((p) => depthOf(p) === 0);
+    const lower = sunken.map((s) => ribbons(all.filter((p) => depthOf(p) === s.depth), 2.5, -s.depth + 0.04));
+    return [ribbons(upper, 2.5, 0.04), ...lower].filter((g) => g !== null);
+  }, [sunken]);
   const gardens = useMemo(
     () =>
       (campus.gardens ?? []).map((g) => ({
@@ -40,11 +48,11 @@ export function Site() {
           <meshLambertMaterial color="#cfcbc2" /> {/* light grey concrete paving (photos tour 01, jornada 1–2) */}
         </mesh>
       )}
-      {footways && (
-        <mesh geometry={footways} receiveShadow>
+      {footways.map((g, i) => (
+        <mesh key={`fw-${i}`} geometry={g} receiveShadow>
           <meshLambertMaterial color="#e9e1d2" />
         </mesh>
-      )}
+      ))}
       {gardens.map((g, i) => (
         <group key={`garden-${i}`}>
           {/* dense dark ground cover (photo 05) */}

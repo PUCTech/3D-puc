@@ -360,3 +360,18 @@ Frames sampled every 2 s.
 **Seen but not yet modeled**
 - The cross-shaped hedge parterres in the patio beds.
 - A small tile-roofed building at the court's south end. It's one of the buildings removed from the map.
+
+## Terrain, DTI and the basement uses (user)
+**Lower level**
+- Prédio 10, the court, Prédio 2's level −1 and Prédio 3 all sit on the same lower ground.
+- The whole campus east of Prédio 2's east wall line is now one sunken zone, 3.4 m deep: the campus boundary clipped by that line.
+- The street-level paving uses the complementary polygon (`upperLot`), so no polygon holes touch the boundary.
+- Prédio 3 and DTI have `baseHeight` −3.4. Footways and areas inside the zone are drawn on its floor.
+
+**Prédio 10 → DTI**
+- From the drone video, frames 24–30 s: white walls, continuous grey-glass window bands, and a **dark slate low hip roof**.
+- The id is now `dti`, so old `?b=predio-10` links fall back to the overview.
+
+**Prédio 2, Subsolo 1** (uses reported by the user; partitions estimated)
+- Library, library, the stair hall (same position as the upper floors), then the canteen (cantina) to the south.
+- A corridor runs along the west.

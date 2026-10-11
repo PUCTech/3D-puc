@@ -40,6 +40,7 @@ export type Campus = {
   boundary?: Point[];
   // Areas where the ground drops (e.g. the court level east of Prédio 2), depth in meters below street level.
   sunken?: { polygon: Point[]; depth: number }[];
+  upperLot?: Point[]; // street-level part of the campus lot (boundary minus sunken zones), so paving needs no holes
   areas?: { kind: string; polygon: Point[] }[]; // OSM leisure/landuse inside or near campus, e.g. "pitch", "garden"
   footways?: Point[][];
   context?: { footprint: Point[]; height: number }[]; // neighbouring city buildings

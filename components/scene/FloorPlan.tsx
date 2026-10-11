@@ -11,7 +11,7 @@ export const ROOM_COLORS: Record<string, string> = {
   classroom: '#bae4fe', office: '#ffd166', support: '#e8e1cf', wc: '#cfe3e8', stair: '#bdb6a8', corridor: '#c97a5a', // terracotta tile corridor floor (Prédio 2 photo, 2025)
  
   foyer: '#f1d9b5', entrance: '#f1d9b5', stage: '#e3b6e8', auditorium: '#f4b1a8', library: '#b7dfa8', stacks: '#9ccf8c',
-  terrace: '#8fcf6a', lounge: '#f6c9a8', bedroom: '#f9e3b8', meeting: '#ffe08a', room: '#e9dcc6', bar: '#f2c6a0',
+  terrace: '#8fcf6a', canteen: '#f7b267', lounge: '#f6c9a8', bedroom: '#f9e3b8', meeting: '#ffe08a', room: '#e9dcc6', bar: '#f2c6a0',
 };
 const ROOM_HEIGHT = 0.4; // low blocks: walls suggested, the plan stays readable from above
 const LABEL_MIN_AREA = 14; // m²; smaller rooms are colored but unlabeled to avoid clutter

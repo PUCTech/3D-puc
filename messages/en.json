@@ -20,7 +20,7 @@
     "wholeBuilding": "Show whole building",
     "planNote": "Original 1942 plan (Rino Levi). Current uses may differ.",
     "showFloor": "Show {floor} on the map",
-    "estimatedNote": "This floor’s layout is estimated from photos; there is no plan."
+    "estimatedNote": "This floor’s layout is estimated (no plan); uses reported by the community."
   },
   "floor": {
     "ground": "Ground floor",
@@ -69,6 +69,7 @@
     "meeting": "Meeting room",
     "room": "Room",
     "entrance": "Entrance",
-    "bar": "Pantry"
+    "bar": "Pantry",
+    "canteen": "Canteen"
   }
 }

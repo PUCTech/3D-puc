@@ -69,7 +69,7 @@ export function Sunken({ courts }: { courts: Point[][] }) {
       {zones.map((z, i) => (
         <group key={i}>
           <mesh geometry={z.floor} receiveShadow>
-            <meshLambertMaterial color="#9c968c" />
+            <meshLambertMaterial color="#c4c0b7" /> {/* paving at the lower level, a shade darker than the street-level lot */}
           </mesh>
           <mesh geometry={z.walls} castShadow receiveShadow>
             <meshToonMaterial color="#cfc9bd" gradientMap={toonRamp} />
