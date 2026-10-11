@@ -6,7 +6,7 @@ import { Building } from './Building';
 import { Ground } from './Ground';
 import { Streets } from './Streets';
 import { CameraRig } from './CameraRig';
-import { PIXEL_DPR } from './pixel';
+import { PHONE_DPR, PIXEL_DPR } from './pixel';
 import { City } from './City';
 import { Site } from './Site';
 import { Marquees } from './Marquees';
@@ -60,6 +60,7 @@ type Props = {
   locale: Locale;
   onSelect: (id: string | null) => void;
   onContextLost?: () => void;
+  phone?: boolean; // finer pixels on small screens (PHONE_DPR), desktop keeps PIXEL_DPR
 };
 
 // Phones and low-memory devices get a smaller shadow map; everything else is the same scene.
@@ -67,7 +68,7 @@ const lite = () =>
   typeof window !== 'undefined' &&
   (window.matchMedia('(pointer: coarse)').matches || ((navigator as { deviceMemory?: number }).deviceMemory ?? 8) <= 4 || (navigator.hardwareConcurrency ?? 8) <= 4);
 
-export default function CampusScene({ selectedId, selectedFloor, lower, bottomInset = 0, leftInset = 0, topInset = 0, locale, onSelect, onContextLost }: Props) {
+export default function CampusScene({ selectedId, selectedFloor, lower, bottomInset = 0, leftInset = 0, topInset = 0, locale, onSelect, onContextLost, phone = false }: Props) {
   const [shadowSize] = useState(() => (lite() ? 1024 : 2048));
   // Trees and city blocks between the camera and the selection are hidden (occlusion.ts).
   useEffect(() => {
@@ -87,7 +88,7 @@ export default function CampusScene({ selectedId, selectedFloor, lower, bottomIn
       }
       orthographic
       camera={{ position: [-250, 300, 250], zoom: 4, near: 1, far: 3000 }}
-      dpr={PIXEL_DPR}
+      dpr={phone ? PHONE_DPR : PIXEL_DPR}
       gl={{ antialias: false }}
       shadows="percentage"
       style={{ imageRendering: 'pixelated' }}
