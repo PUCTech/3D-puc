@@ -436,3 +436,16 @@ Frames sampled every 2 s.
 - Fix: the gatehouse lattice insert sat on the campus-side face. It's now on the street face of the right block.
 
 **Credit:** a "Feito por / Built by PUC Tech" strip with the league wordmark (`public/brand/puctech.svg`), linking to puctech.com.br. It's at the bottom of the desktop sidebar and of the phone building list.
+
+## Street front, round 2 (Street View Jan 2023 / Jan 2024 screenshots in chat)
+- **Car gate:**
+  - a black sliding gate whose two leaves of diagonal bars meet in a chevron;
+  - square concrete pillars either side;
+  - a black vertical-bar fence on a low wall to its south.
+- **Sidewalk pots:** eight black pots with cycads in front of the lattice wall, between the entrance and the car gate.
+- **Pedestrian gate:** white vertical bars instead of a glass panel.
+- **Entrance canopy:** the wavy canopy now starts just inside the gate and runs in along the entrance walk.
+- **Auditório terrace:** a parapet railing (posts and two rails) around its planted roof.
+- **Fonts:** the gate sign's lettering uses Archivo Narrow, a Google Font via `next/font`. The PUC Tech wordmark needs no font: its letters are outlined paths, and the hidden duplicate text layers were removed.
+- **Build:** Tailwind no longer scans `docs/`; it failed reading a photo there.
+- **Open question:** a brown tile band on a white wall in front of the terrace (photo 4) isn't modeled yet; unclear which wall it belongs to.

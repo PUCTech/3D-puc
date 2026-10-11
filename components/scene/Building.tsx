@@ -4,7 +4,7 @@ import { Edges, Html } from '@react-three/drei';
 import { useFrame, type ThreeEvent } from '@react-three/fiber';
 import { basementDepth, buildingHeight, floorBase, footprintCenter, type Building as B, type Locale, type Point } from '@/lib/campus';
 import { INK_WIDTH, toonRamp, wallTexture } from './pixel';
-import { blankShortWalls, extrude, flatPolygon } from './geometry';
+import { blankShortWalls, extrude, flatPolygon, mergeGeometries } from './geometry';
 import { Plants } from './Plants';
 import { Cobogo } from './Cobogo';
 import { Roof } from './Roof';
@@ -24,6 +24,31 @@ const shrubSpots = (footprint: B['footprint']): B['footprint'] => {
   const n = footprint.length;
   const [cx, cz] = [footprint.reduce((s, p) => s + p[0], 0) / n, footprint.reduce((s, p) => s + p[1], 0) / n];
   return footprint.map(([x, z]) => [cx + (x - cx) * 0.55, cz + (z - cz) * 0.55]);
+};
+
+// Parapet railing around a roof terrace (Street View, Jan 2024): thin posts every 1.5 m and two rails at 0.5 / 1.1 m.
+const railing = (footprint: B['footprint'], height: number) => {
+  const parts: THREE.BufferGeometry[] = [];
+  footprint.forEach((a, i) => {
+    const b = footprint[(i + 1) % footprint.length];
+    const len = Math.hypot(b[0] - a[0], b[1] - a[1]);
+    const angle = -Math.atan2(b[1] - a[1], b[0] - a[0]);
+    const at = (d: number): [number, number] => [a[0] + ((b[0] - a[0]) * d) / len, a[1] + ((b[1] - a[1]) * d) / len];
+    for (let d = 0; d < len; d += 1.5) {
+      const g = new THREE.BoxGeometry(0.05, 1.1, 0.05);
+      const [x, z] = at(d);
+      g.translate(x, height + 0.55, z);
+      parts.push(g);
+    }
+    for (const y of [0.5, 1.1]) {
+      const g = new THREE.BoxGeometry(len, 0.05, 0.05);
+      g.rotateY(angle);
+      const [x, z] = at(len / 2);
+      g.translate(x, height + y, z);
+      parts.push(g);
+    }
+  });
+  return mergeGeometries(parts);
 };
 
 const LANDMARK_HEIGHT = 10; // meters; taller buildings keep their label in the overview
@@ -60,7 +85,7 @@ export function Building({ building, selected, dimmed, near, locale, floorLevel,
     () =>
       bodies
         .filter((b) => b.roofGarden)
-        .map((b) => ({ height: b.height, geometry: flatPolygon(b.footprint, b.height + 0.05), shrubs: shrubSpots(b.footprint).map((at) => ({ kind: 'dracaena' as const, at })) })),
+        .map((b) => ({ height: b.height, geometry: flatPolygon(b.footprint, b.height + 0.05), railing: railing(b.footprint, b.height), shrubs: shrubSpots(b.footprint).map((at) => ({ kind: 'dracaena' as const, at })) })),
     [bodies],
   );
   const [cx, cz] = footprintCenter(building);
@@ -112,6 +137,9 @@ export function Building({ building, selected, dimmed, near, locale, floorLevel,
           <group position-y={g.height}>
             <Plants plants={g.shrubs} scale={0.6} />
           </group>
+          <mesh geometry={g.railing} castShadow>
+            <meshToonMaterial color="#dcdcd6" gradientMap={toonRamp} transparent opacity={opacity} />
+          </mesh>
         </group>
       ))}
       {/* Always mounted, hidden with opacity: unmounting drei <Html> mid-render triggers React warnings */}

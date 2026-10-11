@@ -4,7 +4,7 @@ import { Edges, Html } from '@react-three/drei';
 import { useTranslations } from 'next-intl';
 import { campus, type Point } from '@/lib/campus';
 import { mergeGeometries } from './geometry';
-import { INK_WIDTH, toonRamp } from './pixel';
+import { INK_WIDTH, carGateTexture, toonRamp } from './pixel';
 
 // Parking lane (user + photo 2025-10-29): concrete lane from the car gate, sloping down past the Auditório
 // to the lower level and ending at Prédio 3; cars parallel-parked on both sides; a railed pedestrian ramp.
@@ -51,6 +51,28 @@ function strip(f: ReturnType<typeof frame>, width: number, slope: [number, numbe
   g.setAttribute('position', new THREE.Float32BufferAttribute(pos, 3));
   g.computeVertexNormals();
   return g;
+}
+
+// Car gate across the lane at the street (Street View, Jan 2023): square concrete pillars and a black
+// sliding gate of diagonal bars. Local frame: x along the lane (inward), z across it.
+const GATE_HEIGHT = 2.3;
+function CarGate({ at, yaw, width }: { at: Point; yaw: number; width: number }) {
+  const texture = useMemo(() => carGateTexture(), []);
+  return (
+    <group position={[at[0], 0, at[1]]} rotation-y={-yaw}>
+      {[-1, 1].map((side) => (
+        <mesh key={side} position={[0, 1.4, side * (width / 2 + 0.35)]} castShadow>
+          <boxGeometry args={[0.7, 2.8, 0.7]} />
+          <meshToonMaterial color="#e3ded3" gradientMap={toonRamp} />
+          <Edges threshold={20} color="#1b1b24" lineWidth={INK_WIDTH * 0.5} />
+        </mesh>
+      ))}
+      <mesh position-y={GATE_HEIGHT / 2 + 0.05} rotation-y={Math.PI / 2}>
+        <planeGeometry args={[width, GATE_HEIGHT]} />
+        <meshBasicMaterial map={texture} alphaTest={0.5} transparent side={THREE.DoubleSide} />
+      </mesh>
+    </group>
+  );
 }
 
 function Car({ color }: { color: string }) {
@@ -150,6 +172,7 @@ export function Parking({ lower }: { lower: boolean }) {
   if (!built || !parking) return null;
   return (
     <group>
+      {!lower && <CarGate at={parking.from} yaw={built.f.yaw} width={parking.width} />}
       <mesh geometry={built.lane} receiveShadow>
         <meshLambertMaterial color="#d6d1c5" side={THREE.DoubleSide} />
         <Edges threshold={20} color="#1b1b24" lineWidth={INK_WIDTH * 0.6} />

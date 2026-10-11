@@ -2,7 +2,8 @@ import { useMemo } from 'react';
 import * as THREE from 'three';
 import { campus } from '@/lib/campus';
 import { mergeGeometries } from './geometry';
-import { toonRamp } from './pixel';
+import { barsTexture, toonRamp } from './pixel';
+import { Plants } from './Plants';
 
 // Photo 14: a low concrete wall, a square concrete lattice above it, square pillars every ~2.6 m.
 const WALL = 0.5;
@@ -48,6 +49,19 @@ export function StreetFence() {
     return { solid: solid.length ? mergeGeometries(solid) : null, lattice: lattice.length ? mergeGeometries(lattice) : null };
   }, []);
   const texture = useMemo(() => latticeTexture(), []);
+  // Black bar fence: low wall + a plane of bars, per segment (texture repeat depends on length).
+  const barFences = useMemo(
+    () =>
+      (campus.streetBars ?? []).flatMap((f) =>
+        f.path.slice(1).map((b, i) => {
+          const a = f.path[i];
+          const len = Math.hypot(b[0] - a[0], b[1] - a[1]);
+          return { mid: [(a[0] + b[0]) / 2, (a[1] + b[1]) / 2] as const, angle: -Math.atan2(b[1] - a[1], b[0] - a[0]), len, height: f.height, bars: barsTexture('#1d1f22', 8, len) };
+        }),
+      ),
+    [],
+  );
+  const pots = useMemo(() => (campus.streetPots ?? []).map((at) => ({ kind: 'dracaena' as const, at })), []);
   return (
     <>
       {solid && (
@@ -60,6 +74,31 @@ export function StreetFence() {
           <meshToonMaterial map={texture} gradientMap={toonRamp} alphaTest={0.5} transparent side={THREE.DoubleSide} />
         </mesh>
       )}
+      {barFences.map((f, i) => (
+        <group key={i} position={[f.mid[0], 0, f.mid[1]]} rotation-y={f.angle}>
+          <mesh position-y={WALL / 2} castShadow receiveShadow>
+            <boxGeometry args={[f.len, WALL, 0.3]} />
+            <meshToonMaterial color={CONCRETE} gradientMap={toonRamp} />
+          </mesh>
+          <mesh position-y={WALL + (f.height - WALL) / 2}>
+            <planeGeometry args={[f.len, f.height - WALL]} />
+            <meshBasicMaterial map={f.bars} alphaTest={0.5} transparent side={THREE.DoubleSide} />
+          </mesh>
+          <mesh position-y={f.height}>
+            <boxGeometry args={[f.len, 0.06, 0.06]} />
+            <meshBasicMaterial color="#1d1f22" />
+          </mesh>
+        </group>
+      ))}
+      {pots.map((p, i) => (
+        <mesh key={i} position={[p.at[0], 0.3, p.at[1]]} castShadow>
+          <cylinderGeometry args={[0.4, 0.3, 0.6, 10]} />
+          <meshToonMaterial color="#1e2024" gradientMap={toonRamp} />
+        </mesh>
+      ))}
+      <group position-y={0.6}>
+        <Plants plants={pots} scale={0.55} />
+      </group>
     </>
   );
 }

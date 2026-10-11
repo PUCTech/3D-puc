@@ -3,7 +3,7 @@ import * as THREE from 'three';
 import { Html } from '@react-three/drei';
 import { campus, type Point } from '@/lib/campus';
 import { mergeGeometries, ribbons } from './geometry';
-import { toonRamp } from './pixel';
+import { barsTexture, toonRamp } from './pixel';
 import { latticeTexture } from './StreetFence';
 
 // Upright strips along a path: walls (thick, opaque) and fences (thin, see-through bars).
@@ -40,7 +40,10 @@ function useSignTexture() {
   useEffect(() => {
     const img = new Image();
     img.src = '/brand/pucsp-sign.png';
-    img.onload = () => {
+    // Canvas text needs the web font loaded first (next/font exposes its family through --font-sign).
+    const family = getComputedStyle(document.documentElement).getPropertyValue('--font-sign').trim() || 'sans-serif';
+    const ready = Promise.all([img.decode(), document.fonts.load(`bold 30px ${family}`)]);
+    ready.then(() => {
       const c = document.createElement('canvas');
       c.width = 680;
       c.height = 260;
@@ -49,16 +52,16 @@ function useSignTexture() {
       const w = (img.width / img.height) * h;
       g.drawImage(img, 10, 10, w, h);
       g.fillStyle = '#1d1d1f';
-      g.font = 'bold 30px "Arial Narrow", Arial, sans-serif';
+      g.font = `bold 30px ${family}`;
       g.fillText('Campus Marquês de Paranaguá', 150, 240);
       g.fillStyle = '#2b4f9e';
-      g.font = 'bold 64px Arial, sans-serif';
+      g.font = `bold 70px ${family}`;
       g.fillText('111', 570, 140);
       const t = new THREE.CanvasTexture(c);
       t.colorSpace = THREE.SRGBColorSpace;
       t.anisotropy = 4;
       setTexture(t);
-    };
+    });
   }, []);
   return texture;
 }
@@ -70,6 +73,7 @@ function Gatehouse({ at: [x, z], along: [ax, az] }: { at: Point; along: Point })
     return t;
   }, []);
   const sign = useSignTexture();
+  const bars = useMemo(() => barsTexture('#f3f3ee', 8, GATE.width), []);
   // Local frame: x along the street (south = +x), +z toward the street (west).
   const angle = -Math.atan2(az, ax);
   const offset = GATE.width / 2 + GATE.house / 2;
@@ -97,9 +101,14 @@ function Gatehouse({ at: [x, z], along: [ax, az] }: { at: Point; along: Point })
           )}
         </group>
       ))}
+      {/* pedestrian gate: white vertical bars (Street View, Jan 2024) */}
       <mesh position-y={1.2}>
-        <boxGeometry args={[GATE.width, 2.4, 0.08]} />
-        <meshToonMaterial color="#f3f3ee" gradientMap={toonRamp} transparent opacity={0.7} />
+        <planeGeometry args={[GATE.width, 2.4]} />
+        <meshToonMaterial map={bars} color="#f3f3ee" gradientMap={toonRamp} alphaTest={0.5} transparent side={THREE.DoubleSide} />
+      </mesh>
+      <mesh position-y={2.42}>
+        <boxGeometry args={[GATE.width, 0.08, 0.08]} />
+        <meshToonMaterial color="#f3f3ee" gradientMap={toonRamp} />
       </mesh>
     </group>
   );
