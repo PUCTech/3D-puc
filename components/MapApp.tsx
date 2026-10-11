@@ -1,6 +1,6 @@
 'use client';
 import dynamic from 'next/dynamic';
-import { useEffect, useState, useSyncExternalStore } from 'react';
+import { useEffect, useRef, useState, useSyncExternalStore } from 'react';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import { useLocale, useTranslations } from 'next-intl';
 import type { Locale } from '@/lib/campus';
@@ -42,6 +42,9 @@ const hasWebGL = () => {
   return webglSupport;
 };
 const noSubscribe = () => () => {};
+// Desktop panel widths in CSS px (left-4 sidebar 23.5rem; + history 25rem), with a gutter.
+const PANELS = 26 * 16;
+const PANELS_WIDE = 52 * 16;
 
 export function MapApp() {
   const t = useTranslations();
@@ -63,6 +66,13 @@ export function MapApp() {
   const [historyOpen, setHistoryOpen] = useState(true);
   const historyEntries = selected ? historyFor(selected.id, selectedFloor) : [];
   const showHistory = historyOpen && historyEntries.length > 0;
+  // Picking another building or floor starts both panels from the top.
+  const sidebarScroll = useRef<HTMLDivElement>(null);
+  const historyScroll = useRef<HTMLDivElement>(null);
+  useEffect(() => {
+    sidebarScroll.current?.scrollTo({ top: 0 });
+    historyScroll.current?.scrollTo({ top: 0 });
+  }, [selected?.id, selectedFloor]);
 
   const select = (id: string | null) => {
     setListOpen(false);
@@ -103,7 +113,7 @@ export function MapApp() {
 
   const scene = webgl ? (
     <SceneErrorBoundary onError={() => setSceneFailed(true)}>
-      <CampusScene selectedId={selected?.id ?? null} selectedFloor={selectedFloor} lower={lower} bottomInset={isDesktop || !selected ? 0 : selectedFloor !== null ? 0.42 : 0.2} locale={locale} onSelect={select} />
+      <CampusScene selectedId={selected?.id ?? null} selectedFloor={selectedFloor} lower={lower} bottomInset={isDesktop || !selected ? 0 : selectedFloor !== null ? 0.42 : 0.2} leftInset={isDesktop ? (showHistory ? PANELS_WIDE : PANELS) : 0} locale={locale} onSelect={select} />
     </SceneErrorBoundary>
   ) : (
     <p role="status" className="grid h-full place-items-center p-6 text-center font-display text-lg text-navy">
@@ -114,8 +124,8 @@ export function MapApp() {
   if (isDesktop)
     return (
       <main className="fixed inset-0 overflow-hidden bg-ground">
-        {/* Map gets its own area right of the sidebar, so a selected building is never hidden behind a panel. */}
-        <div className={`absolute inset-y-0 right-0 ${showHistory ? 'left-[52rem]' : 'left-[25.5rem]'}`}>{scene}</div>
+        {/* Map fills the window behind the panels; the camera frames the selection in the uncovered part (leftInset). */}
+        <div className="absolute inset-0">{scene}</div>
         <aside className="pixel-box fixed bottom-4 left-4 top-4 z-20 flex w-[23.5rem] flex-col overflow-hidden">
           <header className="flex items-start justify-between gap-3 border-b-3 border-ink bg-navy px-5 py-4 text-white">
             <div>
@@ -127,7 +137,7 @@ export function MapApp() {
           <div className="border-b-3 border-ink bg-paper p-4">
             <SearchBar onPick={select} />
           </div>
-          <div className="flex-1 overflow-y-auto p-4">
+          <div ref={sidebarScroll} className="flex-1 overflow-y-auto p-4">
             {selected ? (
               <section aria-labelledby="building-title" data-testid="building-sheet">
                 <button onClick={() => select(null)} className="pixel-btn pixel-btn-paper mb-5 px-3 py-1 text-sm">
@@ -157,7 +167,7 @@ export function MapApp() {
                 ✕
               </button>
             </header>
-            <div className="flex-1 overflow-y-auto p-5">
+            <div ref={historyScroll} className="flex-1 overflow-y-auto p-5">
               <History key={`${selected?.id}-${selectedFloor}`} entries={historyEntries} name={selected?.name[locale]} />
             </div>
           </aside>

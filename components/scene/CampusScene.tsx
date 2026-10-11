@@ -1,7 +1,7 @@
 'use client';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Canvas, useFrame } from '@react-three/fiber';
-import { basementDepth, campus, onLowerLevel, type Locale } from '@/lib/campus';
+import { basementDepth, buildingHeight, campus, findBuilding, onLowerLevel, type Locale } from '@/lib/campus';
 import { Building } from './Building';
 import { Ground } from './Ground';
 import { Streets } from './Streets';
@@ -17,6 +17,7 @@ import { StreetFence } from './StreetFence';
 import { Props as CampusProps } from './Props';
 import { Plants } from './Plants';
 import { GROUND_COLOR } from './Ground';
+import { setOcclusionTarget } from './occlusion';
 
 const STREET_TREES = (campus.streetTrees ?? []).map((at) => ({ kind: 'slender' as const, at }));
 const NEAR_ZOOM = 6; // orthographic zoom = CSS px per meter; zoomed in past this, every building gets a label
@@ -47,9 +48,24 @@ function Buildings({ selectedId, selectedFloor, lower, locale, onSelect }: Props
 }
 
 // lower: show only the lower level (court, Prédio 2 subsolo, Prédio 3, DTI); street-level layers are removed.
-type Props = { selectedId: string | null; selectedFloor: number | null; lower: boolean; bottomInset?: number; locale: Locale; onSelect: (id: string | null) => void };
+// leftInset: CSS px covered by panels on the left (desktop); the camera frames things to the right of them.
+type Props = {
+  selectedId: string | null;
+  selectedFloor: number | null;
+  lower: boolean;
+  bottomInset?: number;
+  leftInset?: number;
+  locale: Locale;
+  onSelect: (id: string | null) => void;
+};
 
-export default function CampusScene({ selectedId, selectedFloor, lower, bottomInset = 0, locale, onSelect }: Props) {
+export default function CampusScene({ selectedId, selectedFloor, lower, bottomInset = 0, leftInset = 0, locale, onSelect }: Props) {
+  // Trees and city blocks between the camera and the selection are hidden (occlusion.ts).
+  useEffect(() => {
+    const b = findBuilding(selectedId);
+    const base = b?.baseHeight ?? 0;
+    setOcclusionTarget(b ? b.footprint : null, base, b ? base + buildingHeight(b) : 0);
+  }, [selectedId]);
   return (
     <Canvas
       orthographic
@@ -93,7 +109,7 @@ export default function CampusScene({ selectedId, selectedFloor, lower, bottomIn
         </>
       )}
       <Buildings selectedId={selectedId} selectedFloor={selectedFloor} lower={lower} locale={locale} onSelect={onSelect} />
-      <CameraRig selectedId={selectedId} bottomInset={bottomInset} />
+      <CameraRig selectedId={selectedId} bottomInset={bottomInset} leftInset={leftInset} />
     </Canvas>
   );
 }

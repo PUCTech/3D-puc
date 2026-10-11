@@ -1,5 +1,6 @@
-import { useEffect, useRef } from 'react';
+import { useCallback, useEffect, useRef } from 'react';
 import * as THREE from 'three';
+import { useThree } from '@react-three/fiber';
 import { CameraControls, CameraControlsImpl } from '@react-three/drei';
 import { campus, buildingHeight, findBuilding, type Building } from '@/lib/campus';
 import { CAMERA_EVENT, type CameraCommand } from '@/components/ui/MapControls';
@@ -23,18 +24,34 @@ const sphereOf = (buildings: Building[]) => {
 const CAMPUS_SPHERE = sphereOf(campus.buildings);
 
 // bottomInset: share of the screen covered by a bottom sheet (phones); the selection is framed above it.
-export function CameraRig({ selectedId, bottomInset }: { selectedId: string | null; bottomInset: number }) {
+// leftInset: CSS px covered by side panels (desktop); the selection is framed in the map area right of them.
+export function CameraRig({ selectedId, bottomInset, leftInset }: { selectedId: string | null; bottomInset: number; leftInset: number }) {
   const ref = useRef<CameraControls>(null);
+  const size = useThree((s) => s.size);
+  // Shared by selection changes and the recenter button.
+  const frame = useCallback(
+    (smooth: boolean) => {
+      const controls = ref.current;
+      if (!controls) return;
+      const b = findBuilding(selectedId);
+      const sphere = b ? sphereOf([b]) : CAMPUS_SPHERE;
+      if (leftInset) {
+        // Fit the sphere into the uncovered area, then slide the camera left (negative x) by half the panels' width.
+        const zoom = Math.min(size.width - leftInset, size.height) / (2 * sphere.radius);
+        controls.moveTo(sphere.center.x, sphere.center.y, sphere.center.z, smooth);
+        controls.zoomTo(zoom, smooth);
+        controls.setFocalOffset(-leftInset / 2 / zoom, 0, 0, smooth);
+        return;
+      }
+      controls.fitToSphere(sphere, smooth);
+      // Positive y focal offset shifts the view up past the target, so the object sits higher on screen (above the sheet).
+      controls.setFocalOffset(0, b ? sphere.radius * bottomInset * 1.8 : 0, 0, smooth);
+    },
+    [selectedId, bottomInset, leftInset, size.width, size.height],
+  );
   useEffect(() => {
-    const controls = ref.current;
-    if (!controls) return;
-    const smooth = !window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    const b = findBuilding(selectedId);
-    const sphere = b ? sphereOf([b]) : CAMPUS_SPHERE;
-    controls.fitToSphere(sphere, smooth);
-    // Positive y focal offset shifts the view up past the target, so the object sits higher on screen (above the sheet).
-    controls.setFocalOffset(0, b ? sphere.radius * bottomInset * 1.8 : 0, 0, smooth);
-  }, [selectedId, bottomInset]);
+    frame(!window.matchMedia('(prefers-reduced-motion: reduce)').matches);
+  }, [frame]);
 
   // Zoom / recenter buttons (MapControls) talk to the camera through a window event.
   useEffect(() => {
@@ -45,14 +62,11 @@ export function CameraRig({ selectedId, bottomInset }: { selectedId: string | nu
       const command = (e as CustomEvent<CameraCommand>).detail;
       if (command === 'in') controls.zoomTo(controls.camera.zoom * 1.5, smooth);
       else if (command === 'out') controls.zoomTo(controls.camera.zoom / 1.5, smooth);
-      else {
-        const b = findBuilding(selectedId);
-        controls.fitToSphere(b ? sphereOf([b]) : CAMPUS_SPHERE, smooth);
-      }
+      else frame(smooth);
     };
     window.addEventListener(CAMERA_EVENT, onCommand);
     return () => window.removeEventListener(CAMERA_EVENT, onCommand);
-  }, [selectedId]);
+  }, [frame]);
   return (
     <CameraControls
       ref={ref}

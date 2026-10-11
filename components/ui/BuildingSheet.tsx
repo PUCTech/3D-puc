@@ -1,5 +1,5 @@
 'use client';
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useTranslations } from 'next-intl';
 import type { Building } from '@/lib/campus';
 import { BuildingDetails } from './BuildingDetails';
@@ -13,6 +13,10 @@ export function BuildingSheet({ building, floor, onFloor, onClose }: Props) {
   const [expanded, setExpanded] = useState(false);
   const floorView = floor !== null; // keep the sheet short so the cut floor stays visible above it
   const dragStart = useRef<number | null>(null);
+  const sheet = useRef<HTMLElement>(null);
+  useEffect(() => {
+    sheet.current?.scrollTo({ top: 0 });
+  }, [floor]); // new floor: start from the top
 
   const onPointerUp = (y: number) => {
     if (dragStart.current === null) return;
@@ -25,6 +29,7 @@ export function BuildingSheet({ building, floor, onFloor, onClose }: Props) {
 
   return (
     <section
+      ref={sheet}
       data-testid="building-sheet"
       aria-labelledby="building-title"
       className={`pixel-box fixed inset-x-0 bottom-0 z-20 overflow-y-auto ${floorView ? 'max-h-[42dvh]' : 'max-h-[75dvh]'} border-x-0 border-b-0 px-5 pb-6 pt-1 shadow-[0_-4px_0_var(--color-ink)]`}
