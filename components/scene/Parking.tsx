@@ -1,6 +1,7 @@
 import { useMemo } from 'react';
+import { Label } from './Label';
 import * as THREE from 'three';
-import { Edges, Html } from '@react-three/drei';
+import { Edges } from '@react-three/drei';
 import { useTranslations } from 'next-intl';
 import { campus, type Point } from '@/lib/campus';
 import { mergeGeometries } from './geometry';
@@ -208,9 +209,7 @@ export function Parking({ lower }: { lower: boolean }) {
           <lineBasicMaterial color="#f4f4f0" />
         </lineSegments>
       ))}
-      <Html position={[built.label[0], built.labelY + 2.5, built.label[1]]} center zIndexRange={[10, 0]} className="pointer-events-none select-none">
-        <span className="pixel-chip block whitespace-nowrap bg-paper px-1 font-display text-[11px] text-navy">P · {t('parking')}</span>
-      </Html>
+      <Label position={[built.label[0], built.labelY + 2.5, built.label[1]]} text={`P · ${t('parking')}`} className="pixel-chip block whitespace-nowrap bg-paper px-1 font-display text-[11px] text-navy" />
     </group>
   );
 }

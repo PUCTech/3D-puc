@@ -18,7 +18,8 @@ export const generateStaticParams = () => routing.locales.map((locale) => ({ loc
 
 export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }): Promise<Metadata> {
   const t = await getTranslations({ locale: (await params).locale, namespace: 'meta' });
-  return { title: t('title'), description: t('description') };
+  // appleWebApp: from the Home Screen, iOS opens it full screen with the map under a translucent status bar.
+  return { title: t('title'), description: t('description'), appleWebApp: { capable: true, title: 'Mapa PUC', statusBarStyle: 'black-translucent' } };
 }
 
 export default async function LocaleLayout({ children, params }: { children: React.ReactNode; params: Promise<{ locale: string }> }) {

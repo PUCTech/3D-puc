@@ -1,6 +1,7 @@
 import { useMemo, useState } from 'react';
+import { Label } from './Label';
 import { useFrame } from '@react-three/fiber';
-import { Edges, Html } from '@react-three/drei';
+import { Edges } from '@react-three/drei';
 import { useTranslations } from 'next-intl';
 import type { Building, Floor, Point } from '@/lib/campus';
 import { extrude, flatPolygon } from './geometry';
@@ -52,15 +53,16 @@ export function FloorPlan({ building, floor, y, xray }: { building: Building; fl
           <Edges threshold={15} color="#1b1b24" lineWidth={INK_WIDTH * 0.6} depthTest={!xray} renderOrder={xray ? 7 : 0} />
         </mesh>
       ))}
-      {/* Always mounted, hidden with opacity: mounting/unmounting drei <Html> on every zoom step is costly and noisy */}
+      {/* Always mounted, faded by zoom, so zooming doesn't add and remove DOM nodes */}
       {rooms
         .filter((r) => r.big && r.kind !== 'corridor')
         .map((r) => (
-          <Html key={`l-${r.id}`} position={[r.at[0], y + ROOM_HEIGHT + 0.6, r.at[1]]} center zIndexRange={[10, 0]} className="pointer-events-none select-none">
-            <span className={`pixel-chip block whitespace-nowrap bg-paper px-1 font-display text-[11px] text-navy transition-opacity ${labelsFit ? 'opacity-100' : 'opacity-0'}`}>
-              {t(r.kind as 'room')}
-            </span>
-          </Html>
+          <Label
+            key={`l-${r.id}`}
+            position={[r.at[0], y + ROOM_HEIGHT + 0.6, r.at[1]]}
+            text={t(r.kind as 'room')}
+            className={`pixel-chip block whitespace-nowrap bg-paper px-1 font-display text-[11px] text-navy transition-opacity ${labelsFit ? 'opacity-100' : 'opacity-0'}`}
+          />
         ))}
     </group>
   );
