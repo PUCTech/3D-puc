@@ -451,3 +451,4 @@ Frames sampled every 2 s.
 - **Open question:** a brown tile band on a white wall in front of the terrace (photo 4) isn't modeled yet; unclear which wall it belongs to.
 
 - Wavy canopy: no leg along Prédio 2's west wall (user, Oct 2026). It only runs along Prédio 1 and the Auditório.
+- Entrance canopy meets the Prédio 1–Auditório canopy at 90° (user screenshot 11.42.44). Both follow the street grid; the entrance walk runs straight in from the gate.
