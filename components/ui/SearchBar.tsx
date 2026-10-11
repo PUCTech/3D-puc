@@ -4,7 +4,9 @@ import { useLocale, useTranslations } from 'next-intl';
 import { campus, type Locale } from '@/lib/campus';
 import { searchBuildings } from '@/lib/search';
 
-export function SearchBar({ onPick }: { onPick: (id: string) => void }) {
+// inline: results flow under the input (inside the phone sheet) instead of a floating dropdown.
+// onFocus: lets the phone sheet open fully, above the keyboard.
+export function SearchBar({ onPick, inline = false, onFocus }: { onPick: (id: string) => void; inline?: boolean; onFocus?: () => void }) {
   const t = useTranslations('search');
   const locale = useLocale() as Locale;
   const [q, setQ] = useState('');
@@ -21,6 +23,7 @@ export function SearchBar({ onPick }: { onPick: (id: string) => void }) {
         placeholder={t('placeholder')}
         value={q}
         onChange={(e) => setQ(e.target.value)}
+        onFocus={onFocus}
         onKeyDown={(e) => {
           if (e.key === 'Enter' && results[0]) pick(results[0].id);
           if (e.key === 'Escape') setQ('');
@@ -31,7 +34,7 @@ export function SearchBar({ onPick }: { onPick: (id: string) => void }) {
         {q.trim() && (results.length ? t('count', { count: results.length }) : t('noResults'))}
       </p>
       {q.trim() && (
-        <ul className="pixel-box absolute inset-x-0 top-[calc(100%+8px)] z-30 max-h-[60vh] overflow-y-auto">
+        <ul className={`pixel-box ${inline ? 'mt-3' : 'absolute inset-x-0 top-[calc(100%+8px)] z-30 max-h-[60vh] overflow-y-auto'}`}>
           {results.length === 0 && <li className="px-3 py-3 text-sm text-ink/60">{t('noResults')}</li>}
           {results.map((b) => (
             <li key={b.id} className="border-b-2 border-ink/10 last:border-b-0">

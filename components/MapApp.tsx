@@ -6,7 +6,7 @@ import { useLocale, useTranslations } from 'next-intl';
 import type { Locale } from '@/lib/campus';
 import { findBuilding, onLowerLevel } from '@/lib/campus';
 import { SearchBar } from './ui/SearchBar';
-import { BuildingSheet } from './ui/BuildingSheet';
+import { MobileSheet, type Snap } from './ui/MobileSheet';
 import { BuildingList } from './ui/BuildingList';
 import { LocaleSwitch } from './ui/LocaleSwitch';
 import { SceneErrorBoundary } from './SceneErrorBoundary';
@@ -45,8 +45,8 @@ const noSubscribe = () => () => {};
 // Desktop panel widths in CSS px (left-4 sidebar 23.5rem; + history 25rem), with a gutter.
 const PANELS = 26 * 16;
 const PANELS_WIDE = 52 * 16;
-// Phone search bar + level toggle height in CSS px (notch padding aside).
-const PHONE_TOP_BAR = 118;
+// Phone floating controls (language + level toggle) height in CSS px, notch padding aside.
+const PHONE_TOP_BAR = 64;
 
 export function MapApp() {
   const t = useTranslations();
@@ -62,8 +62,8 @@ export function MapApp() {
   const [sceneFailed, setSceneFailed] = useState(false);
   const webgl = webglSupported && !sceneFailed;
   const locale = useLocale() as Locale;
-  const [listOpen, setListOpen] = useState(false);
-  const [sheetHeight, setSheetHeight] = useState(0); // phone bottom sheet, measured
+  const [snap, setSnap] = useState<Snap>(() => (params.get('b') ? 'half' : 'peek')); // phone sheet position; a shared building link opens its details
+  const [sheetHeight, setSheetHeight] = useState(0); // phone sheet visible height, reported by the sheet
   const isDesktop = useIsDesktop();
   // Desktop: a selection with history opens the history panel next to the sidebar; ✕ hides it until reopened.
   const [historyOpen, setHistoryOpen] = useState(true);
@@ -78,7 +78,7 @@ export function MapApp() {
   }, [selected?.id, selectedFloor]);
 
   const select = (id: string | null) => {
-    setListOpen(false);
+    setSnap(id ? 'half' : 'peek'); // a pick opens the building; closing goes back to the search peek
     router.push(id ? `${pathname}?b=${encodeURIComponent(id)}` : pathname, { scroll: false });
   };
   // Lower-level view: ?nivel=inferior, or implied by picking a basement floor.
@@ -103,16 +103,16 @@ export function MapApp() {
     router.push(level === null ? `${pathname}${b}` : `${pathname}${b}&f=${level}`, { scroll: false });
   };
 
-  // Escape closes the topmost panel: the list first, then the sheet.
+  // Escape closes the building first, then lowers the phone sheet.
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
       if (e.key !== 'Escape') return;
-      if (listOpen && webgl) setListOpen(false);
-      else if (selected) router.push(pathname, { scroll: false });
+      if (selected) router.push(pathname, { scroll: false });
+      setSnap('peek');
     };
     window.addEventListener('keydown', onKey);
     return () => window.removeEventListener('keydown', onKey);
-  }, [listOpen, webgl, selected, router, pathname]);
+  }, [selected, router, pathname]);
 
   const scene = webgl ? (
     <SceneErrorBoundary onError={() => setSceneFailed(true)}>
@@ -155,7 +155,7 @@ export function MapApp() {
                 />
               </section>
             ) : (
-              <BuildingList onPick={select} inline />
+              <BuildingList onPick={select} />
             )}
           </div>
           <PucTechCredit className="border-t-3 border-ink" />
@@ -180,27 +180,50 @@ export function MapApp() {
       </main>
     );
 
+  // Phone (mobile first): full-bleed map, two small floating toggles, and one bottom sheet that is always there.
+  // Sheet header (the drag area): the search bar, or the picked building's name. Body: the list, or its details.
+  const sheetHeader = selected ? (
+    <div className="flex items-start justify-between gap-3">
+      <div className="min-w-0">
+        <p className="font-display text-[12px] uppercase tracking-widest text-puc">{t('sheet.floors', { count: selected.floors.filter((f) => f.level >= 0).length })}</p>
+        <h2 id="building-title" className="truncate text-2xl font-extrabold leading-tight tracking-tight text-navy">
+          {selected.name[locale]}
+        </h2>
+      </div>
+      <button onClick={() => select(null)} aria-label={t('sheet.close')} className="pixel-btn pixel-btn-paper grid h-10 w-10 shrink-0 place-items-center text-lg leading-none">
+        ✕
+      </button>
+    </div>
+  ) : (
+    <SearchBar onPick={select} inline onFocus={() => setSnap('full')} />
+  );
   return (
-    <main className="fixed inset-0 overflow-hidden bg-ground">
+    // h-lvh: the large viewport, so the map also runs under Safari's floating toolbar.
+    <main className="fixed inset-x-0 top-0 h-lvh overflow-hidden bg-ground">
       {scene}
-      <div className="pointer-events-none fixed inset-x-0 top-0 z-20 flex gap-2 p-3 pt-[max(0.75rem,env(safe-area-inset-top))]">
-        <div className="pointer-events-auto flex-1">
-          <SearchBar onPick={select} />
-        </div>
-        <button
-          onClick={() => setListOpen((v) => !v)}
-          aria-expanded={listOpen || !webgl}
-          className="pixel-btn pointer-events-auto h-11 px-3 text-base uppercase"
-        >
-          {t('list.open')}
-        </button>
-        <div className="pointer-events-auto">
+      {webgl && (
+        <div className="fixed right-3 top-[max(0.75rem,env(safe-area-inset-top))] z-10 flex gap-2">
+          <LevelToggle lower={lower} onChange={setLower} />
           <LocaleSwitch />
         </div>
-      </div>
-      {webgl && !listOpen && <LevelToggle lower={lower} onChange={setLower} className="fixed left-3 top-[calc(4.25rem+env(safe-area-inset-top))] z-10" />}
-      {(listOpen || !webgl) && <BuildingList onPick={select} onClose={webgl ? () => setListOpen(false) : undefined} />}
-      {selected && <BuildingSheet key={selected.id} building={selected} floor={selectedFloor} onFloor={selectFloor} onClose={() => select(null)} onHeight={setSheetHeight} />}
+      )}
+      <MobileSheet
+        label={selected ? selected.name[locale] : t('list.title')}
+        snap={webgl ? snap : 'full'}
+        onSnap={setSnap}
+        onVisibleHeight={setSheetHeight}
+        header={sheetHeader}
+        resetScrollKey={`${selected?.id}-${selectedFloor}`}
+      >
+        {selected ? (
+          <BuildingDetails key={selected.id} building={selected} floor={selectedFloor} onFloor={selectFloor} headless dense history={historyFor(selected.id, selectedFloor)} />
+        ) : (
+          <>
+            <BuildingList onPick={select} />
+            <PucTechCredit className="-mx-4 mt-6 border-y-3 border-ink" />
+          </>
+        )}
+      </MobileSheet>
     </main>
   );
 }

@@ -1,14 +1,13 @@
 'use client';
 import { useLocale, useTranslations } from 'next-intl';
 import { campus, type Locale } from '@/lib/campus';
-import { PucTechCredit } from './PucTechCredit';
 import { history } from '@/lib/history';
 import { History } from './History';
 
-type Props = { onPick: (id: string) => void; onClose?: () => void; inline?: boolean };
+type Props = { onPick: (id: string) => void };
 
-// The building index. Inline in the desktop sidebar; a floating panel on phones.
-export function BuildingList({ onPick, onClose, inline = false }: Props) {
+// The building index, shown in the desktop sidebar and the phone sheet.
+export function BuildingList({ onPick }: Props) {
   const t = useTranslations('list');
   const th = useTranslations('history');
   const locale = useLocale() as Locale;
@@ -41,28 +40,12 @@ export function BuildingList({ onPick, onClose, inline = false }: Props) {
       </div>
     </details>
   );
-  if (inline)
-    return (
-      <nav aria-label={t('title')}>
-        <h2 className="font-display text-sm uppercase tracking-widest text-ink/55">{t('title')}</h2>
-        <p className="mb-3 mt-1 text-xs text-ink/55">{t('hint')}</p>
-        {items}
-        {site}
-      </nav>
-    );
   return (
-    <nav data-testid="building-list" aria-label={t('title')} className="pixel-box fixed inset-x-3 top-[calc(5rem+env(safe-area-inset-top))] bottom-[max(0.75rem,env(safe-area-inset-bottom))] z-20 flex flex-col overflow-y-auto p-4">
-      <div className="mb-3 flex items-center justify-between">
-        <h2 className="text-xl font-extrabold tracking-tight text-navy">{t('title')}</h2>
-        {onClose && (
-          <button onClick={onClose} aria-label={t('close')} className="pixel-btn pixel-btn-paper grid h-9 w-9 place-items-center text-lg leading-none">
-            ✕
-          </button>
-        )}
-      </div>
+    <nav aria-label={t('title')}>
+      <h2 className="font-display text-sm uppercase tracking-widest text-ink/55">{t('title')}</h2>
+      <p className="mb-3 mt-1 text-xs text-ink/55">{t('hint')}</p>
       {items}
       {site}
-      <PucTechCredit className="-mx-4 -mb-4 mt-auto border-t-3 border-ink" />
     </nav>
   );
 }
