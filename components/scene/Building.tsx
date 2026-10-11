@@ -2,13 +2,14 @@ import { useMemo, useRef, useState } from 'react';
 import * as THREE from 'three';
 import { Edges, Html } from '@react-three/drei';
 import { useFrame, type ThreeEvent } from '@react-three/fiber';
-import { buildingHeight, floorBase, footprintCenter, type Building as B, type Locale, type Point } from '@/lib/campus';
+import { basementDepth, buildingHeight, floorBase, footprintCenter, type Building as B, type Locale, type Point } from '@/lib/campus';
 import { INK_WIDTH, toonRamp, wallTexture } from './pixel';
 import { blankShortWalls, extrude, flatPolygon } from './geometry';
 import { Plants } from './Plants';
 import { Cobogo } from './Cobogo';
 import { Roof } from './Roof';
 import { FloorPlan } from './FloorPlan';
+import { LeanTo } from './LeanTo';
 
 // Defaults when a building has no hand-written style.
 const WALL = '#f6e7c8';
@@ -35,14 +36,18 @@ export function Building({ building, selected, dimmed, near, locale, floorLevel,
   const cutAt = floor ? floorBase(building, floor.level) : null;
   const height = cutAt ?? fullHeight; // label and roof sit on what's visible
   // Volumes to extrude: in floor view, the floors below the cut; otherwise the massing parts (or the footprint).
-  const bodies = useMemo<{ footprint: Point[]; height: number; roofGarden?: boolean }[]>(() => {
-    if (cutAt !== null) return cutAt > 0 ? [{ footprint: building.footprint, height: cutAt }] : [];
-    return building.parts ?? [{ footprint: building.footprint, height: fullHeight, roofGarden: building.style?.roofGarden }];
-  }, [cutAt, building.footprint, building.parts, building.style?.roofGarden, fullHeight]);
+  // Basements start below street level; they show only where the ground is sunken (e.g. the court side).
+  const bottom = -basementDepth(building);
+  const bodies = useMemo<{ footprint: Point[]; from: number; height: number; roofGarden?: boolean }[]>(() => {
+    if (cutAt !== null) return cutAt > bottom ? [{ footprint: building.footprint, from: bottom, height: cutAt }] : [];
+    if (building.parts) return building.parts.map((p) => ({ ...p, from: bottom }));
+    return [{ footprint: building.footprint, from: bottom, height: fullHeight, roofGarden: building.style?.roofGarden }];
+  }, [cutAt, bottom, building.footprint, building.parts, building.style?.roofGarden, fullHeight]);
   const geometries = useMemo(
     () =>
       bodies.map((b) => {
-        const g = extrude(b.footprint, b.height);
+        const g = extrude(b.footprint, b.height - b.from);
+        g.translate(0, b.from, 0);
         return blankEnds ? blankShortWalls(g, blankEnds) : g;
       }),
     [bodies, blankEnds],
@@ -90,11 +95,13 @@ export function Building({ building, selected, dimmed, near, locale, floorLevel,
             {/* Ink outline: the main cartoon cue */}
             {!dimmed && <Edges threshold={15} color="#1b1b24" lineWidth={INK_WIDTH} />}
           </mesh>
-          {cutAt === null && style.roofShape && style.roofShape !== 'flat' && (
+          {/* planted terraces (roofGarden parts) stay flat */}
+          {cutAt === null && style.roofShape && style.roofShape !== 'flat' && !b.roofGarden && (
             <Roof kind={style.roofShape} footprint={b.footprint} height={b.height} color={selected ? SELECTED_ROOF : roofColor} opacity={opacity} />
           )}
         </group>
       ))}
+      {style.leanTo && (cutAt === null || cutAt >= 0) && <LeanTo {...style.leanTo} center={footprintCenter(building)} depth={-bottom} opacity={opacity} />}
       {cutAt === null && style.cobogoWall && <Cobogo wall={style.cobogoWall} center={footprintCenter(building)} height={fullHeight} floorHeight={floorHeight} opacity={opacity} />}
       {floor && cutAt !== null && <FloorPlan building={building} floor={floor} y={cutAt} />}
       {gardens.map((g, i) => (

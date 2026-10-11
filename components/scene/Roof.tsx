@@ -7,6 +7,9 @@ import { INK_WIDTH, toonRamp } from './pixel';
 
 const EAVE = { overhang: 0.7, thickness: 0.3 }; // photos 13/14: thick slab projecting past the walls
 const GABLE = { overhang: 0.6, rise: 1.2 }; // photo 15: shallow pitched roof on exposed rafters
+// Drone video (docs/consolacao/pictures): Rino Levi blocks have terracotta clay-tile hipped roofs on a white eave.
+const HIP = { overhang: 0.7, slope: 0.36, eave: 0.25 };
+export const TILE_COLOR = '#c8693f';
 
 // Grow a polygon outward by d (miter joins, capped for sharp corners).
 function offset(points: Point[], d: number): Point[] {
@@ -84,8 +87,67 @@ function gable(points: Point[], height: number) {
   return flat;
 }
 
-export function Roof({ kind, footprint, height, color, opacity }: { kind: 'eave' | 'gable'; footprint: Point[]; height: number; color: THREE.Color; opacity: number }) {
+// Clay tile courses: 1-px darker lines every ~0.35 m down the slope.
+function tileTexture() {
+  const c = document.createElement('canvas');
+  c.width = 4;
+  c.height = 4;
+  const g = c.getContext('2d')!;
+  g.fillStyle = '#ffffff';
+  g.fillRect(0, 0, 4, 4);
+  g.fillStyle = '#c9b4a8'; // multiplied by the tile color: a darker course line
+  g.fillRect(0, 3, 4, 1);
+  g.fillRect(1, 0, 1, 3);
+  const t = new THREE.CanvasTexture(c);
+  t.magFilter = t.minFilter = THREE.NearestFilter;
+  t.wrapS = t.wrapT = THREE.RepeatWrapping;
+  t.colorSpace = THREE.SRGBColorSpace;
+  return t;
+}
+
+// Hipped roof over the oriented box: ridge along the long axis, triangular hips at both ends.
+function hip(points: Point[], height: number) {
+  const { ux, uz, vx, vz, u, v } = orientedBox(points);
+  const [u0, u1] = [u[0] - HIP.overhang, u[1] + HIP.overhang];
+  const [v0, v1] = [v[0] - HIP.overhang, v[1] + HIP.overhang];
+  const half = (v1 - v0) / 2;
+  const vm = v0 + half;
+  const rise = half * HIP.slope;
+  const inset = Math.min(half, (u1 - u0) / 2); // ridge stops `half` from each end (pyramid when square)
+  const at = (a: number, b: number, y: number) => new THREE.Vector3(a * ux + b * vx, y, a * uz + b * vz);
+  const top = height + HIP.eave;
+  const c = [at(u0, v0, top), at(u1, v0, top), at(u1, v1, top), at(u0, v1, top)];
+  const r = [at(u0 + inset, vm, top + rise), at(u1 - inset, vm, top + rise)];
+  const tris: [THREE.Vector3, THREE.Vector3, THREE.Vector3][] = [
+    [c[0], c[1], r[1]], [c[0], r[1], r[0]], // long slope
+    [c[2], c[3], r[0]], [c[2], r[0], r[1]], // other long slope
+    [c[1], c[2], r[1]], [c[3], c[0], r[0]], // hips
+  ];
+  const pos: number[] = [];
+  const uv: number[] = [];
+  for (const tri of tris)
+    for (const p of tri) {
+      pos.push(p.x, p.y, p.z);
+      // planar UV in meters: along the ridge, and up the slope (via height)
+      uv.push((p.x * ux + p.z * uz) / 0.5, (p.y - top) / (rise || 1) * (half / 0.35));
+    }
+  const g = new THREE.BufferGeometry();
+  g.setAttribute('position', new THREE.Float32BufferAttribute(pos, 3));
+  g.setAttribute('uv', new THREE.Float32BufferAttribute(uv, 2));
+  g.computeVertexNormals();
+  return g;
+}
+
+export function Roof({ kind, footprint, height, color, opacity }: { kind: 'eave' | 'gable' | 'hip'; footprint: Point[]; height: number; color: THREE.Color; opacity: number }) {
+  const tiles = useMemo(() => (kind === 'hip' ? tileTexture() : null), [kind]);
+  const eaveSlab = useMemo(() => {
+    if (kind !== 'hip') return null;
+    const g = extrude(offset(footprint, HIP.overhang), HIP.eave);
+    g.translate(0, height, 0);
+    return g;
+  }, [kind, footprint, height]);
   const geometry = useMemo(() => {
+    if (kind === 'hip') return hip(footprint, height);
     if (kind === 'gable') return gable(footprint, height);
     const g = extrude(offset(footprint, EAVE.overhang), EAVE.thickness);
     g.translate(0, height - EAVE.thickness + 0.02, 0);
@@ -104,8 +166,14 @@ export function Roof({ kind, footprint, height, color, opacity }: { kind: 'eave'
         </mesh>
       </>
     )}
+    {eaveSlab && (
+      <mesh geometry={eaveSlab} castShadow receiveShadow>
+        <meshToonMaterial color="#f3f1ec" gradientMap={toonRamp} transparent opacity={opacity} />
+        {opacity === 1 && <Edges threshold={15} color="#1b1b24" lineWidth={INK_WIDTH * 0.8} />}
+      </mesh>
+    )}
     <mesh geometry={geometry} castShadow receiveShadow>
-      <meshToonMaterial color={color} gradientMap={toonRamp} side={THREE.DoubleSide} transparent opacity={opacity} />
+      <meshToonMaterial color={color} map={tiles} gradientMap={toonRamp} side={THREE.DoubleSide} transparent opacity={opacity} />
       {opacity === 1 && <Edges threshold={15} color="#1b1b24" lineWidth={INK_WIDTH * 0.8} />}
     </mesh>
     </>

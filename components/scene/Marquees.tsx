@@ -36,19 +36,22 @@ function slab(path: Point[], width: number, height: number) {
     const [lx, lz] = [x + nx * (width - LIP.width), z + nz * (width - LIP.width)];
     pos.push(x, y, z, ox, y, oz, x, y - SLAB, z, ox, y - SLAB, oz, lx, y + LIP.height, lz, ox, y + LIP.height, oz);
   }
-  const quad = (a: number, b: number, c: number, d: number) => idx.push(a, b, c, a, c, d);
+  const top: number[] = []; // upper faces: dark weathered concrete from above (drone video)
+  const quad = (a: number, b: number, c: number, d: number, into = idx) => into.push(a, b, c, a, c, d);
   for (let i = 1; i < pts.length; i++) {
     const [p, q] = [(i - 1) * 6, i * 6];
-    quad(p, q, q + 1, p + 1); // top
+    quad(p, q, q + 1, p + 1, top); // top
     quad(p + 2, p + 3, q + 3, q + 2); // bottom
     quad(p + 1, q + 1, q + 3, p + 3); // outer edge
     quad(p, p + 2, q + 2, q); // wall side
-    quad(p + 5, q + 5, q + 4, p + 4); // lip top
+    quad(p + 5, q + 5, q + 4, p + 4, top); // lip top
     quad(p + 1, q + 1, q + 5, p + 5); // lip outer face
   }
   const g = new THREE.BufferGeometry();
   g.setAttribute('position', new THREE.Float32BufferAttribute(pos, 3));
-  g.setIndex(idx);
+  g.setIndex([...top, ...idx]);
+  g.addGroup(0, top.length, 0);
+  g.addGroup(top.length, idx.length, 1);
   g.computeVertexNormals();
   return { geometry: g, columns: pts.filter((q) => q.s % WAVE.length < 0.4 && q.s > 0.5) };
 }
@@ -67,16 +70,18 @@ export function Marquees() {
         columns.push(col);
       }
     }
-    return { slabs: slabs.length ? mergeGeometries(slabs) : null, columns: columns.length ? mergeGeometries(columns) : null };
+    // Slabs stay separate (few of them) so their top/side material groups survive.
+    return { slabs, columns: columns.length ? mergeGeometries(columns) : null };
   }, []);
   return (
     <>
-      {slabs && (
-        <mesh geometry={slabs} castShadow receiveShadow>
-          <meshToonMaterial color="#f2f0ea" gradientMap={toonRamp} side={THREE.DoubleSide} />
+      {slabs.map((g, i) => (
+        <mesh key={i} geometry={g} castShadow receiveShadow>
+          <meshToonMaterial attach="material-0" color="#5f6366" gradientMap={toonRamp} side={THREE.DoubleSide} />
+          <meshToonMaterial attach="material-1" color="#f2f0ea" gradientMap={toonRamp} side={THREE.DoubleSide} />
           <Edges threshold={40} color="#1b1b24" lineWidth={INK_WIDTH * 0.7} />
         </mesh>
-      )}
+      ))}
       {columns && (
         <mesh geometry={columns} castShadow>
           <meshToonMaterial color="#e8dfc0" gradientMap={toonRamp} />

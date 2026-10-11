@@ -19,7 +19,8 @@
     "rooms": "Ambientes",
     "wholeBuilding": "Ver prédio inteiro",
     "planNote": "Planta original de 1942 (Rino Levi). Usos atuais podem ser diferentes.",
-    "showFloor": "Ver {floor} no mapa"
+    "showFloor": "Ver {floor} no mapa",
+    "estimatedNote": "Layout deste andar estimado (sem planta); usos informados pela comunidade."
   },
   "floor": {
     "ground": "Térreo",
@@ -68,6 +69,7 @@
     "meeting": "Sala de reunião",
     "room": "Sala",
     "entrance": "Entrada",
-    "bar": "Copa"
+    "bar": "Copa",
+    "canteen": "Cantina"
   }
 }

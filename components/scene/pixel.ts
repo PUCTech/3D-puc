@@ -39,7 +39,7 @@ export const COBOGO_PANEL = { width: 2.52, height: 3.38 }; // meters
 
 const BAY_WIDTH = 3; // meters between window centers
 
-export type WindowKind = 'default' | 'shutter-white' | 'shutter-grey' | 'framed' | 'ribbon';
+export type WindowKind = 'default' | 'shutter-white' | 'shutter-grey' | 'framed' | 'ribbon' | 'pane';
 
 // One window bay (3 m wide × one floor tall) as an 8×8 canvas, tiled over every wall.
 // Wall UVs are in meters (u along the wall, v up), so repeat = 1 / bay size.
@@ -66,6 +66,12 @@ export function wallTexture(wall: string, kind: WindowKind = 'default', floorHei
     px('#3b4048', 2, 2, 4, 3);
     px('#c9cfd2', 4, 2, 1, 3); // grille
     px('#c9cfd2', 2, 3, 4, 1);
+  } else if (kind === 'pane') {
+    // Large white-framed multi-pane window (court photo, 2018): dark glass split by white mullions.
+    px('#f6f6f2', 1, 1, 6, 5);
+    px('#4a5866', 2, 2, 4, 3);
+    px('#f6f6f2', 4, 2, 1, 3);
+    px('#f6f6f2', 2, 3, 4, 1);
   } else if (kind === 'ribbon') {
     px('#f4f4f0', 0, 2, 8, 3); // continuous frame band
     px('#8fb3c9', 0, 2, 7, 2);

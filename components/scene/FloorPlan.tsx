@@ -8,9 +8,10 @@ import { INK_WIDTH, toonRamp } from './pixel';
 
 // Room colors by use, so a floor reads at a glance (legend: BuildingDetails room list).
 export const ROOM_COLORS: Record<string, string> = {
-  classroom: '#bae4fe', office: '#ffd166', support: '#e8e1cf', wc: '#cfe3e8', stair: '#bdb6a8', corridor: '#f3ecd9',
+  classroom: '#bae4fe', office: '#ffd166', support: '#e8e1cf', wc: '#cfe3e8', stair: '#bdb6a8', corridor: '#c97a5a', // terracotta tile corridor floor (Prédio 2 photo, 2025)
+ 
   foyer: '#f1d9b5', entrance: '#f1d9b5', stage: '#e3b6e8', auditorium: '#f4b1a8', library: '#b7dfa8', stacks: '#9ccf8c',
-  terrace: '#8fcf6a', lounge: '#f6c9a8', bedroom: '#f9e3b8', meeting: '#ffe08a', room: '#e9dcc6', bar: '#f2c6a0',
+  terrace: '#8fcf6a', canteen: '#f7b267', lounge: '#f6c9a8', bedroom: '#f9e3b8', meeting: '#ffe08a', room: '#e9dcc6', bar: '#f2c6a0',
 };
 const ROOM_HEIGHT = 0.4; // low blocks: walls suggested, the plan stays readable from above
 const LABEL_MIN_AREA = 14; // m²; smaller rooms are colored but unlabeled to avoid clutter
@@ -22,6 +23,8 @@ const centroid = (pts: Point[]): Point => [pts.reduce((s, p) => s + p[0], 0) / p
 // One floor of a building as a cutaway: a slab with its rooms as colored, ink-outlined blocks and labels.
 export function FloorPlan({ building, floor, y }: { building: Building; floor: Floor; y: number }) {
   const t = useTranslations('room');
+  // Basement floors are under the street-level ground: draw them through it (x-ray) so the plan is readable.
+  const xray = y < 0;
   const [labelsFit, setLabelsFit] = useState(false);
   useFrame(({ camera }) => {
     const fit = camera.zoom >= LABEL_MIN_ZOOM;
@@ -41,13 +44,13 @@ export function FloorPlan({ building, floor, y }: { building: Building; floor: F
   );
   return (
     <group>
-      <mesh geometry={slab} receiveShadow>
-        <meshLambertMaterial color="#fdf6e3" />
+      <mesh geometry={slab} receiveShadow renderOrder={xray ? 5 : 0}>
+        <meshLambertMaterial color="#fdf6e3" depthTest={!xray} transparent={xray} opacity={xray ? 0.85 : 1} />
       </mesh>
       {rooms.map((r) => (
-        <mesh key={r.id} geometry={r.geometry} receiveShadow>
-          <meshToonMaterial color={ROOM_COLORS[r.kind] ?? ROOM_COLORS.room} gradientMap={toonRamp} />
-          <Edges threshold={15} color="#1b1b24" lineWidth={INK_WIDTH * 0.6} />
+        <mesh key={r.id} geometry={r.geometry} receiveShadow renderOrder={xray ? 6 : 0}>
+          <meshToonMaterial color={ROOM_COLORS[r.kind] ?? ROOM_COLORS.room} gradientMap={toonRamp} depthTest={!xray} transparent={xray} opacity={xray ? 0.9 : 1} />
+          <Edges threshold={15} color="#1b1b24" lineWidth={INK_WIDTH * 0.6} depthTest={!xray} renderOrder={xray ? 7 : 0} />
         </mesh>
       ))}
       {rooms
