@@ -4,6 +4,7 @@ import { Edges } from '@react-three/drei';
 import type { Point } from '@/lib/campus';
 import { mergeGeometries } from './geometry';
 import { COBOGO_PANEL, INK_WIDTH, cobogoTexture, toonRamp } from './pixel';
+import { useNight } from './night';
 
 const FRAME = { pilaster: 0.3, beam: 0.25, depth: 0.45 }; // meters; photos 04/05/tour 02: frame stands proud of the lattice
 
@@ -22,6 +23,7 @@ export function Cobogo({
   floorHeight: number;
   opacity: number;
 }) {
+  const night = useNight();
   const { position, rotationY, length } = useMemo(() => {
     const length = Math.hypot(x2 - x1, z2 - z1);
     let [nx, nz] = [(z2 - z1) / length, -(x2 - x1) / length];
@@ -54,7 +56,8 @@ export function Cobogo({
     <group position={position} rotation-y={rotationY}>
       <mesh position-y={height / 2}>
         <planeGeometry args={[length, height]} />
-        <meshToonMaterial map={texture} gradientMap={toonRamp} side={THREE.DoubleSide} transparent opacity={opacity} />
+        {/* night: the lit corridors behind glow warm through the glass grid */}
+        <meshToonMaterial map={texture} gradientMap={toonRamp} side={THREE.DoubleSide} transparent opacity={opacity} emissive="#ffcf80" emissiveMap={texture} emissiveIntensity={night ? 0.7 : 0} />
       </mesh>
       <mesh geometry={frame} castShadow>
         <meshToonMaterial color="#d3d8d8" gradientMap={toonRamp} transparent opacity={opacity} />

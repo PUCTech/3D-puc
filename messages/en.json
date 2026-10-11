@@ -90,5 +90,9 @@
     "thisFloor": "This floor",
     "siteLabel": "Before the campus",
     "closePhoto": "Close photo"
+  },
+  "night": {
+    "toNight": "Show at night",
+    "toDay": "Show by day"
   }
 }

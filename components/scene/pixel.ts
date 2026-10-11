@@ -148,3 +148,45 @@ export function carGateTexture() {
   t.colorSpace = THREE.SRGBColorSpace;
   return t;
 }
+
+// Night: an emissive map matching wallTexture's windows: 8×8 bays per tile, a seeded random ~55% lit warm,
+// so façades don't light up as a uniform grid. Black everywhere else (walls, roofs at UV 0,0).
+const GLASS: Record<WindowKind, [number, number, number, number] | null> = {
+  default: [2, 2, 4, 3],
+  framed: [2, 2, 4, 3],
+  pane: [2, 2, 4, 3],
+  ribbon: [0, 2, 7, 2],
+  'shutter-white': [2, 1, 4, 5], // light through the louvers, dimmer
+  'shutter-grey': [2, 1, 4, 5],
+};
+const glowCache = new Map<string, THREE.CanvasTexture>();
+export function windowGlowTexture(kind: WindowKind = 'default', floorHeight = 3.5) {
+  const key = `${kind}-${floorHeight}`;
+  const cached = glowCache.get(key);
+  if (cached) return cached;
+  const N = 8;
+  const c = document.createElement('canvas');
+  c.width = c.height = 8 * N;
+  const g = c.getContext('2d')!;
+  g.fillStyle = '#000';
+  g.fillRect(0, 0, c.width, c.height);
+  const glass = GLASS[kind];
+  let seed = 7;
+  const rand = () => ((seed = (seed * 16807) % 2147483647) / 2147483647);
+  const warm = ['#ffd27a', '#ffe3a3', '#ffc864', '#fff0c8'];
+  const dim = kind.startsWith('shutter') ? 0.45 : 1;
+  for (let ty = 0; ty < N; ty++)
+    for (let tx = 0; tx < N; tx++) {
+      if (!glass || rand() > 0.55) continue;
+      g.globalAlpha = dim * (0.75 + rand() * 0.25);
+      g.fillStyle = warm[Math.floor(rand() * warm.length)];
+      g.fillRect(tx * 8 + glass[0], ty * 8 + glass[1], glass[2], glass[3]);
+    }
+  const t = new THREE.CanvasTexture(c);
+  t.magFilter = t.minFilter = THREE.NearestFilter;
+  t.wrapS = t.wrapT = THREE.RepeatWrapping;
+  t.repeat.set(1 / (BAY_WIDTH * N), 1 / (floorHeight * N));
+  t.colorSpace = THREE.SRGBColorSpace;
+  glowCache.set(key, t);
+  return t;
+}

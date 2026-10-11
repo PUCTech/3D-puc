@@ -18,8 +18,11 @@ import { Props as CampusProps } from './Props';
 import { Plants } from './Plants';
 import { GROUND_COLOR } from './Ground';
 import { setOcclusionTarget } from './occlusion';
+import { NightContext } from './night';
+import { NightLights } from './NightLights';
 
 const STREET_TREES = (campus.streetTrees ?? []).map((at) => ({ kind: 'slender' as const, at }));
+const NIGHT_SKY = '#141a2b';
 const NEAR_ZOOM = 6; // orthographic zoom = CSS px per meter; zoomed in past this, every building gets a label
 
 // Street-level-only buildings (see onLowerLevel) are hidden in the lower view.
@@ -60,6 +63,7 @@ type Props = {
   locale: Locale;
   onSelect: (id: string | null) => void;
   onContextLost?: () => void;
+  night?: boolean; // moonlight, lit windows, street lamps and floodlights
   phone?: boolean; // finer pixels on small screens (PHONE_DPR), desktop keeps PIXEL_DPR
 };
 
@@ -68,7 +72,7 @@ const lite = () =>
   typeof window !== 'undefined' &&
   (window.matchMedia('(pointer: coarse)').matches || ((navigator as { deviceMemory?: number }).deviceMemory ?? 8) <= 4 || (navigator.hardwareConcurrency ?? 8) <= 4);
 
-export default function CampusScene({ selectedId, selectedFloor, lower, bottomInset = 0, leftInset = 0, topInset = 0, locale, onSelect, onContextLost, phone = false }: Props) {
+export default function CampusScene({ selectedId, selectedFloor, lower, bottomInset = 0, leftInset = 0, topInset = 0, locale, onSelect, onContextLost, phone = false, night = false }: Props) {
   const [shadowSize] = useState(() => (lite() ? 1024 : 2048));
   // Trees and city blocks between the camera and the selection are hidden (occlusion.ts).
   useEffect(() => {
@@ -93,11 +97,14 @@ export default function CampusScene({ selectedId, selectedFloor, lower, bottomIn
       shadows="percentage"
       style={{ imageRendering: 'pixelated' }}
     >
-      <color attach="background" args={[GROUND_COLOR]} />
-      <hemisphereLight args={['#ffffff', '#7fae55', 1.1]} />
+      <NightContext value={night}>
+      <color attach="background" args={[night ? NIGHT_SKY : GROUND_COLOR]} />
+      {/* night: a dim blue sky light and a pale moon keep shapes readable; lamps and windows do the rest */}
+      <hemisphereLight args={night ? ['#5b6fa8', '#1a1f33', 0.55] : ['#ffffff', '#7fae55', 1.1]} />
       <directionalLight
         position={[120, 240, 80]}
-        intensity={2.2}
+        color={night ? '#a9bcff' : '#ffffff'}
+        intensity={night ? 0.5 : 2.2}
         castShadow
         shadow-bias={-0.0005}
         shadow-normalBias={0.08} // removes acne stripes on roofs and slopes
@@ -124,10 +131,12 @@ export default function CampusScene({ selectedId, selectedFloor, lower, bottomIn
           <StreetFence />
           <CampusProps />
           <Plants plants={STREET_TREES} />
+          {night && <NightLights />}
         </>
       )}
       <Buildings selectedId={selectedId} selectedFloor={selectedFloor} lower={lower} locale={locale} onSelect={onSelect} />
       <CameraRig selectedId={selectedId} bottomInset={bottomInset} leftInset={leftInset} topInset={topInset} />
+      </NightContext>
     </Canvas>
   );
 }

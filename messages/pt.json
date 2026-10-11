@@ -90,5 +90,9 @@
     "thisFloor": "Este andar",
     "siteLabel": "Antes do campus",
     "closePhoto": "Fechar foto"
+  },
+  "night": {
+    "toNight": "Ver à noite",
+    "toDay": "Ver de dia"
   }
 }
