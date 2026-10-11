@@ -124,7 +124,7 @@ export function BuildingDetails({ building, floor, onFloor, compact = false, den
       {!compact && !!history?.length && (
         <section className="mt-6 border-t-3 border-ink pt-4">
           <h3 className="mb-3 font-display text-[13px] uppercase tracking-widest text-ink/55">{t('history.title')}</h3>
-          <History entries={history} />
+          <History entries={history} name={building.name[locale]} />
         </section>
       )}
     </div>

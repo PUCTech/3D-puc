@@ -85,6 +85,10 @@
     "open": "Ver história",
     "close": "Fechar história",
     "sources": "Fontes",
-    "site": "História do terreno"
+    "site": "História do terreno",
+    "facts": "Curiosidades",
+    "thisFloor": "Este andar",
+    "siteLabel": "Antes do campus",
+    "closePhoto": "Fechar foto"
   }
 }

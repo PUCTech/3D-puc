@@ -151,14 +151,14 @@ export function MapApp() {
           <aside aria-labelledby="history-title" className="pixel-box fixed bottom-4 left-[25.5rem] top-4 z-20 flex w-[25rem] flex-col overflow-hidden">
             <header className="flex items-center justify-between gap-3 border-b-3 border-ink bg-sun px-5 py-3">
               <h2 id="history-title" className="font-display text-sm uppercase tracking-widest text-ink">
-                {t('history.title')}
+                {t('history.title')} <span className="text-ink/55">· {selected?.name[locale]}</span>
               </h2>
               <button onClick={() => setHistoryOpen(false)} aria-label={t('history.close')} className="pixel-btn pixel-btn-paper grid h-8 w-8 place-items-center leading-none">
                 ✕
               </button>
             </header>
             <div className="flex-1 overflow-y-auto p-5">
-              <History key={`${selected?.id}-${selectedFloor}`} entries={historyEntries} />
+              <History key={`${selected?.id}-${selectedFloor}`} entries={historyEntries} name={selected?.name[locale]} />
             </div>
           </aside>
         )}
