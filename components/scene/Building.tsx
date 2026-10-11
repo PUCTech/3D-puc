@@ -17,7 +17,7 @@ const ROOF = new THREE.Color('#b9a7a0');
 const SELECTED_ROOF = new THREE.Color('#ffd166');
 
 // floorLevel: when set (selected building only), the building is cut at that floor and its plan is shown.
-type Props = { building: B; selected: boolean; dimmed: boolean; near: boolean; locale: Locale; floorLevel: number | null; onSelect: () => void };
+type Props = { building: B; selected: boolean; dimmed: boolean; near: boolean; locale: Locale; floorLevel: number | null; lower?: boolean; onSelect: () => void };
 
 // A few shrubs spread inside the footprint (each corner pulled toward the centroid).
 const shrubSpots = (footprint: B['footprint']): B['footprint'] => {
@@ -28,7 +28,7 @@ const shrubSpots = (footprint: B['footprint']): B['footprint'] => {
 
 const LANDMARK_HEIGHT = 10; // meters; taller buildings keep their label in the overview
 
-export function Building({ building, selected, dimmed, near, locale, floorLevel, onSelect }: Props) {
+export function Building({ building, selected, dimmed, near, locale, floorLevel, lower = false, onSelect }: Props) {
   const fullHeight = buildingHeight(building);
   const base = building.baseHeight ?? 0;
   const blankEnds = building.style?.blankEnds;
@@ -64,7 +64,7 @@ export function Building({ building, selected, dimmed, near, locale, floorLevel,
     [bodies],
   );
   const [cx, cz] = footprintCenter(building);
-  const opacity = dimmed ? 0.45 : 1;
+  const opacity = dimmed ? 0.2 : 1; // faint, so lower-level places (the court) read through tall neighbours
   const [hovered, setHovered] = useState(false);
   // In floor view the room labels take over; the name is already in the panel.
   const showLabel = !floor && (selected || hovered || (!dimmed && (near || fullHeight >= LANDMARK_HEIGHT)));
@@ -103,7 +103,7 @@ export function Building({ building, selected, dimmed, near, locale, floorLevel,
       ))}
       {style.leanTo && (cutAt === null || cutAt >= 0) && <LeanTo {...style.leanTo} center={footprintCenter(building)} depth={-bottom} opacity={opacity} />}
       {cutAt === null && style.cobogoWall && <Cobogo wall={style.cobogoWall} center={footprintCenter(building)} height={fullHeight} floorHeight={floorHeight} opacity={opacity} />}
-      {floor && cutAt !== null && <FloorPlan building={building} floor={floor} y={cutAt} />}
+      {floor && cutAt !== null && <FloorPlan building={building} floor={floor} y={cutAt} xray={!lower && cutAt < 0} />}
       {gardens.map((g, i) => (
         <group key={`garden-${i}`}>
           <mesh geometry={g.geometry} receiveShadow>

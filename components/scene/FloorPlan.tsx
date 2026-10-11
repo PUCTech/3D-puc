@@ -21,10 +21,9 @@ const area = (pts: Point[]) => Math.abs(pts.reduce((s, [x, z], i) => s + x * pts
 const centroid = (pts: Point[]): Point => [pts.reduce((s, p) => s + p[0], 0) / pts.length, pts.reduce((s, p) => s + p[1], 0) / pts.length];
 
 // One floor of a building as a cutaway: a slab with its rooms as colored, ink-outlined blocks and labels.
-export function FloorPlan({ building, floor, y }: { building: Building; floor: Floor; y: number }) {
+// xray: the floor is under the visible ground, so draw it through (depthTest off).
+export function FloorPlan({ building, floor, y, xray }: { building: Building; floor: Floor; y: number; xray: boolean }) {
   const t = useTranslations('room');
-  // Basement floors are under the street-level ground: draw them through it (x-ray) so the plan is readable.
-  const xray = y < 0;
   const [labelsFit, setLabelsFit] = useState(false);
   useFrame(({ camera }) => {
     const fit = camera.zoom >= LABEL_MIN_ZOOM;

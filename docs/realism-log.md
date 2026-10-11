@@ -375,3 +375,57 @@ Frames sampled every 2 s.
 **Prédio 2, Subsolo 1** (uses reported by the user; partitions estimated)
 - Library, library, the stair hall (same position as the upper floors), then the canteen (cantina) to the south.
 - A corridor runs along the west.
+
+## Court and lower level (drone video, 29–33 s)
+**Court**
+- Multi-sport: a maroon border band around a green field, with white futsal and basketball markings (center circle, penalty arcs, keys, free-throw circles).
+- Goals, hoops with backboards, a 4 m chain-link fence on posts, and floodlights on the corners (as in the 2018 photo).
+- New component: `Court.tsx`.
+
+**Roofs swapped**
+- DTI, the pavilion at the court's south end, has the **terracotta hip** roof.
+- Prédio 3, the long block on the court's east, has the **dark slate hip** roof.
+
+**Lean-to:** now runs the full length of Prédio 2's east wall, as in the video.
+
+**Lower-level planting**
+- Dense tree canopy east and south of the buildings ("Bosque"), a planted strip north of the court, and a hedge strip behind the court's east fence.
+- Gardens now take a `depth`, to sit on the sunken level.
+
+**Faded buildings** drop to 20% opacity when something else is selected. Prédio 2 blocks the court from the fixed camera, so this lets the court read through.
+
+## Lower-level view and the Prédio 3 roof (user)
+- **Prédio 3:** flat dark roof.
+- **New STREET / LOWER toggle** (`?nivel=inferior`). It's on by default when a basement floor is picked.
+  - **Removes:** street-level-only buildings (Prédio 1, the Auditório), the patio and gardens, canopies, paving, streets, street furniture and the street fence.
+  - **Ground:** drops to the lower level, and the city shifts down with it.
+  - **Prédio 2:** opens at Subsolo 1 with its rooms, drawn normally (no X-ray needed).
+  - **Shows on one plane:** the court, DTI, Prédio 3, the lower woods and the basement.
+
+## Parking lane (user + photo `pictures/WhatsApp Image 2025-10-29…`, satellite screenshot 01.17.04)
+**Layout (user)**
+- The car gate is on R. Marquês de Paranaguá, at the OSM gate in the south-west corner.
+- The lane runs east along the Auditório, slopes down to the lower level, and ends at Prédio 3.
+- Cars park on both sides. A railed pedestrian ramp beside the Auditório goes down to the lower level.
+
+**Modeled**
+- A 7.5 m concrete lane. It slopes over 27 m (~12%) from the Auditório's mid-length down to the lower level at Prédio 2's south end.
+- Painted bays, and one accessible (blue) bay near the gate.
+- 24 low-poly parallel-parked cars, in the photo's colors (silver, greys, black, white, a red one). Cars on the slope are pitched.
+- A 1.7 m pedestrian ramp with white posts and handrails.
+- The lower zone was extended over the slope and past the OSM boundary on the south. The concrete retaining wall on the lane's south side is the lower zone's edge, as in the photo. The street-level paving and fence stop at the car gate.
+
+**Estimated**
+- Where the slope starts and ends, the lane width, and the car positions.
+- The OSM boundary is ~6 m short on the south here; the lane runs past it.
+
+`campus.json` is ~101 KB; the size budget was raised to 128 KB (gzipped it's ~25 KB).
+
+### Parking slope fixes (review)
+- **Z-fighting:** the lane and ramp surfaces sat exactly on the street paving and the lower floor and flickered or vanished. They're now lifted 6 cm.
+- **See-through:** the sloped lane and ramp are now solid, with side walls down to the lower floor and a front cap where the lower view cuts the lane.
+- **Floating street:** OSM's street segments inside the sunken zone (its service driveway on the lane) were drawn at street level over the cars. Those segments are dropped.
+- **Lower view:**
+  - selecting a street-level-only building leaves the lower view instead of aiming the camera at a hidden building;
+  - turning the lower view on clears such a selection;
+  - the lane shows from the top of the slope down.

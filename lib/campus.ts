@@ -40,12 +40,25 @@ export type Campus = {
   boundary?: Point[];
   // Areas where the ground drops (e.g. the court level east of Prédio 2), depth in meters below street level.
   sunken?: { polygon: Point[]; depth: number }[];
-  upperLot?: Point[]; // street-level part of the campus lot (boundary minus sunken zones), so paving needs no holes
+  upperLot?: Point[];
+  // Parking lane: axis from the car gate (`from`) to its end; slope = [start, end] distances along it where it drops `depth` m.
+  // Cars: d = distance along the axis, side = -1 | 1 (which row), color.
+  parking?: {
+    from: Point;
+    to: Point;
+    width: number;
+    slope: number[];
+    depth: number;
+    ramp?: { from: Point; to: Point; width: number };
+    accessible?: { d: number; side: number }[];
+    cars: { d: number; side: number; color: string }[];
+  }; // street-level part of the campus lot (boundary minus sunken zones), so paving needs no holes
   areas?: { kind: string; polygon: Point[] }[]; // OSM leisure/landuse inside or near campus, e.g. "pitch", "garden"
   footways?: Point[][];
   context?: { footprint: Point[]; height: number }[]; // neighbouring city buildings
   // hand-written landscaping (photos 02/05/07): planting, red-earth beds, stone path, palms
-  gardens?: { name?: string; polygon: Point[]; plants?: { kind: 'palm' | 'slender' | 'shade' | 'monstera' | 'dracaena'; at: Point }[]; earth?: Point[][]; path?: Point[] }[];
+  // depth: garden on a sunken level (m below street level)
+  gardens?: { name?: string; depth?: number; polygon: Point[]; plants?: { kind: 'palm' | 'slender' | 'shade' | 'monstera' | 'dracaena'; at: Point }[]; earth?: Point[][]; path?: Point[] }[];
   barriers?: { kind: string; path: Point[]; height: number }[]; // OSM fences/walls along the campus edge
   gates?: Point[];
   // OSM street details; angle = direction of the street there (radians, atan2(dz, dx))
@@ -69,6 +82,9 @@ export const floorBase = (b: Building, level: number) =>
   level >= 0
     ? b.floors.filter((f) => f.level >= 0 && f.level < level).reduce((sum, f) => sum + f.height, 0)
     : -b.floors.filter((f) => f.level >= level && f.level < 0).reduce((sum, f) => sum + f.height, 0);
+
+// Buildings that exist on the lower level (basements, or standing on the sunken ground).
+export const onLowerLevel = (b: Building) => b.floors.some((f) => f.level < 0) || (b.baseHeight ?? 0) < 0;
 
 // How far the building goes below street level (its basement floors).
 export const basementDepth = (b: Building) => b.floors.filter((f) => f.level < 0).reduce((sum, f) => sum + f.height, 0);

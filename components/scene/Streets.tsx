@@ -2,6 +2,7 @@ import { useMemo } from 'react';
 import { Html } from '@react-three/drei';
 import { campus, type Point } from '@/lib/campus';
 import { ribbons } from './geometry';
+import { pointInPolygon } from './Sunken';
 
 const length = (path: Point[]) => path.slice(1).reduce((s, [x, z], i) => s + Math.hypot(x - path[i][0], z - path[i][1]), 0);
 
@@ -15,7 +16,15 @@ campus.streets.forEach((s, i) => {
 const STREET_WIDTH = 8; // meters; shortcut: one width for every street until lanes/widths are imported
 
 export function Streets() {
-  const asphalt = useMemo(() => ribbons(campus.streets.map((s) => s.path), STREET_WIDTH, 0.01), []);
+  // Segments inside a sunken zone (e.g. OSM's service driveway on the parking lane) would float over it: drop them.
+  const asphalt = useMemo(() => {
+    const zones = (campus.sunken ?? []).map((z) => z.polygon);
+    const segments = campus.streets.flatMap((s) =>
+      s.path.slice(1).map((b, i) => [s.path[i], b] as [Point, Point]),
+    );
+    const kept = segments.filter(([a, b]) => !zones.some((z) => pointInPolygon([(a[0] + b[0]) / 2, (a[1] + b[1]) / 2], z)));
+    return ribbons(kept, STREET_WIDTH, 0.01);
+  }, []);
   return (
     <>
       {asphalt && (

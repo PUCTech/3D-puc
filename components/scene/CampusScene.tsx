@@ -1,7 +1,7 @@
 'use client';
 import { useState } from 'react';
 import { Canvas, useFrame } from '@react-three/fiber';
-import { campus, type Locale } from '@/lib/campus';
+import { basementDepth, campus, onLowerLevel, type Locale } from '@/lib/campus';
 import { Building } from './Building';
 import { Ground } from './Ground';
 import { Streets } from './Streets';
@@ -10,6 +10,7 @@ import { PIXEL_DPR } from './pixel';
 import { City } from './City';
 import { Site } from './Site';
 import { Marquees } from './Marquees';
+import { Parking } from './Parking';
 import { Edge } from './Edge';
 import { Furniture } from './Furniture';
 import { StreetFence } from './StreetFence';
@@ -20,29 +21,35 @@ import { GROUND_COLOR } from './Ground';
 const STREET_TREES = (campus.streetTrees ?? []).map((at) => ({ kind: 'slender' as const, at }));
 const NEAR_ZOOM = 6; // orthographic zoom = CSS px per meter; zoomed in past this, every building gets a label
 
-function Buildings({ selectedId, selectedFloor, locale, onSelect }: Props) {
+// Street-level-only buildings (see onLowerLevel) are hidden in the lower view.
+export const LOWER_DEPTH = campus.sunken?.[0]?.depth ?? 0;
+
+function Buildings({ selectedId, selectedFloor, lower, locale, onSelect }: Props) {
   const [near, setNear] = useState(false);
   useFrame(({ camera }) => {
     const n = camera.zoom > NEAR_ZOOM;
     if (n !== near) setNear(n);
   });
-  return campus.buildings.map((b) => (
+  return campus.buildings.filter((b) => !lower || onLowerLevel(b)).map((b) => (
     <Building
       key={b.id}
       building={b}
       selected={b.id === selectedId}
       dimmed={selectedId !== null && b.id !== selectedId}
       near={near}
-      floorLevel={b.id === selectedId ? selectedFloor : null}
+      // lower view opens basements at their lowest floor
+      floorLevel={lower && basementDepth(b) > 0 ? Math.min(...b.floors.map((f) => f.level)) : b.id === selectedId ? selectedFloor : null}
+      lower={lower}
       locale={locale}
       onSelect={() => onSelect(b.id)}
     />
   ));
 }
 
-type Props = { selectedId: string | null; selectedFloor: number | null; bottomInset?: number; locale: Locale; onSelect: (id: string | null) => void };
+// lower: show only the lower level (court, Prédio 2 subsolo, Prédio 3, DTI); street-level layers are removed.
+type Props = { selectedId: string | null; selectedFloor: number | null; lower: boolean; bottomInset?: number; locale: Locale; onSelect: (id: string | null) => void };
 
-export default function CampusScene({ selectedId, selectedFloor, bottomInset = 0, locale, onSelect }: Props) {
+export default function CampusScene({ selectedId, selectedFloor, lower, bottomInset = 0, locale, onSelect }: Props) {
   return (
     <Canvas
       orthographic
@@ -67,17 +74,25 @@ export default function CampusScene({ selectedId, selectedFloor, bottomInset = 0
         shadow-camera-bottom={-250}
         shadow-camera-far={600}
       />
-      <Ground onClear={() => onSelect(null)} />
-      <Site />
-      <Streets />
-      <City />
-      <Marquees />
-      <Edge />
-      <Furniture />
-      <StreetFence />
-      <CampusProps />
-      <Plants plants={STREET_TREES} />
-      <Buildings selectedId={selectedId} selectedFloor={selectedFloor} locale={locale} onSelect={onSelect} />
+      <Ground lower={lower} onClear={() => onSelect(null)} />
+      <Site lower={lower} />
+      <Parking lower={lower} />
+      {/* the city keeps its place relative to the ground */}
+      <group position-y={lower ? -LOWER_DEPTH : 0}>
+        <City />
+      </group>
+      {!lower && (
+        <>
+          <Streets />
+          <Marquees />
+          <Edge />
+          <Furniture />
+          <StreetFence />
+          <CampusProps />
+          <Plants plants={STREET_TREES} />
+        </>
+      )}
+      <Buildings selectedId={selectedId} selectedFloor={selectedFloor} lower={lower} locale={locale} onSelect={onSelect} />
       <CameraRig selectedId={selectedId} bottomInset={bottomInset} />
     </Canvas>
   );
