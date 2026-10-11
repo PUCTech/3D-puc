@@ -4,7 +4,7 @@ import { useEffect, useState, useSyncExternalStore } from 'react';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import { useLocale, useTranslations } from 'next-intl';
 import type { Locale } from '@/lib/campus';
-import { findBuilding } from '@/lib/campus';
+import { findBuilding, onLowerLevel } from '@/lib/campus';
 import { SearchBar } from './ui/SearchBar';
 import { BuildingSheet } from './ui/BuildingSheet';
 import { BuildingList } from './ui/BuildingList';
@@ -62,10 +62,14 @@ export function MapApp() {
     router.push(id ? `${pathname}?b=${encodeURIComponent(id)}` : pathname, { scroll: false });
   };
   // Lower-level view: ?nivel=inferior, or implied by picking a basement floor.
-  const lower = params.get('nivel') === 'inferior' || (selectedFloor !== null && selectedFloor < 0);
+  // A selected street-level-only building wins over the lower view (it would be hidden there).
+  const lower = (params.get('nivel') === 'inferior' && (!selected || onLowerLevel(selected))) || (selectedFloor !== null && selectedFloor < 0);
   const setLower = (on: boolean) => {
     const q = new URLSearchParams(params.toString());
-    if (on) q.set('nivel', 'inferior');
+    if (on) {
+      q.set('nivel', 'inferior');
+      if (selected && !onLowerLevel(selected)) q.delete('b'); // it would vanish; show the lower level instead
+    }
     else {
       q.delete('nivel');
       if (Number(q.get('f')) < 0) q.delete('f'); // leaving the lower level also leaves a basement floor

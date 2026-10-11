@@ -420,3 +420,12 @@ Frames sampled every 2 s.
 - The OSM boundary is ~6 m short on the south here; the lane runs past it.
 
 `campus.json` is ~101 KB; the size budget was raised to 128 KB (gzipped it's ~25 KB).
+
+### Parking slope fixes (review)
+- **Z-fighting:** the lane and ramp surfaces sat exactly on the street paving and the lower floor and flickered or vanished. They're now lifted 6 cm.
+- **See-through:** the sloped lane and ramp are now solid, with side walls down to the lower floor and a front cap where the lower view cuts the lane.
+- **Floating street:** OSM's street segments inside the sunken zone (its service driveway on the lane) were drawn at street level over the cars. Those segments are dropped.
+- **Lower view:**
+  - selecting a street-level-only building leaves the lower view instead of aiming the camera at a hidden building;
+  - turning the lower view on clears such a selection;
+  - the lane shows from the top of the slope down.

@@ -83,6 +83,9 @@ export const floorBase = (b: Building, level: number) =>
     ? b.floors.filter((f) => f.level >= 0 && f.level < level).reduce((sum, f) => sum + f.height, 0)
     : -b.floors.filter((f) => f.level >= level && f.level < 0).reduce((sum, f) => sum + f.height, 0);
 
+// Buildings that exist on the lower level (basements, or standing on the sunken ground).
+export const onLowerLevel = (b: Building) => b.floors.some((f) => f.level < 0) || (b.baseHeight ?? 0) < 0;
+
 // How far the building goes below street level (its basement floors).
 export const basementDepth = (b: Building) => b.floors.filter((f) => f.level < 0).reduce((sum, f) => sum + f.height, 0);
 

@@ -1,7 +1,7 @@
 'use client';
 import { useState } from 'react';
 import { Canvas, useFrame } from '@react-three/fiber';
-import { basementDepth, campus, type Locale } from '@/lib/campus';
+import { basementDepth, campus, onLowerLevel, type Locale } from '@/lib/campus';
 import { Building } from './Building';
 import { Ground } from './Ground';
 import { Streets } from './Streets';
@@ -21,8 +21,7 @@ import { GROUND_COLOR } from './Ground';
 const STREET_TREES = (campus.streetTrees ?? []).map((at) => ({ kind: 'slender' as const, at }));
 const NEAR_ZOOM = 6; // orthographic zoom = CSS px per meter; zoomed in past this, every building gets a label
 
-// Street-level-only buildings (no basement, not on the sunken ground) are hidden in the lower view.
-const onLowerLevel = (b: (typeof campus.buildings)[number]) => basementDepth(b) > 0 || (b.baseHeight ?? 0) < 0;
+// Street-level-only buildings (see onLowerLevel) are hidden in the lower view.
 export const LOWER_DEPTH = campus.sunken?.[0]?.depth ?? 0;
 
 function Buildings({ selectedId, selectedFloor, lower, locale, onSelect }: Props) {
