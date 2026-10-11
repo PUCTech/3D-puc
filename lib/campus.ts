@@ -26,7 +26,7 @@ export type Building = {
     roof?: string;
     windows?: 'default' | 'shutter-white' | 'shutter-grey' | 'framed' | 'ribbon' | 'pane';
     leanTo?: { from: Point; to: Point; width: number }; // tile lean-to roof along a wall, over a sunken level
-    roofShape?: 'flat' | 'eave' | 'gable';
+    roofShape?: 'flat' | 'eave' | 'gable' | 'hip';
     blankEnds?: number; // walls shorter than this many meters have no windows (end walls of bar blocks)
     roofGarden?: boolean;
     cobogoWall?: [Point, Point];

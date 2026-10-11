@@ -342,3 +342,21 @@ Sources: Rino Levi's Instituto Sedes Sapientiae ground and upper floor plans (re
 - Basement floor views draw through the ground (X-ray), so the plan reads.
 
 **Estimated:** level −1 rooms (no plan exists: a row of rooms facing the court plus a corridor). The UI says so. The pit's exact extent is estimated from the photo and the court position.
+
+## Drone video (`docs/consolacao/pictures/videoplayback.mp4`, user-supplied)
+Frames sampled every 2 s.
+
+**Roofs (the biggest miss)**
+- Prédio 1, Prédio 2 and the Auditório's library wing all have **terracotta clay-tile hipped roofs** on a white eave. This replaces the flat concrete slab and the grey "corrugated" gable from photo 15.
+- New `hip` roof: ridge along the long axis, tile-course texture, and a white eave slab projecting 0.7 m.
+- The Auditório's terrace wing stays flat and planted.
+
+**Prédio 3 and Prédio 10:** white modern boxes with flat dark roofs.
+
+**Canopies:** the tops are dark weathered concrete from above (#5f6366). The edges, underside and round columns stay white.
+
+**Court:** it sits against Prédio 2's east wall, between Prédio 2 and a white flat-roofed block. The sunken zone was trimmed to the wall strip plus the court (20–39 m along the wall, 22 m out), and the lean-to was shortened to match.
+
+**Seen but not yet modeled**
+- The cross-shaped hedge parterres in the patio beds.
+- A small tile-roofed building at the court's south end. It's one of the buildings removed from the map.

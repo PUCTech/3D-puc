@@ -303,9 +303,9 @@
    ],
    "style": {
     "wall": "#ece4cf",
-    "roof": "#b9b5ab",
+    "roof": "#c8693f",
     "windows": "shutter-grey",
-    "roofShape": "eave",
+    "roofShape": "hip",
     "blankEnds": 13
    }
   },
@@ -389,13 +389,13 @@
    ],
    "style": {
     "wall": "#efece6",
-    "roof": "#8f8f8a",
+    "roof": "#c8693f",
     "cobogoWall": [[-45.48,-17.84],[-31.11,23.23]],
     "windows": "pane",
-    "roofShape": "gable",
+    "roofShape": "hip",
     "blankEnds": 13,
     "leanTo": {
-     "from": [-26.05,0.22],
+     "from": [-24.73,3.99],
      "to": [-18.44,21.92],
      "width": 3
     }
@@ -432,8 +432,10 @@
     }
    ],
    "style": {
-    "wall": "#f3e3c3",
-    "roof": "#b8aea4"
+    "wall": "#f1f0ec",
+    "roof": "#55595e",
+    "windows": "pane",
+    "roofShape": "flat"
    }
   },
   {
@@ -472,9 +474,9 @@
    ],
    "style": {
     "wall": "#f1efe8",
-    "roof": "#c9c3b8",
+    "roof": "#c8693f",
     "windows": "ribbon",
-    "roofShape": "eave"
+    "roofShape": "hip"
    },
    "parts": [
     {
@@ -509,8 +511,10 @@
     }
    ],
    "style": {
-    "wall": "#f3e3c3",
-    "roof": "#b8aea4"
+    "wall": "#f1f0ec",
+    "roof": "#55595e",
+    "windows": "pane",
+    "roofShape": "flat"
    }
   }
  ],
@@ -2283,7 +2287,7 @@
  ],
  "sunken": [
   {
-   "polygon": [[-26.05,0.22],[-18.44,21.92],[3.73,14.15],[-3.87,-7.55]],
+   "polygon": [[-24.73,3.99],[-18.44,21.92],[2.32,14.65],[-3.96,-3.28]],
    "depth": 3.4
   }
  ]

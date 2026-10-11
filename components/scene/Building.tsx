@@ -95,7 +95,8 @@ export function Building({ building, selected, dimmed, near, locale, floorLevel,
             {/* Ink outline: the main cartoon cue */}
             {!dimmed && <Edges threshold={15} color="#1b1b24" lineWidth={INK_WIDTH} />}
           </mesh>
-          {cutAt === null && style.roofShape && style.roofShape !== 'flat' && (
+          {/* planted terraces (roofGarden parts) stay flat */}
+          {cutAt === null && style.roofShape && style.roofShape !== 'flat' && !b.roofGarden && (
             <Roof kind={style.roofShape} footprint={b.footprint} height={b.height} color={selected ? SELECTED_ROOF : roofColor} opacity={opacity} />
           )}
         </group>
