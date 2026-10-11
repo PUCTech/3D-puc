@@ -452,3 +452,4 @@ Frames sampled every 2 s.
 
 - Wavy canopy: no leg along Prédio 2's west wall (user, Oct 2026). It only runs along Prédio 1 and the Auditório.
 - Entrance canopy meets the Prédio 1–Auditório canopy at 90° (user screenshot 11.42.44). Both follow the street grid; the entrance walk runs straight in from the gate.
+- Correction: the entrance canopy is the Auditório north-wall canopy carried straight out to the gate; the Prédio 1 canopy meets it at 90°. The gate moved ~5.5 m south to line up with it, and the street fences, pots, tree, lamp and totem moved with it.
