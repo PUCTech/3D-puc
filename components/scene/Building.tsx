@@ -158,9 +158,10 @@ export function Building({ building, selected, dimmed, near, locale, floorLevel,
 
 function Entrance({ x, z }: { x: number; z: number }) {
   const ref = useRef<THREE.Mesh>(null);
-  useFrame(({ clock }) => {
+  useFrame(({ clock, invalidate }) => {
     const s = 1 + 0.3 * Math.sin(clock.elapsedTime * 3);
     ref.current?.scale.set(s, s, s);
+    invalidate(); // the scene renders on demand; this pulse asks for the next frame itself
   });
   return (
     <mesh ref={ref} position={[x, 0.05, z]} rotation-x={-Math.PI / 2}>

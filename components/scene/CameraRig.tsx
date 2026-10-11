@@ -23,9 +23,9 @@ const sphereOf = (buildings: Building[]) => {
 };
 const CAMPUS_SPHERE = sphereOf(campus.buildings);
 
-// bottomInset: share of the screen covered by a bottom sheet (phones); the selection is framed above it.
-// leftInset: CSS px covered by side panels (desktop); the selection is framed in the map area right of them.
-export function CameraRig({ selectedId, bottomInset, leftInset }: { selectedId: string | null; bottomInset: number; leftInset: number }) {
+// leftInset / topInset / bottomInset: CSS px covered by side panels (desktop) or the top bar and bottom sheet (phones).
+// The selection is fitted into the uncovered rectangle and centered in it.
+export function CameraRig({ selectedId, bottomInset, leftInset, topInset }: { selectedId: string | null; bottomInset: number; leftInset: number; topInset: number }) {
   const ref = useRef<CameraControls>(null);
   const size = useThree((s) => s.size);
   // Shared by selection changes and the recenter button.
@@ -35,19 +35,14 @@ export function CameraRig({ selectedId, bottomInset, leftInset }: { selectedId: 
       if (!controls) return;
       const b = findBuilding(selectedId);
       const sphere = b ? sphereOf([b]) : CAMPUS_SPHERE;
-      if (leftInset) {
-        // Fit the sphere into the uncovered area, then slide the camera left (negative x) by half the panels' width.
-        const zoom = Math.min(size.width - leftInset, size.height) / (2 * sphere.radius);
-        controls.moveTo(sphere.center.x, sphere.center.y, sphere.center.z, smooth);
-        controls.zoomTo(zoom, smooth);
-        controls.setFocalOffset(-leftInset / 2 / zoom, 0, 0, smooth);
-        return;
-      }
-      controls.fitToSphere(sphere, smooth);
-      // Positive y focal offset shifts the view up past the target, so the object sits higher on screen (above the sheet).
-      controls.setFocalOffset(0, b ? sphere.radius * bottomInset * 1.8 : 0, 0, smooth);
+        // Orthographic zoom is CSS px per meter: fit the sphere's diameter into the uncovered rectangle.
+      const zoom = Math.max(1.5, Math.min(size.width - leftInset, size.height - bottomInset - topInset) / (2 * sphere.radius));
+      controls.moveTo(sphere.center.x, sphere.center.y, sphere.center.z, smooth);
+      controls.zoomTo(zoom, smooth);
+      // Shift by half the covered size (in meters at this zoom): -x moves the selection right, +y moves it up.
+      controls.setFocalOffset(-leftInset / 2 / zoom, (bottomInset - topInset) / 2 / zoom, 0, smooth);
     },
-    [selectedId, bottomInset, leftInset, size.width, size.height],
+    [selectedId, bottomInset, leftInset, topInset, size.width, size.height],
   );
   useEffect(() => {
     frame(!window.matchMedia('(prefers-reduced-motion: reduce)').matches);

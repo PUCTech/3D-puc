@@ -6,9 +6,10 @@ import { BuildingDetails } from './BuildingDetails';
 import { historyFor } from '@/lib/history';
 
 // Phone bottom sheet: peek (name + tag) → drag/tap the handle to expand to floors.
-type Props = { building: Building; floor: number | null; onFloor: (level: number | null) => void; onClose: () => void };
+// onHeight: the sheet's on-screen height in CSS px, so the map can frame the building in the space above it.
+type Props = { building: Building; floor: number | null; onFloor: (level: number | null) => void; onClose: () => void; onHeight?: (px: number) => void };
 
-export function BuildingSheet({ building, floor, onFloor, onClose }: Props) {
+export function BuildingSheet({ building, floor, onFloor, onClose, onHeight }: Props) {
   const t = useTranslations('sheet');
   const [expanded, setExpanded] = useState(false);
   const floorView = floor !== null; // keep the sheet short so the cut floor stays visible above it
@@ -17,6 +18,16 @@ export function BuildingSheet({ building, floor, onFloor, onClose }: Props) {
   useEffect(() => {
     sheet.current?.scrollTo({ top: 0 });
   }, [floor]); // new floor: start from the top
+  useEffect(() => {
+    const el = sheet.current;
+    if (!el || !onHeight) return;
+    const ro = new ResizeObserver(() => onHeight(el.getBoundingClientRect().height));
+    ro.observe(el);
+    return () => {
+      ro.disconnect();
+      onHeight(0);
+    };
+  }, [onHeight]);
 
   const onPointerUp = (y: number) => {
     if (dragStart.current === null) return;
@@ -32,7 +43,7 @@ export function BuildingSheet({ building, floor, onFloor, onClose }: Props) {
       ref={sheet}
       data-testid="building-sheet"
       aria-labelledby="building-title"
-      className={`pixel-box fixed inset-x-0 bottom-0 z-20 overflow-y-auto ${floorView ? 'max-h-[42dvh]' : 'max-h-[75dvh]'} border-x-0 border-b-0 px-5 pb-6 pt-1 shadow-[0_-4px_0_var(--color-ink)]`}
+      className={`pixel-box fixed inset-x-0 bottom-0 z-20 overflow-y-auto ${floorView ? 'max-h-[42dvh]' : 'max-h-[60dvh]'} border-x-0 border-b-0 px-5 pb-[max(1.5rem,env(safe-area-inset-bottom))] pt-1 shadow-[0_-4px_0_var(--color-ink)]`}
     >
       <button
         aria-label={expanded ? t('collapse') : t('expand')}

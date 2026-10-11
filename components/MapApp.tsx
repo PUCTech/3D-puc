@@ -45,6 +45,8 @@ const noSubscribe = () => () => {};
 // Desktop panel widths in CSS px (left-4 sidebar 23.5rem; + history 25rem), with a gutter.
 const PANELS = 26 * 16;
 const PANELS_WIDE = 52 * 16;
+// Phone search bar + level toggle height in CSS px (notch padding aside).
+const PHONE_TOP_BAR = 118;
 
 export function MapApp() {
   const t = useTranslations();
@@ -61,6 +63,7 @@ export function MapApp() {
   const webgl = webglSupported && !sceneFailed;
   const locale = useLocale() as Locale;
   const [listOpen, setListOpen] = useState(false);
+  const [sheetHeight, setSheetHeight] = useState(0); // phone bottom sheet, measured
   const isDesktop = useIsDesktop();
   // Desktop: a selection with history opens the history panel next to the sidebar; ✕ hides it until reopened.
   const [historyOpen, setHistoryOpen] = useState(true);
@@ -113,7 +116,7 @@ export function MapApp() {
 
   const scene = webgl ? (
     <SceneErrorBoundary onError={() => setSceneFailed(true)}>
-      <CampusScene selectedId={selected?.id ?? null} selectedFloor={selectedFloor} lower={lower} bottomInset={isDesktop || !selected ? 0 : selectedFloor !== null ? 0.42 : 0.2} leftInset={isDesktop ? (showHistory ? PANELS_WIDE : PANELS) : 0} locale={locale} onSelect={select} />
+      <CampusScene selectedId={selected?.id ?? null} selectedFloor={selectedFloor} lower={lower} bottomInset={isDesktop ? 0 : sheetHeight} leftInset={isDesktop ? (showHistory ? PANELS_WIDE : PANELS) : 0} topInset={isDesktop ? 0 : PHONE_TOP_BAR} locale={locale} onSelect={select} onContextLost={() => setSceneFailed(true)} />
     </SceneErrorBoundary>
   ) : (
     <p role="status" className="grid h-full place-items-center p-6 text-center font-display text-lg text-navy">
@@ -180,7 +183,7 @@ export function MapApp() {
   return (
     <main className="fixed inset-0 overflow-hidden bg-ground">
       {scene}
-      <div className="pointer-events-none fixed inset-x-0 top-0 z-20 flex gap-2 p-3">
+      <div className="pointer-events-none fixed inset-x-0 top-0 z-20 flex gap-2 p-3 pt-[max(0.75rem,env(safe-area-inset-top))]">
         <div className="pointer-events-auto flex-1">
           <SearchBar onPick={select} />
         </div>
@@ -195,9 +198,9 @@ export function MapApp() {
           <LocaleSwitch />
         </div>
       </div>
-      {webgl && !listOpen && <LevelToggle lower={lower} onChange={setLower} className="fixed left-3 top-[4.25rem] z-10" />}
+      {webgl && !listOpen && <LevelToggle lower={lower} onChange={setLower} className="fixed left-3 top-[calc(4.25rem+env(safe-area-inset-top))] z-10" />}
       {(listOpen || !webgl) && <BuildingList onPick={select} onClose={webgl ? () => setListOpen(false) : undefined} />}
-      {selected && <BuildingSheet key={selected.id} building={selected} floor={selectedFloor} onFloor={selectFloor} onClose={() => select(null)} />}
+      {selected && <BuildingSheet key={selected.id} building={selected} floor={selectedFloor} onFloor={selectFloor} onClose={() => select(null)} onHeight={setSheetHeight} />}
     </main>
   );
 }

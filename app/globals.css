@@ -57,6 +57,10 @@ html, body {
 
 /* Thick, square keyboard focus everywhere. In the base layer so utilities like outline-none still win. */
 @layer base {
+  /* No double-tap page zoom on buttons (pinch still works); taps fire without the 300ms wait. */
+  html {
+    touch-action: manipulation;
+  }
   :focus-visible {
     outline: 3px solid var(--color-puc);
     outline-offset: 2px;

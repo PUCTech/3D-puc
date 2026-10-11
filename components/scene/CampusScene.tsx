@@ -48,18 +48,27 @@ function Buildings({ selectedId, selectedFloor, lower, locale, onSelect }: Props
 }
 
 // lower: show only the lower level (court, Prédio 2 subsolo, Prédio 3, DTI); street-level layers are removed.
-// leftInset: CSS px covered by panels on the left (desktop); the camera frames things to the right of them.
+// leftInset / bottomInset: CSS px covered by panels (left on desktop, bottom sheet on phones); the camera frames the rest.
+// onContextLost: the GPU dropped the WebGL context (low memory, backgrounded tab on iOS); the app shows its fallback.
 type Props = {
   selectedId: string | null;
   selectedFloor: number | null;
   lower: boolean;
   bottomInset?: number;
   leftInset?: number;
+  topInset?: number;
   locale: Locale;
   onSelect: (id: string | null) => void;
+  onContextLost?: () => void;
 };
 
-export default function CampusScene({ selectedId, selectedFloor, lower, bottomInset = 0, leftInset = 0, locale, onSelect }: Props) {
+// Phones and low-memory devices get a smaller shadow map; everything else is the same scene.
+const lite = () =>
+  typeof window !== 'undefined' &&
+  (window.matchMedia('(pointer: coarse)').matches || ((navigator as { deviceMemory?: number }).deviceMemory ?? 8) <= 4 || (navigator.hardwareConcurrency ?? 8) <= 4);
+
+export default function CampusScene({ selectedId, selectedFloor, lower, bottomInset = 0, leftInset = 0, topInset = 0, locale, onSelect, onContextLost }: Props) {
+  const [shadowSize] = useState(() => (lite() ? 1024 : 2048));
   // Trees and city blocks between the camera and the selection are hidden (occlusion.ts).
   useEffect(() => {
     const b = findBuilding(selectedId);
@@ -68,11 +77,19 @@ export default function CampusScene({ selectedId, selectedFloor, lower, bottomIn
   }, [selectedId]);
   return (
     <Canvas
+      // Render only when something changes (camera, selection, hover): an idle map costs no GPU or battery.
+      frameloop="demand"
+      onCreated={({ gl }) =>
+        gl.domElement.addEventListener('webglcontextlost', (e) => {
+          e.preventDefault();
+          onContextLost?.();
+        })
+      }
       orthographic
       camera={{ position: [-250, 300, 250], zoom: 4, near: 1, far: 3000 }}
       dpr={PIXEL_DPR}
       gl={{ antialias: false }}
-      shadows
+      shadows="percentage"
       style={{ imageRendering: 'pixelated' }}
     >
       <color attach="background" args={[GROUND_COLOR]} />
@@ -83,7 +100,7 @@ export default function CampusScene({ selectedId, selectedFloor, lower, bottomIn
         castShadow
         shadow-bias={-0.0005}
         shadow-normalBias={0.08} // removes acne stripes on roofs and slopes
-        shadow-mapSize={[2048, 2048]}
+        shadow-mapSize={[shadowSize, shadowSize]}
         shadow-camera-left={-250}
         shadow-camera-right={250}
         shadow-camera-top={250}
@@ -109,7 +126,7 @@ export default function CampusScene({ selectedId, selectedFloor, lower, bottomIn
         </>
       )}
       <Buildings selectedId={selectedId} selectedFloor={selectedFloor} lower={lower} locale={locale} onSelect={onSelect} />
-      <CameraRig selectedId={selectedId} bottomInset={bottomInset} leftInset={leftInset} />
+      <CameraRig selectedId={selectedId} bottomInset={bottomInset} leftInset={leftInset} topInset={topInset} />
     </Canvas>
   );
 }

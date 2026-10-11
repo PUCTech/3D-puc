@@ -149,7 +149,8 @@ export function Edge() {
           <Html position={[entrance.at[0], 6.5, entrance.at[1]]} center zIndexRange={[10, 0]} className="pointer-events-none select-none">
             {/* white plaque with dark lettering, as on the real gate (Descubra Sampa photo) */}
             <span className="block whitespace-nowrap rounded-sm border border-[#555] bg-[#f7f6f1] px-1.5 py-0.5 font-display text-[13px] uppercase tracking-wider text-[#2a2a2a] shadow-[2px_2px_0_#000]">
-              {entrance.label}
+              {entrance.label.split(' · ')[0]}
+              <span className="max-sm:hidden"> · {entrance.label.split(' · ').slice(1).join(' · ')}</span>
             </span>
           </Html>
         </group>

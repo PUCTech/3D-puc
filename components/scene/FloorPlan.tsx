@@ -52,11 +52,14 @@ export function FloorPlan({ building, floor, y, xray }: { building: Building; fl
           <Edges threshold={15} color="#1b1b24" lineWidth={INK_WIDTH * 0.6} depthTest={!xray} renderOrder={xray ? 7 : 0} />
         </mesh>
       ))}
+      {/* Always mounted, hidden with opacity: mounting/unmounting drei <Html> on every zoom step is costly and noisy */}
       {rooms
-        .filter((r) => labelsFit && r.big && r.kind !== 'corridor')
+        .filter((r) => r.big && r.kind !== 'corridor')
         .map((r) => (
           <Html key={`l-${r.id}`} position={[r.at[0], y + ROOM_HEIGHT + 0.6, r.at[1]]} center zIndexRange={[10, 0]} className="pointer-events-none select-none">
-            <span className="pixel-chip block whitespace-nowrap bg-paper px-1 font-display text-[11px] text-navy">{t(r.kind as 'room')}</span>
+            <span className={`pixel-chip block whitespace-nowrap bg-paper px-1 font-display text-[11px] text-navy transition-opacity ${labelsFit ? 'opacity-100' : 'opacity-0'}`}>
+              {t(r.kind as 'room')}
+            </span>
           </Html>
         ))}
     </group>
