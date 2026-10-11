@@ -449,3 +449,5 @@ Frames sampled every 2 s.
 - **Fonts:** the gate sign's lettering uses Archivo Narrow, a Google Font via `next/font`. The PUC Tech wordmark needs no font: its letters are outlined paths, and the hidden duplicate text layers were removed.
 - **Build:** Tailwind no longer scans `docs/`; it failed reading a photo there.
 - **Open question:** a brown tile band on a white wall in front of the terrace (photo 4) isn't modeled yet; unclear which wall it belongs to.
+
+- Wavy canopy: no leg along Prédio 2's west wall (user, Oct 2026). It only runs along Prédio 1 and the Auditório.
