@@ -3,6 +3,7 @@ import { useRef, useState } from 'react';
 import { useTranslations } from 'next-intl';
 import type { Building } from '@/lib/campus';
 import { BuildingDetails } from './BuildingDetails';
+import { historyFor } from '@/lib/history';
 
 // Phone bottom sheet: peek (name + tag) → drag/tap the handle to expand to floors.
 type Props = { building: Building; floor: number | null; onFloor: (level: number | null) => void; onClose: () => void };
@@ -41,7 +42,7 @@ export function BuildingSheet({ building, floor, onFloor, onClose }: Props) {
       <button onClick={onClose} aria-label={t('close')} className="pixel-btn pixel-btn-paper absolute right-4 top-4 grid h-9 w-9 place-items-center text-lg leading-none">
         ✕
       </button>
-      <BuildingDetails key={building.id} building={building} floor={floor} onFloor={onFloor} compact={!expanded && !floorView} dense={floorView} />
+      <BuildingDetails key={building.id} building={building} floor={floor} onFloor={onFloor} compact={!expanded && !floorView} dense={floorView} history={historyFor(building.id, floor)} />
     </section>
   );
 }

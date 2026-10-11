@@ -15,6 +15,8 @@ import { MapControls } from './ui/MapControls';
 import { useIsDesktop } from './ui/useIsDesktop';
 import { LevelToggle } from './ui/LevelToggle';
 import { PucTechCredit } from './ui/PucTechCredit';
+import { History } from './ui/History';
+import { historyFor } from '@/lib/history';
 
 function Loading() {
   const t = useTranslations();
@@ -57,6 +59,10 @@ export function MapApp() {
   const locale = useLocale() as Locale;
   const [listOpen, setListOpen] = useState(false);
   const isDesktop = useIsDesktop();
+  // Desktop: a selection with history opens the history panel next to the sidebar; ✕ hides it until reopened.
+  const [historyOpen, setHistoryOpen] = useState(true);
+  const historyEntries = selected ? historyFor(selected.id, selectedFloor) : [];
+  const showHistory = historyOpen && historyEntries.length > 0;
 
   const select = (id: string | null) => {
     setListOpen(false);
@@ -109,7 +115,7 @@ export function MapApp() {
     return (
       <main className="fixed inset-0 overflow-hidden bg-ground">
         {/* Map gets its own area right of the sidebar, so a selected building is never hidden behind a panel. */}
-        <div className="absolute inset-y-0 left-[25.5rem] right-0">{scene}</div>
+        <div className={`absolute inset-y-0 right-0 ${showHistory ? 'left-[52rem]' : 'left-[25.5rem]'}`}>{scene}</div>
         <aside className="pixel-box fixed bottom-4 left-4 top-4 z-20 flex w-[23.5rem] flex-col overflow-hidden">
           <header className="flex items-start justify-between gap-3 border-b-3 border-ink bg-navy px-5 py-4 text-white">
             <div>
@@ -127,7 +133,13 @@ export function MapApp() {
                 <button onClick={() => select(null)} className="pixel-btn pixel-btn-paper mb-5 px-3 py-1 text-sm">
                   ◀ {t('list.back')}
                 </button>
-                <BuildingDetails key={selected.id} building={selected} floor={selectedFloor} onFloor={selectFloor} />
+                <BuildingDetails
+                  key={selected.id}
+                  building={selected}
+                  floor={selectedFloor}
+                  onFloor={selectFloor}
+                  onHistory={!showHistory && historyEntries.length ? () => setHistoryOpen(true) : undefined}
+                />
               </section>
             ) : (
               <BuildingList onPick={select} inline />
@@ -135,6 +147,21 @@ export function MapApp() {
           </div>
           <PucTechCredit className="border-t-3 border-ink" />
         </aside>
+        {showHistory && (
+          <aside aria-labelledby="history-title" className="pixel-box fixed bottom-4 left-[25.5rem] top-4 z-20 flex w-[25rem] flex-col overflow-hidden">
+            <header className="flex items-center justify-between gap-3 border-b-3 border-ink bg-sun px-5 py-3">
+              <h2 id="history-title" className="font-display text-sm uppercase tracking-widest text-ink">
+                {t('history.title')}
+              </h2>
+              <button onClick={() => setHistoryOpen(false)} aria-label={t('history.close')} className="pixel-btn pixel-btn-paper grid h-8 w-8 place-items-center leading-none">
+                ✕
+              </button>
+            </header>
+            <div className="flex-1 overflow-y-auto p-5">
+              <History key={`${selected?.id}-${selectedFloor}`} entries={historyEntries} />
+            </div>
+          </aside>
+        )}
         {webgl && <MapControls />}
         {webgl && <LevelToggle lower={lower} onChange={setLower} className="fixed right-5 top-5 z-20" />}
       </main>

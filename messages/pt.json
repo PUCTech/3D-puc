@@ -79,5 +79,12 @@
     "label": "Nível",
     "street": "Rua",
     "lower": "Nível inferior"
+  },
+  "history": {
+    "title": "História",
+    "open": "Ver história",
+    "close": "Fechar história",
+    "sources": "Fontes",
+    "site": "História do terreno"
   }
 }
