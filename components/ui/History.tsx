@@ -3,9 +3,10 @@ import { useRef, useState } from 'react';
 import { useLocale, useTranslations } from 'next-intl';
 import type { Locale } from '@/lib/campus';
 import { history, type HistoryEntry, type HistoryPhoto } from '@/lib/history';
+import { Icon } from './Icon';
 
 function YearChip({ year }: { year: number }) {
-  return <span className="pixel-chip bg-sun px-1.5 font-display text-[12px] text-ink">{year}</span>;
+  return <span className="rounded-md bg-amarela px-1.5 py-0.5 text-xs font-bold tabular-nums text-navy">{year}</span>;
 }
 
 // A cropped photo tile; clicking opens the full scan.
@@ -13,7 +14,7 @@ function YearChip({ year }: { year: number }) {
 function Photo({ photo, hero, wide, onOpen }: { photo: HistoryPhoto; hero?: boolean; wide?: boolean; onOpen: () => void }) {
   const locale = useLocale() as Locale;
   return (
-    <figure className={`pixel-row overflow-hidden bg-white ${wide ? 'col-span-2' : ''}`}>
+    <figure className={`overflow-hidden rounded-xl bg-platform ${wide ? 'col-span-2' : ''}`}>
       <button onClick={onOpen} className="group relative block w-full" aria-label={photo.caption[locale]}>
         {/* eslint-disable-next-line @next/next/no-img-element -- static export, pre-sized scans */}
         <img
@@ -26,7 +27,7 @@ function Photo({ photo, hero, wide, onOpen }: { photo: HistoryPhoto; hero?: bool
           <YearChip year={photo.year} />
         </span>
       </button>
-      <figcaption className={`px-2.5 py-2 leading-snug text-ink/80 ${hero || wide ? 'text-[13px]' : 'line-clamp-2 text-xs'}`}>{photo.caption[locale]}</figcaption>
+      <figcaption className={`px-3 py-2 leading-snug text-muted ${hero || wide ? 'text-[13px]' : 'line-clamp-2 text-xs'}`}>{photo.caption[locale]}</figcaption>
     </figure>
   );
 }
@@ -39,18 +40,19 @@ function Entry({ entry, label, onOpen }: { entry: HistoryEntry; label: string; o
   return (
     <article className="space-y-4">
       {hero && <Photo photo={hero} hero onOpen={() => onOpen(hero)} />}
+      {/* nbsp keeps a title's " · " separator on the first line instead of dangling */}
       <header>
-        <p className="font-display text-[12px] uppercase tracking-widest text-puc">{label}</p>
-        <h3 className="mt-1 text-xl font-extrabold leading-tight tracking-tight text-navy">{entry.title[locale]}</h3>
+        <h3 className="text-[22px] font-black leading-tight tracking-tight text-balance text-navy">{entry.title[locale].replaceAll(' · ', '\u00a0· ')}</h3>
+        <p className="mt-1 text-sm font-semibold text-muted">{label}</p>
       </header>
-      <p className="text-sm leading-relaxed text-ink/80">{entry.text[locale]}</p>
+      <p className="max-w-[65ch] text-[15px] leading-relaxed text-ink">{entry.text[locale]}</p>
       {!!entry.facts?.length && (
-        <section className="pixel-row bg-ice/50 p-3">
-          <h4 className="font-display text-[12px] uppercase tracking-widest text-navy">{t('facts')}</h4>
+        <section className="rounded-xl bg-platform p-4">
+          <h4 className="text-sm font-black text-navy">{t('facts')}</h4>
           <ul className="mt-2 space-y-2">
             {entry.facts.map((f) => (
-              <li key={f.pt} className="flex gap-2 text-[13px] leading-snug text-ink/85">
-                <span aria-hidden className="font-display text-puc">▸</span>
+              <li key={f.pt} className="flex gap-2.5 text-sm leading-snug text-ink">
+                <span aria-hidden className="mt-[5px] h-2.5 w-2.5 shrink-0 rounded-full border-[2.5px] border-navy" />
                 <span>{f[locale]}</span>
               </li>
             ))}
@@ -81,16 +83,16 @@ export function History({ entries, name }: { entries: HistoryEntry[]; name?: str
   return (
     <div>
       {entries.map((e, i) => (
-        <div key={e.title.pt} className={i > 0 ? 'mt-8 border-t-3 border-dashed border-ink/20 pt-6' : ''}>
+        <div key={e.title.pt} className={i > 0 ? 'mt-8 border-t border-rule pt-6' : ''}>
           <Entry entry={e} label={'levels' in e ? t('thisFloor') : (name ?? t('siteLabel'))} onOpen={show} />
         </div>
       ))}
-      <footer className="mt-8 border-t-2 border-dashed border-ink/20 pt-3">
-        <h4 className="font-display text-[12px] uppercase tracking-widest text-ink/55">{t('sources')}</h4>
-        <ul className="mt-1 space-y-1">
+      <footer className="mt-8 border-t border-rule pt-4">
+        <h4 className="text-sm font-black text-navy">{t('sources')}</h4>
+        <ul className="mt-2 space-y-1.5">
           {history.sources.map((s) => (
-            <li key={s.url} className="text-xs">
-              <a href={s.url} target="_blank" rel="noopener" className="text-puc underline underline-offset-2 hover:text-navy">
+            <li key={s.url} className="text-[13px] leading-snug">
+              <a href={s.url} target="_blank" rel="noopener" className="text-navy underline decoration-navy/35 underline-offset-[3px] hover:decoration-navy">
                 {s.label}
               </a>
             </li>
@@ -103,20 +105,20 @@ export function History({ entries, name }: { entries: HistoryEntry[]; name?: str
         onClose={() => setOpen(null)}
         onKeyDown={(e) => e.key === 'Escape' && e.stopPropagation()}
         onClick={(e) => e.target === dialog.current && dialog.current.close()}
-        className="pixel-box m-auto max-h-[92dvh] w-[min(56rem,94vw)] overflow-hidden p-0 backdrop:bg-ink/70"
+        className="m-auto max-h-[92dvh] w-[min(56rem,94vw)] overflow-hidden rounded-2xl bg-white p-0 shadow-2xl backdrop:bg-navy-deep/75"
       >
         {open && (
           <figure className="flex max-h-[92dvh] flex-col">
             {/* eslint-disable-next-line @next/next/no-img-element -- static export, pre-sized scans */}
-            <img src={open.src} alt={open.caption[locale]} className="min-h-0 w-full flex-1 bg-ink object-contain" />
-            <figcaption className="flex items-start gap-3 border-t-3 border-ink px-4 py-3 text-sm">
+            <img src={open.src} alt={open.caption[locale]} className="min-h-0 w-full flex-1 bg-navy-deep object-contain" />
+            <figcaption className="flex items-start gap-3 px-4 py-3 text-sm text-ink">
               <YearChip year={open.year} />
               <span className="flex-1 leading-snug">
                 {open.caption[locale]}
-                <span className="block text-xs text-ink/55">{open.credit}</span>
+                <span className="mt-0.5 block text-xs text-muted">{open.credit}</span>
               </span>
-              <button onClick={() => dialog.current?.close()} aria-label={t('closePhoto')} className="pixel-btn pixel-btn-paper grid h-8 w-8 shrink-0 place-items-center leading-none">
-                ✕
+              <button onClick={() => dialog.current?.close()} aria-label={t('closePhoto')} className="grid h-10 w-10 shrink-0 place-items-center rounded-full text-navy hover:bg-platform">
+                <Icon name="close" />
               </button>
             </figcaption>
           </figure>

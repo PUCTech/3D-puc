@@ -1,9 +1,9 @@
 import { useMemo } from 'react';
 import * as THREE from 'three';
-import { Edges } from '@react-three/drei';
+import { crispTexture } from './textures';
+
 import type { Point } from '@/lib/campus';
 import { mergeGeometries } from './geometry';
-import { INK_WIDTH, toonRamp } from './pixel';
 
 // Red clay-tile lean-to along a wall over the sunken level (court photo, 2018):
 // it leaves the wall at street level and slopes down outward, on posts standing on the lower floor.
@@ -21,8 +21,7 @@ function tileTexture() {
   g.fillStyle = '#8e3c22'; // tile course lines
   g.fillRect(0, 3, 4, 1);
   g.fillRect(2, 0, 1, 3);
-  const t = new THREE.CanvasTexture(c);
-  t.magFilter = t.minFilter = THREE.NearestFilter;
+  const t = crispTexture(c);
   t.wrapS = t.wrapT = THREE.RepeatWrapping;
   t.colorSpace = THREE.SRGBColorSpace;
   return t;
@@ -52,11 +51,10 @@ export function LeanTo({ from: [x1, z1], to: [x2, z2], width, center: [cx, cz], 
   return (
     <>
       <mesh geometry={roof} castShadow receiveShadow>
-        <meshToonMaterial map={texture} gradientMap={toonRamp} side={THREE.DoubleSide} transparent opacity={opacity} />
-        {opacity === 1 && <Edges threshold={15} color="#1b1b24" lineWidth={INK_WIDTH * 0.7} />}
+        <meshStandardMaterial map={texture} side={THREE.DoubleSide} transparent opacity={opacity} />
       </mesh>
       <mesh geometry={posts} castShadow>
-        <meshToonMaterial color="#e8e4da" gradientMap={toonRamp} transparent opacity={opacity} />
+        <meshStandardMaterial color="#e8e4da" transparent opacity={opacity} />
       </mesh>
     </>
   );

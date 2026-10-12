@@ -1,10 +1,10 @@
 import { useMemo } from 'react';
 import { campus } from '@/lib/campus';
-import { flatPolygon, ribbons } from './geometry';
+import { extrude, flatPolygon, ribbons, terrainAt, terrainGeometry } from './geometry';
 import { pointInPolygon, Sunken } from './Sunken';
 import { Plants } from './Plants';
 
-const AREA_COLORS: Record<string, string> = { pitch: '#3fae4f', garden: '#6cc24a', park: '#6cc24a', grass: '#82d05c', playground: '#f0a43a' };
+const AREA_COLORS: Record<string, string> = { pitch: '#4c8a3c', garden: '#5e9142', park: '#5e9142', grass: '#6b9a4a', playground: '#f0a43a' };
 
 // Ground layers, stacked a few cm apart so they don't z-fight.
 // lower: only the sunken level's layers (court, retaining walls, lower gardens and paths).
@@ -37,9 +37,13 @@ export function Site({ lower = false }: { lower?: boolean }) {
     () =>
       (campus.gardens ?? []).map((g) => ({
         y: -(g.depth ?? 0),
-        geometry: flatPolygon(g.polygon, -(g.depth ?? 0) + 0.06),
+        // A garden with `terrain` follows the measured slope (the bosque falls to -12 m); the rest are flat.
+        geometry: g.terrain ? terrainGeometry(g.terrain, g.polygon, -(g.depth ?? 0), pointInPolygon) : flatPolygon(g.polygon, -(g.depth ?? 0) + 0.06),
+        terrain: g.terrain,
         earth: (g.earth ?? []).map((e) => flatPolygon(e, -(g.depth ?? 0) + 0.07)),
+        hedges: (g.hedges ?? []).map((h) => extrude(h, 0.6).translate(0, -(g.depth ?? 0) + 0.06, 0)),
         path: g.path ? ribbons([g.path], 1.6, -(g.depth ?? 0) + 0.08) : null,
+        curb: g.path ? ribbons([g.path], 1.85, -(g.depth ?? 0) + 0.075) : null, // red-painted edging under the flagstones (PUC-SP gallery 2023)
         plants: g.plants ?? [],
       })),
     [],
@@ -61,26 +65,45 @@ export function Site({ lower = false }: { lower?: boolean }) {
         <group key={`garden-${i}`}>
           {/* dense dark ground cover (photo 05) */}
           <mesh geometry={g.geometry} receiveShadow>
-            <meshLambertMaterial color="#3f8f3a" />
+            <meshLambertMaterial color="#40703a" />
           </mesh>
           {g.earth.map((e, j) => (
             <mesh key={j} geometry={e} receiveShadow>
               <meshLambertMaterial color="#b5652f" />
             </mesh>
           ))}
+          {/* Burle Marx's clipped, lobed hedge beds (drone video) */}
+          {g.hedges.map((h, j) => (
+            <mesh key={`h-${j}`} geometry={h} castShadow receiveShadow>
+              <meshStandardMaterial color="#3b6b2f" roughness={0.95} />
+            </mesh>
+          ))}
+          {g.curb && (
+            <mesh geometry={g.curb} receiveShadow>
+              <meshLambertMaterial color="#a8442f" />
+            </mesh>
+          )}
           {g.path && (
             <mesh geometry={g.path} receiveShadow>
               <meshLambertMaterial color="#cfc6b2" />
             </mesh>
           )}
-          <group position-y={g.y}>
-            <Plants plants={g.plants} />
-          </group>
+          {g.terrain ? (
+            g.plants.map((p, j) => (
+              <group key={`p-${j}`} position-y={terrainAt(g.terrain!, p.at[0], p.at[1])}>
+                <Plants plants={[p]} />
+              </group>
+            ))
+          ) : (
+            <group position-y={g.y}>
+              <Plants plants={g.plants} />
+            </group>
+          )}
         </group>
       ))}
       {areas.filter((a) => !(a.sunk && a.kind === 'pitch') && (!lower || a.sunk)).map((a, i) => (
         <mesh key={i} geometry={a.geometry} receiveShadow>
-          <meshLambertMaterial color={AREA_COLORS[a.kind] ?? '#82d05c'} />
+          <meshLambertMaterial color={AREA_COLORS[a.kind] ?? '#6b9a4a'} />
         </mesh>
       ))}
     </>

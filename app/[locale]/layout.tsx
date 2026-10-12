@@ -1,13 +1,13 @@
 import type { Metadata, Viewport } from 'next';
-import { Archivo_Narrow, Geist, Geist_Mono } from 'next/font/google';
+import { Archivo_Narrow, Schibsted_Grotesk } from 'next/font/google';
 import { notFound } from 'next/navigation';
 import { NextIntlClientProvider, hasLocale } from 'next-intl';
 import { getTranslations, setRequestLocale } from 'next-intl/server';
 import { routing } from '@/i18n/routing';
 import '../globals.css';
 
-const sans = Geist({ variable: '--font-geist-sans', subsets: ['latin'] });
-const mono = Geist_Mono({ variable: '--font-geist-mono', subsets: ['latin'] });
+// The one UI face: a neo-grotesk in the Metrô sign tradition, 400–900.
+const sans = Schibsted_Grotesk({ variable: '--font-schibsted', subsets: ['latin'] });
 // Condensed bold for the gate sign's lettering (drawn on a canvas in the 3D scene).
 const sign = Archivo_Narrow({ variable: '--font-sign', subsets: ['latin'], weight: ['700'] });
 
@@ -27,7 +27,7 @@ export default async function LocaleLayout({ children, params }: { children: Rea
   if (!hasLocale(routing.locales, locale)) notFound();
   setRequestLocale(locale);
   return (
-    <html lang={locale === 'pt' ? 'pt-BR' : 'en'} className={`${sans.variable} ${mono.variable} ${sign.variable}`}>
+    <html lang={locale === 'pt' ? 'pt-BR' : 'en'} className={`${sans.variable} ${sign.variable}`}>
       <body className="font-sans antialiased">
         <NextIntlClientProvider>{children}</NextIntlClientProvider>
       </body>

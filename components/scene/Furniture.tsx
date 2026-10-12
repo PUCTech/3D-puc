@@ -2,7 +2,6 @@ import { useMemo } from 'react';
 import * as THREE from 'three';
 import { campus } from '@/lib/campus';
 import { mergeGeometries } from './geometry';
-import { toonRamp } from './pixel';
 
 const items = campus.furniture ?? [];
 
@@ -36,11 +35,11 @@ export function Furniture() {
           <group key={`s${i}`} position={[f.at[0], 0, f.at[1]]} rotation-y={-f.angle}>
             <mesh position-y={2} castShadow>
               <boxGeometry args={[0.25, 4, 0.25]} />
-              <meshToonMaterial color="#2c2f38" gradientMap={toonRamp} />
+              <meshStandardMaterial color="#2c2f38" />
             </mesh>
             <mesh position-y={4.2}>
               <boxGeometry args={[0.5, 1.2, 0.5]} />
-              <meshToonMaterial color="#f2c230" gradientMap={toonRamp} />
+              <meshStandardMaterial color="#f2c230" />
             </mesh>
           </group>
         ))}
@@ -50,12 +49,12 @@ export function Furniture() {
           <group key={`b${i}`} position={[f.at[0], 0, f.at[1]]} rotation-y={-f.angle}>
             <mesh position-y={2.6} castShadow>
               <boxGeometry args={[4, 0.2, 1.6]} />
-              <meshToonMaterial color="#3a86c8" gradientMap={toonRamp} />
+              <meshStandardMaterial color="#3a86c8" />
             </mesh>
             {[-1.8, 1.8].map((x) => (
               <mesh key={x} position={[x, 1.3, -0.6]}>
                 <boxGeometry args={[0.15, 2.6, 0.15]} />
-                <meshToonMaterial color="#2c2f38" gradientMap={toonRamp} />
+                <meshStandardMaterial color="#2c2f38" />
               </mesh>
             ))}
           </group>

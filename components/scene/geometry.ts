@@ -1,6 +1,6 @@
 import * as THREE from 'three';
 import { mergeGeometries } from 'three/examples/jsm/utils/BufferGeometryUtils.js';
-import type { Point } from '@/lib/campus';
+import type { Point, Terrain } from '@/lib/campus';
 
 // Footprints are (x east, z south). Shapes live in XY and are laid flat with rotateX(-90°),
 // which maps shape y to -z, so we feed -z.
@@ -52,6 +52,57 @@ export function ribbons(paths: Point[][], width: number, y: number) {
       parts.push(g);
     }
   return parts.length ? mergeGeometries(parts) : null;
+}
+
+// Oriented bounding box via the longest edge's direction (unit axes u along it, v across, and the extent on each):
+// good enough for bar-shaped blocks and rooms.
+export function orientedBox(points: Point[]) {
+  let best = { len: 0, ux: 1, uz: 0 };
+  points.forEach((p, i) => {
+    const q = points[(i + 1) % points.length];
+    const len = Math.hypot(q[0] - p[0], q[1] - p[1]);
+    if (len > best.len) best = { len, ux: (q[0] - p[0]) / len, uz: (q[1] - p[1]) / len };
+  });
+  const { ux, uz } = best;
+  const [vx, vz] = [-uz, ux];
+  const us = points.map(([x, z]) => x * ux + z * uz), vs = points.map(([x, z]) => x * vx + z * vz);
+  return { ux, uz, vx, vz, u: [Math.min(...us), Math.max(...us)], v: [Math.min(...vs), Math.max(...vs)] };
+}
+
+// Bilinear ground height at (x, z); clamps outside the grid.
+export function terrainAt(t: Terrain, x: number, z: number) {
+  const fx = Math.min(t.cols - 1.001, Math.max(0, (x - t.x0) / t.step));
+  const fz = Math.min(t.rows - 1.001, Math.max(0, (z - t.z0) / t.step));
+  const i = Math.floor(fx), j = Math.floor(fz), u = fx - i, v = fz - j;
+  const h = (a: number, b: number) => t.h[b * t.cols + a];
+  return (h(i, j) * (1 - u) + h(i + 1, j) * u) * (1 - v) + (h(i, j + 1) * (1 - u) + h(i + 1, j + 1) * u) * v;
+}
+
+// Sloped ground clipped to a polygon (grid cells whose centre is inside), plus a skirt down from `top` along the
+// polygon's edges so the slope meets the flat levels around it without a gap.
+export function terrainGeometry(t: Terrain, polygon: Point[], top: number, inside: (p: Point, poly: Point[]) => boolean) {
+  const pos: number[] = [];
+  const v = (a: number, b: number) => [t.x0 + a * t.step, t.h[b * t.cols + a], t.z0 + b * t.step];
+  for (let j = 0; j < t.rows - 1; j++)
+    for (let i = 0; i < t.cols - 1; i++) {
+      if (!inside([t.x0 + (i + 0.5) * t.step, t.z0 + (j + 0.5) * t.step], polygon)) continue;
+      const [a, b, c, d] = [v(i, j), v(i + 1, j), v(i + 1, j + 1), v(i, j + 1)];
+      pos.push(...a, ...c, ...b, ...a, ...d, ...c); // counter-clockwise seen from above
+    }
+  polygon.forEach((p, k) => {
+    const q = polygon[(k + 1) % polygon.length];
+    const n = Math.max(1, Math.ceil(Math.hypot(q[0] - p[0], q[1] - p[1])));
+    for (let s = 0; s < n; s++) {
+      const [x1, z1] = [p[0] + ((q[0] - p[0]) * s) / n, p[1] + ((q[1] - p[1]) * s) / n];
+      const [x2, z2] = [p[0] + ((q[0] - p[0]) * (s + 1)) / n, p[1] + ((q[1] - p[1]) * (s + 1)) / n];
+      const [h1, h2] = [terrainAt(t, x1, z1), terrainAt(t, x2, z2)];
+      pos.push(x1, top, z1, x2, top, z2, x2, h2, z2, x1, top, z1, x2, h2, z2, x1, h1, z1);
+    }
+  });
+  const g = new THREE.BufferGeometry();
+  g.setAttribute('position', new THREE.Float32BufferAttribute(pos, 3));
+  g.computeVertexNormals();
+  return g;
 }
 
 export { mergeGeometries };

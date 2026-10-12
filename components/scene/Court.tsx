@@ -2,7 +2,7 @@ import { useMemo } from 'react';
 import * as THREE from 'three';
 import type { Point } from '@/lib/campus';
 import { mergeGeometries } from './geometry';
-import { toonRamp } from './pixel';
+
 import { useNight } from './night';
 
 // Multi-sport court from the drone video (29–33 s) and the 2018 court photo:
@@ -85,11 +85,11 @@ function Hoop({ x, flip }: { x: number; flip: boolean }) {
     <group position-x={x}>
       <mesh position={[0, 1.6, 0]}>
         <boxGeometry args={[0.15, 3.2, 0.15]} />
-        <meshToonMaterial color="#3a3d44" gradientMap={toonRamp} />
+        <meshStandardMaterial color="#3a3d44" />
       </mesh>
       <mesh position={[toward * 0.9, 3.4, 0]}>
         <boxGeometry args={[0.06, 1.05, 1.8]} />
-        <meshToonMaterial color="#f4f4f0" gradientMap={toonRamp} />
+        <meshStandardMaterial color="#f4f4f0" />
       </mesh>
       <mesh position={[toward * 1.2, 3.05, 0]} rotation-x={Math.PI / 2}>
         <torusGeometry args={[0.23, 0.03, 6, 16]} />
@@ -146,18 +146,18 @@ export function Court({ polygon, y }: { polygon: Point[]; y: number }) {
         </mesh>
       ))}
       <mesh geometry={fence} castShadow>
-        <meshToonMaterial color="#27463a" gradientMap={toonRamp} />
+        <meshStandardMaterial color="#27463a" />
       </mesh>
       {/* floodlights on the corners (2018 photo) */}
       {[[-1, -1], [1, -1], [1, 1], [-1, 1]].map(([sx, sz], i) => (
         <group key={i} position={[(sx * L) / 2, 0, (sz * W) / 2 + sz * 0.6]}>
           <mesh position-y={4.5} castShadow>
             <cylinderGeometry args={[0.08, 0.1, 9, 6]} />
-            <meshToonMaterial color="#9aa0a6" gradientMap={toonRamp} />
+            <meshStandardMaterial color="#9aa0a6" />
           </mesh>
           <mesh position={[0, 9, -sz * 0.3]}>
             <boxGeometry args={[1.2, 0.3, 0.5]} />
-            <meshToonMaterial color="#f2f2ee" emissive="#ffffff" emissiveIntensity={night ? 2 : 0} gradientMap={toonRamp} />
+            <meshStandardMaterial color="#f2f2ee" emissive="#ffffff" emissiveIntensity={night ? 2 : 0} />
           </mesh>
         </group>
       ))}

@@ -1,9 +1,9 @@
 import { useMemo } from 'react';
 import * as THREE from 'three';
-import { Edges } from '@react-three/drei';
+
 import { campus, type Point } from '@/lib/campus';
 import { flatPolygon, mergeGeometries } from './geometry';
-import { INK_WIDTH, toonRamp } from './pixel';
+
 import { Court } from './Court';
 
 export function pointInPolygon([x, z]: Point, poly: Point[]) {
@@ -22,7 +22,7 @@ export function Sunken({ courts }: { courts: Point[][] }) {
   const zones = useMemo(
     () =>
       (campus.sunken ?? []).map((s) => {
-        const floor = flatPolygon(s.polygon, -s.depth);
+        const floor = flatPolygon(s.floor ?? s.polygon, -s.depth); // a garden with its own terrain fills the rest
         const walls = s.polygon.map((a, i) => {
           const b = s.polygon[(i + 1) % s.polygon.length];
           const len = Math.hypot(b[0] - a[0], b[1] - a[1]);
@@ -44,8 +44,7 @@ export function Sunken({ courts }: { courts: Point[][] }) {
             <meshLambertMaterial color="#c4c0b7" /> {/* paving at the lower level, a shade darker than the street-level lot */}
           </mesh>
           <mesh geometry={z.walls} castShadow receiveShadow>
-            <meshToonMaterial color="#cfc9bd" gradientMap={toonRamp} />
-            <Edges threshold={15} color="#1b1b24" lineWidth={INK_WIDTH * 0.7} />
+            <meshStandardMaterial color="#cfc9bd" />
           </mesh>
           {z.courts.map((c, j) => (
             <Court key={j} polygon={c} y={-z.depth} />

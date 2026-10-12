@@ -1,6 +1,17 @@
 # 3d-puc
 
-3D campus map of PUC-SP Consolação. See docs/superpowers/specs/.
+Interactive 3D isometric map of the PUC-SP Consolação campus. Browse and search buildings, in English and Portuguese.
+
+**Stack:** Next.js, React Three Fiber (three.js), next-intl, Tailwind.
+
+## Getting started
+
+```bash
+npm install
+npm run dev    # http://localhost:3000
+```
+
+Other scripts: `build`, `lint`, `typecheck`, and `import:footprints` (pulls building footprints from OpenStreetMap). Design notes are in `docs/superpowers/specs/`.
 
 ## Deploy
 

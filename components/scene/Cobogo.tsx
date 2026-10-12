@@ -1,9 +1,9 @@
 import { useMemo } from 'react';
 import * as THREE from 'three';
-import { Edges } from '@react-three/drei';
+
 import type { Point } from '@/lib/campus';
 import { mergeGeometries } from './geometry';
-import { COBOGO_PANEL, INK_WIDTH, cobogoTexture, toonRamp } from './pixel';
+import { COBOGO_PANEL, cobogoTexture } from './textures';
 import { useNight } from './night';
 
 const FRAME = { pilaster: 0.3, beam: 0.25, depth: 0.45 }; // meters; photos 04/05/tour 02: frame stands proud of the lattice
@@ -57,12 +57,11 @@ export function Cobogo({
       <mesh position-y={height / 2}>
         <planeGeometry args={[length, height]} />
         {/* night: the lit corridors behind glow warm through the glass grid */}
-        <meshToonMaterial map={texture} gradientMap={toonRamp} side={THREE.DoubleSide} transparent opacity={opacity} emissive="#ffcf80" emissiveMap={texture} emissiveIntensity={night ? 0.7 : 0} />
+        <meshStandardMaterial map={texture} side={THREE.DoubleSide} transparent opacity={opacity} emissive="#ffcf80" emissiveMap={texture} emissiveIntensity={night ? 0.7 : 0} />
       </mesh>
       <mesh geometry={frame} castShadow>
-        <meshToonMaterial color="#d3d8d8" gradientMap={toonRamp} transparent opacity={opacity} />
+        <meshStandardMaterial color="#d3d8d8" transparent opacity={opacity} />
         {/* soft grey ink: the real frame is light, black lines read too heavy at this density */}
-        {opacity === 1 && <Edges threshold={30} color="#8a9094" lineWidth={INK_WIDTH * 0.5} />}
       </mesh>
     </group>
   );

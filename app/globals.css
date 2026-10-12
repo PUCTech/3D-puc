@@ -2,18 +2,20 @@
 /* docs/ holds photos and PDFs, not code: keep Tailwind's class scan out of it */
 @source not "../docs";
 
-/* HUD design tokens. PUC Tech blue (puc / navy) carries the brand. Display = Geist Mono (buttons, tags, labels). */
+/* Metrô signage: white enamel plates on a pale platform, navy as the sign band and ink,
+   each building a metro line with its own color (lib/lines.ts). One face: Schibsted Grotesk. */
 @theme inline {
-  --color-ink: #1b1b24;
-  --color-paper: #fdf6e3;
-  --color-puc: #2b6fac;
   --color-navy: #143966;
-  --color-ice: #bae4fe;
-  --color-sun: #ffd166;
+  --color-navy-deep: #0c2445;
+  --color-ink: #13213a;
+  --color-muted: #4a5a73;
+  --color-plate: #ffffff;
+  --color-platform: #f1f2ee;
+  --color-rule: #dfe2e8;
+  --color-amarela: #fed304;
   --color-ground: #b7ab98;
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-  --font-display: var(--font-geist-mono);
+  --font-sans: var(--font-schibsted);
+  --font-display: var(--font-schibsted);
 }
 
 html, body {
@@ -25,49 +27,94 @@ html, body {
 }
 
 @layer components {
-  /* Square panel, thick ink outline, hard drop shadow. */
-  .pixel-box {
-    background: var(--color-paper);
-    border: 3px solid var(--color-ink);
-    box-shadow: 4px 4px 0 var(--color-ink);
+  /* Sign plate: white enamel, 6px corners. Plates float over the busy 3D scene, so they keep one soft lift for
+     legibility there; inside panels, rows are flat and divided by rules. Never a hard offset shadow. */
+  .plate {
+    background: var(--color-plate);
+    border-radius: 6px;
+    box-shadow: 0 1px 2px rgb(12 36 69 / 0.18), 0 6px 18px rgb(12 36 69 / 0.12);
   }
-  /* Button that "presses in": the shadow collapses on click. */
-  .pixel-btn {
-    font-family: var(--font-display);
-    font-weight: 600;
-    border: 3px solid var(--color-ink);
-    box-shadow: 3px 3px 0 var(--color-ink);
-    background: var(--color-puc);
-    color: #fff;
-    transition: transform 60ms, box-shadow 60ms, background-color 120ms;
+  /* Small plate button (map controls, toggles). */
+  .plate-btn {
+    background: var(--color-plate);
+    color: var(--color-navy);
+    border-radius: 6px;
+    font-weight: 700;
+    box-shadow: 0 1px 2px rgb(12 36 69 / 0.18), 0 4px 12px rgb(12 36 69 / 0.12);
+    transition: background-color 120ms, color 120ms, transform 120ms;
   }
-  .pixel-btn:hover { background: var(--color-navy); }
-  .pixel-btn:active { transform: translate(3px, 3px); box-shadow: 0 0 0 var(--color-ink); }
-  .pixel-btn-paper { background: var(--color-paper); color: var(--color-navy); }
-  .pixel-btn-paper:hover { background: var(--color-ice); }
-  /* Small labelled chip: tags and map labels. */
-  .pixel-chip {
-    font-family: var(--font-display);
-    border: 2px solid var(--color-ink);
-    box-shadow: 2px 2px 0 var(--color-ink);
+  .plate-btn:hover { background: var(--color-platform); }
+  .plate-btn:active { transform: scale(0.96); }
+  .plate-btn[aria-pressed="true"] { background: var(--color-navy); color: #fff; }
+
+  /* Round metro-line bullet: --line fill, --line-on numeral. */
+  .bullet {
+    display: inline-grid;
+    place-items: center;
+    flex: none;
+    border-radius: 999px;
+    background: var(--line, var(--color-navy));
+    color: var(--line-on, #fff);
+    font-weight: 900;
+    line-height: 1;
+    font-variant-numeric: tabular-nums;
   }
-  .pixel-row {
-    border: 2px solid var(--color-ink);
+
+  /* Map label: a white plate with the building's line bullet (set by Label via data-badge and --line). */
+  .map-plate {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    white-space: nowrap;
+    padding: 4px 10px 4px 4px;
+    border-radius: 6px;
     background: #fff;
+    color: var(--color-ink);
+    font: 700 13px/1 var(--font-schibsted);
+    box-shadow: 0 1px 2px rgb(12 36 69 / 0.25), 0 4px 10px rgb(12 36 69 / 0.15);
+    transition: opacity 200ms, background-color 150ms, color 150ms; /* never transform: Label moves it every frame */
   }
+  .map-plate::before {
+    content: attr(data-badge);
+    display: grid;
+    place-items: center;
+    width: 22px;
+    height: 22px;
+    border-radius: 999px;
+    background: var(--line, var(--color-navy));
+    color: var(--line-on, #fff);
+    font-weight: 900;
+    font-size: 12px;
+  }
+  /* Picked building: the plate takes its line color, like the lit line on a station diagram. */
+  .map-plate[data-on] {
+    background: var(--line);
+    color: var(--line-on);
+    font-size: 15px;
+    padding: 5px 12px 5px 5px;
+  }
+  .map-plate[data-on]::before { background: #fff; color: var(--line-text, var(--color-ink)); }
+  /* Parking: the square blue P of a Brazilian road sign, smaller than a building's plate. */
+  .parking-plate { font-size: 12px; }
+  .parking-plate::before { border-radius: 4px; background: #0b5cad; width: 20px; height: 20px; }
 }
 
-/* Thick, square keyboard focus everywhere. In the base layer so utilities like outline-none still win. */
 @layer base {
   /* No double-tap page zoom on buttons (pinch still works); taps fire without the 300ms wait. */
   html {
     touch-action: manipulation;
+    caret-color: var(--color-navy);
+    accent-color: var(--color-navy);
   }
+  ::selection { background: var(--color-amarela); color: var(--color-navy); }
   :focus-visible {
-    outline: 3px solid var(--color-puc);
+    outline: 3px solid var(--color-navy);
     outline-offset: 2px;
   }
+  * { scrollbar-width: thin; scrollbar-color: rgb(20 57 102 / 0.35) transparent; }
 }
 
-@keyframes pixel-blink { 50% { opacity: 0; } }
-.pixel-blink { animation: pixel-blink 1s steps(1) infinite; }
+/* Loading: three stations lighting up in turn. */
+@keyframes station { 0%, 100% { opacity: 0.25; } 40% { opacity: 1; } }
+.station-dot { animation: station 1.2s ease-in-out infinite; }
+@media (prefers-reduced-motion: reduce) { .station-dot { animation: none; opacity: 1; } }

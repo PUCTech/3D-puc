@@ -1,0 +1,608 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-10-12T18:14:12.557Z",
+  "title": "Design System: Mapa PUC",
+  "extensions": {
+    "colorMeta": {
+      "navy": {
+        "role": "primary",
+        "displayName": "Sign Navy",
+        "canonical": "#143966",
+        "tonalRamp": [
+          "oklch(15% 0.034 255)",
+          "oklch(26% 0.058 255)",
+          "oklch(37% 0.083 255)",
+          "oklch(48% 0.089 255)",
+          "oklch(59% 0.089 255)",
+          "oklch(70% 0.067 255)",
+          "oklch(82% 0.040 255)",
+          "oklch(95% 0.011 255)"
+        ]
+      },
+      "navy-deep": {
+        "role": "primary",
+        "displayName": "Tunnel Navy",
+        "canonical": "#0c2445",
+        "tonalRamp": [
+          "oklch(15% 0.026 257)",
+          "oklch(26% 0.045 257)",
+          "oklch(37% 0.064 257)",
+          "oklch(48% 0.069 257)",
+          "oklch(59% 0.069 257)",
+          "oklch(70% 0.052 257)",
+          "oklch(82% 0.031 257)",
+          "oklch(95% 0.009 257)"
+        ]
+      },
+      "ink": {
+        "role": "neutral",
+        "displayName": "Ink",
+        "canonical": "#13213a",
+        "tonalRamp": [
+          "oklch(15% 0.019 261)",
+          "oklch(26% 0.034 261)",
+          "oklch(37% 0.048 261)",
+          "oklch(48% 0.052 261)",
+          "oklch(59% 0.052 261)",
+          "oklch(70% 0.039 261)",
+          "oklch(82% 0.023 261)",
+          "oklch(95% 0.006 261)"
+        ]
+      },
+      "muted": {
+        "role": "neutral",
+        "displayName": "Muted Steel",
+        "canonical": "#4a5a73",
+        "tonalRamp": [
+          "oklch(15% 0.017 259)",
+          "oklch(26% 0.030 259)",
+          "oklch(37% 0.042 259)",
+          "oklch(48% 0.046 259)",
+          "oklch(59% 0.046 259)",
+          "oklch(70% 0.034 259)",
+          "oklch(82% 0.020 259)",
+          "oklch(95% 0.006 259)"
+        ]
+      },
+      "plate": {
+        "role": "neutral",
+        "displayName": "Enamel White",
+        "canonical": "#ffffff",
+        "tonalRamp": [
+          "oklch(15% 0.000 90)",
+          "oklch(26% 0.000 90)",
+          "oklch(37% 0.000 90)",
+          "oklch(48% 0.000 90)",
+          "oklch(59% 0.000 90)",
+          "oklch(70% 0.000 90)",
+          "oklch(82% 0.000 90)",
+          "oklch(95% 0.000 90)"
+        ]
+      },
+      "platform": {
+        "role": "neutral",
+        "displayName": "Platform",
+        "canonical": "#f1f2ee",
+        "tonalRamp": [
+          "oklch(15% 0.002 118)",
+          "oklch(26% 0.004 118)",
+          "oklch(37% 0.005 118)",
+          "oklch(48% 0.005 118)",
+          "oklch(59% 0.005 118)",
+          "oklch(70% 0.004 118)",
+          "oklch(82% 0.002 118)",
+          "oklch(95% 0.001 118)"
+        ]
+      },
+      "rule": {
+        "role": "neutral",
+        "displayName": "Rule",
+        "canonical": "#dfe2e8",
+        "tonalRamp": [
+          "oklch(15% 0.003 265)",
+          "oklch(26% 0.006 265)",
+          "oklch(37% 0.008 265)",
+          "oklch(48% 0.009 265)",
+          "oklch(59% 0.009 265)",
+          "oklch(70% 0.007 265)",
+          "oklch(82% 0.004 265)",
+          "oklch(95% 0.001 265)"
+        ]
+      },
+      "ground": {
+        "role": "neutral",
+        "displayName": "Sand Ground",
+        "canonical": "#b7ab98",
+        "tonalRamp": [
+          "oklch(15% 0.011 79)",
+          "oklch(26% 0.019 79)",
+          "oklch(37% 0.028 79)",
+          "oklch(48% 0.030 79)",
+          "oklch(59% 0.030 79)",
+          "oklch(70% 0.022 79)",
+          "oklch(82% 0.013 79)",
+          "oklch(95% 0.004 79)"
+        ]
+      },
+      "amarela": {
+        "role": "secondary",
+        "displayName": "Linha Amarela",
+        "canonical": "#fed304",
+        "tonalRamp": [
+          "oklch(15% 0.067 94)",
+          "oklch(26% 0.117 94)",
+          "oklch(37% 0.166 94)",
+          "oklch(48% 0.180 94)",
+          "oklch(59% 0.180 94)",
+          "oklch(70% 0.135 94)",
+          "oklch(82% 0.081 94)",
+          "oklch(95% 0.022 94)"
+        ]
+      },
+      "line-vermelha": {
+        "role": "tertiary",
+        "displayName": "Linha Vermelha",
+        "canonical": "#d42a22",
+        "tonalRamp": [
+          "oklch(15% 0.077 29)",
+          "oklch(26% 0.134 29)",
+          "oklch(37% 0.191 29)",
+          "oklch(48% 0.206 29)",
+          "oklch(59% 0.206 29)",
+          "oklch(70% 0.154 29)",
+          "oklch(82% 0.093 29)",
+          "oklch(95% 0.026 29)"
+        ]
+      },
+      "line-vermelha-on": {
+        "role": "tertiary",
+        "displayName": "Vermelha numeral",
+        "canonical": "#ffffff",
+        "tonalRamp": [
+          "oklch(15% 0.000 90)",
+          "oklch(26% 0.000 90)",
+          "oklch(37% 0.000 90)",
+          "oklch(48% 0.000 90)",
+          "oklch(59% 0.000 90)",
+          "oklch(70% 0.000 90)",
+          "oklch(82% 0.000 90)",
+          "oklch(95% 0.000 90)"
+        ]
+      },
+      "line-vermelha-text": {
+        "role": "tertiary",
+        "displayName": "Vermelha text on white",
+        "canonical": "#d42a22",
+        "tonalRamp": [
+          "oklch(15% 0.077 29)",
+          "oklch(26% 0.134 29)",
+          "oklch(37% 0.191 29)",
+          "oklch(48% 0.206 29)",
+          "oklch(59% 0.206 29)",
+          "oklch(70% 0.154 29)",
+          "oklch(82% 0.093 29)",
+          "oklch(95% 0.026 29)"
+        ]
+      },
+      "line-verde": {
+        "role": "tertiary",
+        "displayName": "Linha Verde",
+        "canonical": "#007e5e",
+        "tonalRamp": [
+          "oklch(15% 0.040 167)",
+          "oklch(26% 0.070 167)",
+          "oklch(37% 0.099 167)",
+          "oklch(48% 0.107 167)",
+          "oklch(59% 0.107 167)",
+          "oklch(70% 0.081 167)",
+          "oklch(82% 0.048 167)",
+          "oklch(95% 0.013 167)"
+        ]
+      },
+      "line-verde-on": {
+        "role": "tertiary",
+        "displayName": "Verde numeral",
+        "canonical": "#ffffff",
+        "tonalRamp": [
+          "oklch(15% 0.000 90)",
+          "oklch(26% 0.000 90)",
+          "oklch(37% 0.000 90)",
+          "oklch(48% 0.000 90)",
+          "oklch(59% 0.000 90)",
+          "oklch(70% 0.000 90)",
+          "oklch(82% 0.000 90)",
+          "oklch(95% 0.000 90)"
+        ]
+      },
+      "line-verde-text": {
+        "role": "tertiary",
+        "displayName": "Verde text on white",
+        "canonical": "#007e5e",
+        "tonalRamp": [
+          "oklch(15% 0.040 167)",
+          "oklch(26% 0.070 167)",
+          "oklch(37% 0.099 167)",
+          "oklch(48% 0.107 167)",
+          "oklch(59% 0.107 167)",
+          "oklch(70% 0.081 167)",
+          "oklch(82% 0.048 167)",
+          "oklch(95% 0.013 167)"
+        ]
+      },
+      "line-amarela": {
+        "role": "tertiary",
+        "displayName": "Linha Amarela",
+        "canonical": "#fed304",
+        "tonalRamp": [
+          "oklch(15% 0.067 94)",
+          "oklch(26% 0.117 94)",
+          "oklch(37% 0.166 94)",
+          "oklch(48% 0.180 94)",
+          "oklch(59% 0.180 94)",
+          "oklch(70% 0.135 94)",
+          "oklch(82% 0.081 94)",
+          "oklch(95% 0.022 94)"
+        ]
+      },
+      "line-amarela-on": {
+        "role": "tertiary",
+        "displayName": "Amarela numeral (navy)",
+        "canonical": "#143966",
+        "tonalRamp": [
+          "oklch(15% 0.034 255)",
+          "oklch(26% 0.058 255)",
+          "oklch(37% 0.083 255)",
+          "oklch(48% 0.089 255)",
+          "oklch(59% 0.089 255)",
+          "oklch(70% 0.067 255)",
+          "oklch(82% 0.040 255)",
+          "oklch(95% 0.011 255)"
+        ]
+      },
+      "line-amarela-text": {
+        "role": "tertiary",
+        "displayName": "Amarela text on white (navy)",
+        "canonical": "#143966",
+        "tonalRamp": [
+          "oklch(15% 0.034 255)",
+          "oklch(26% 0.058 255)",
+          "oklch(37% 0.083 255)",
+          "oklch(48% 0.089 255)",
+          "oklch(59% 0.089 255)",
+          "oklch(70% 0.067 255)",
+          "oklch(82% 0.040 255)",
+          "oklch(95% 0.011 255)"
+        ]
+      },
+      "line-lilas": {
+        "role": "tertiary",
+        "displayName": "Linha Lilás",
+        "canonical": "#9b3894",
+        "tonalRamp": [
+          "oklch(15% 0.064 331)",
+          "oklch(26% 0.111 331)",
+          "oklch(37% 0.158 331)",
+          "oklch(48% 0.171 331)",
+          "oklch(59% 0.171 331)",
+          "oklch(70% 0.128 331)",
+          "oklch(82% 0.077 331)",
+          "oklch(95% 0.021 331)"
+        ]
+      },
+      "line-lilas-on": {
+        "role": "tertiary",
+        "displayName": "Lilás numeral",
+        "canonical": "#ffffff",
+        "tonalRamp": [
+          "oklch(15% 0.000 90)",
+          "oklch(26% 0.000 90)",
+          "oklch(37% 0.000 90)",
+          "oklch(48% 0.000 90)",
+          "oklch(59% 0.000 90)",
+          "oklch(70% 0.000 90)",
+          "oklch(82% 0.000 90)",
+          "oklch(95% 0.000 90)"
+        ]
+      },
+      "line-lilas-text": {
+        "role": "tertiary",
+        "displayName": "Lilás text on white",
+        "canonical": "#9b3894",
+        "tonalRamp": [
+          "oklch(15% 0.064 331)",
+          "oklch(26% 0.111 331)",
+          "oklch(37% 0.158 331)",
+          "oklch(48% 0.171 331)",
+          "oklch(59% 0.171 331)",
+          "oklch(70% 0.128 331)",
+          "oklch(82% 0.077 331)",
+          "oklch(95% 0.021 331)"
+        ]
+      },
+      "line-azul": {
+        "role": "tertiary",
+        "displayName": "Linha Azul",
+        "canonical": "#006fae",
+        "tonalRamp": [
+          "oklch(15% 0.049 244)",
+          "oklch(26% 0.084 244)",
+          "oklch(37% 0.120 244)",
+          "oklch(48% 0.129 244)",
+          "oklch(59% 0.129 244)",
+          "oklch(70% 0.097 244)",
+          "oklch(82% 0.058 244)",
+          "oklch(95% 0.016 244)"
+        ]
+      },
+      "line-azul-on": {
+        "role": "tertiary",
+        "displayName": "Azul numeral",
+        "canonical": "#ffffff",
+        "tonalRamp": [
+          "oklch(15% 0.000 90)",
+          "oklch(26% 0.000 90)",
+          "oklch(37% 0.000 90)",
+          "oklch(48% 0.000 90)",
+          "oklch(59% 0.000 90)",
+          "oklch(70% 0.000 90)",
+          "oklch(82% 0.000 90)",
+          "oklch(95% 0.000 90)"
+        ]
+      },
+      "line-azul-text": {
+        "role": "tertiary",
+        "displayName": "Azul text on white",
+        "canonical": "#006fae",
+        "tonalRamp": [
+          "oklch(15% 0.049 244)",
+          "oklch(26% 0.084 244)",
+          "oklch(37% 0.120 244)",
+          "oklch(48% 0.129 244)",
+          "oklch(59% 0.129 244)",
+          "oklch(70% 0.097 244)",
+          "oklch(82% 0.058 244)",
+          "oklch(95% 0.016 244)"
+        ]
+      },
+      "parking-blue": {
+        "role": "tertiary",
+        "displayName": "Road-sign Blue",
+        "canonical": "#0b5cad",
+        "tonalRamp": [
+          "oklch(15% 0.055 254)",
+          "oklch(26% 0.096 254)",
+          "oklch(37% 0.136 254)",
+          "oklch(48% 0.147 254)",
+          "oklch(59% 0.147 254)",
+          "oklch(70% 0.111 254)",
+          "oklch(82% 0.066 254)",
+          "oklch(95% 0.018 254)"
+        ]
+      }
+    },
+    "typographyMeta": {
+      "display": {
+        "displayName": "Display",
+        "purpose": "A picked building's name in the desktop band; the app title at 28px."
+      },
+      "headline": {
+        "displayName": "Headline",
+        "purpose": "A picked building's name in the phone sheet band."
+      },
+      "title": {
+        "displayName": "Title",
+        "purpose": "History entry titles; list (20px) and history panel (18px) titles share the weight."
+      },
+      "section": {
+        "displayName": "Section",
+        "purpose": "In-panel headings, navy."
+      },
+      "row": {
+        "displayName": "Row",
+        "purpose": "Floor stations (600, 900 when picked) and building rows (700)."
+      },
+      "body": {
+        "displayName": "Body",
+        "purpose": "Descriptions and history text, max 65ch."
+      },
+      "label": {
+        "displayName": "Label",
+        "purpose": "Buttons, metadata, counts."
+      },
+      "map-plate": {
+        "displayName": "Map Plate",
+        "purpose": "DOM labels over the map; 15px when picked."
+      },
+      "caption": {
+        "displayName": "Caption",
+        "purpose": "Photo captions, plan notes."
+      },
+      "bullet": {
+        "displayName": "Bullet",
+        "purpose": "Line bullet numerals; size set per use (12-24px)."
+      }
+    },
+    "shadows": [
+      {
+        "name": "plate-lift",
+        "value": "0 1px 2px rgb(12 36 69 / 0.18), 0 6px 18px rgb(12 36 69 / 0.12)",
+        "purpose": "Panels and search results floating over the map."
+      },
+      {
+        "name": "button-lift",
+        "value": "0 1px 2px rgb(12 36 69 / 0.18), 0 4px 12px rgb(12 36 69 / 0.12)",
+        "purpose": "Plate buttons over the map."
+      },
+      {
+        "name": "map-plate-lift",
+        "value": "0 1px 2px rgb(12 36 69 / 0.25), 0 4px 10px rgb(12 36 69 / 0.15)",
+        "purpose": "Map labels over the busy 3D scene."
+      },
+      {
+        "name": "sheet-lift",
+        "value": "0 -2px 6px rgb(12 36 69 / 0.12), 0 -12px 32px rgb(12 36 69 / 0.16)",
+        "purpose": "The phone bottom sheet, cast upward."
+      }
+    ],
+    "motion": [
+      {
+        "name": "press",
+        "value": "120ms; scale(0.96) on :active",
+        "purpose": "Plate button color and press feedback."
+      },
+      {
+        "name": "sheet-snap",
+        "value": "300ms cubic-bezier(.2,.8,.2,1)",
+        "purpose": "Phone sheet snapping between peek, half and full."
+      },
+      {
+        "name": "train",
+        "value": "500ms cubic-bezier(.16,1,.3,1)",
+        "purpose": "The train dot sliding to the picked floor station."
+      },
+      {
+        "name": "station-pulse",
+        "value": "1.2s ease-in-out infinite, 0.2s stagger",
+        "purpose": "Three loading dots lighting in turn."
+      },
+      {
+        "name": "plate-fade",
+        "value": "opacity 200ms",
+        "purpose": "Map plates fade; never transform-animated."
+      },
+      {
+        "name": "reduced-motion",
+        "value": "prefers-reduced-motion: reduce",
+        "purpose": "All of the above become instant or static."
+      }
+    ],
+    "breakpoints": [
+      {
+        "name": "desktop",
+        "value": "1024px"
+      }
+    ]
+  },
+  "components": [
+    {
+      "name": "Plate Button",
+      "kind": "button",
+      "refersTo": "plate-button",
+      "description": "Floating 44px map control: white enamel plate, navy icon; navy when pressed.",
+      "html": "<div style=\"display:flex;gap:8px\"><button class=\"ds-plate-btn\" aria-label=\"Night\"><svg width=\"20\" height=\"20\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"M12 4V2m0 20v-2m8-8h2M2 12h2m13.66-5.66 1.41-1.41M4.93 19.07l1.41-1.41m0-11.32L4.93 4.93m14.14 14.14-1.41-1.41M16 12a4 4 0 1 1-8 0 4 4 0 0 1 8 0Z\"/></svg></button><button class=\"ds-plate-btn\" aria-pressed=\"true\" aria-label=\"Night\"><svg width=\"20\" height=\"20\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"M12 4V2m0 20v-2m8-8h2M2 12h2m13.66-5.66 1.41-1.41M4.93 19.07l1.41-1.41m0-11.32L4.93 4.93m14.14 14.14-1.41-1.41M16 12a4 4 0 1 1-8 0 4 4 0 0 1 8 0Z\"/></svg></button><a class=\"ds-plate-btn ds-plate-btn--text\" href=\"#\">EN</a></div>",
+      "css": ".ds-plate-btn { font-family: var(--font-schibsted, 'Schibsted Grotesk', sans-serif); display: grid; place-items: center; width: 44px; height: 44px; min-width: 44px; background: #ffffff; color: #143966; border: 0; border-radius: 6px; font-weight: 700; font-size: 14px; text-decoration: none; box-shadow: 0 1px 2px rgb(12 36 69 / 0.18), 0 4px 12px rgb(12 36 69 / 0.12); transition: background-color 120ms, color 120ms, transform 120ms; cursor: pointer; } .ds-plate-btn--text { width: auto; padding: 0 12px; text-transform: uppercase; } .ds-plate-btn:hover { background: #f1f2ee; } .ds-plate-btn:active { transform: scale(0.96); } .ds-plate-btn[aria-pressed=\"true\"] { background: #143966; color: #ffffff; } .ds-plate-btn:focus-visible { outline: 3px solid #143966; outline-offset: 2px; }"
+    },
+    {
+      "name": "Segmented Level Toggle",
+      "kind": "button",
+      "refersTo": "segmented-active",
+      "description": "Rua | Nível inferior: a plate holding two tabs, navy on the active side.",
+      "html": "<div class=\"ds-seg\" role=\"group\"><button aria-pressed=\"true\">Rua</button><button aria-pressed=\"false\">Nível inferior</button></div>",
+      "css": ".ds-seg { font-family: var(--font-schibsted, 'Schibsted Grotesk', sans-serif); display: inline-flex; height: 44px; gap: 4px; padding: 4px; background: #ffffff; border-radius: 6px; box-shadow: 0 1px 2px rgb(12 36 69 / 0.18), 0 6px 18px rgb(12 36 69 / 0.12); } .ds-seg button { font: inherit; font-size: 14px; font-weight: 700; padding: 0 12px; border: 0; border-radius: 4px; background: transparent; color: #143966; cursor: pointer; transition: background-color 150ms, color 150ms; } .ds-seg button:hover { background: #f1f2ee; } .ds-seg button[aria-pressed=\"true\"] { background: #143966; color: #ffffff; } .ds-seg button:focus-visible { outline: 3px solid #143966; outline-offset: 2px; }"
+    },
+    {
+      "name": "Search Field",
+      "kind": "input",
+      "refersTo": "search-input",
+      "description": "50px search with a 2px navy border and a navy icon; 4px navy ring on focus.",
+      "html": "<label class=\"ds-search\"><svg width=\"20\" height=\"20\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"m20 20-4.2-4.2M17 10.5a6.5 6.5 0 1 1-13 0 6.5 6.5 0 0 1 13 0Z\"/></svg><input type=\"search\" placeholder=\"Buscar prédio...\" aria-label=\"Buscar\"></label>",
+      "css": ".ds-search { font-family: var(--font-schibsted, 'Schibsted Grotesk', sans-serif); position: relative; display: block; width: 320px; color: #143966; } .ds-search svg { position: absolute; left: 14px; top: 15px; pointer-events: none; } .ds-search input { font: inherit; box-sizing: border-box; width: 100%; height: 50px; padding: 0 12px 0 44px; border: 2px solid #143966; border-radius: 12px; background: #ffffff; color: #13213a; font-size: 16px; font-weight: 500; } .ds-search input::placeholder { color: #4a5a73; } .ds-search input:focus { outline: none; } .ds-search input:focus-visible { box-shadow: 0 0 0 4px rgb(20 57 102 / 0.25); }"
+    },
+    {
+      "name": "Line Bullets",
+      "kind": "chip",
+      "refersTo": "colors.line-*",
+      "description": "Each building is a metro line: round bullet in the line color, numeral in its on color.",
+      "html": "<div class=\"ds-bullets\"><span class=\"ds-bullet\" style=\"--line:#d42a22;--line-on:#fff\">1</span><span class=\"ds-bullet\" style=\"--line:#007e5e;--line-on:#fff\">2</span><span class=\"ds-bullet\" style=\"--line:#fed304;--line-on:#143966\">3</span><span class=\"ds-bullet\" style=\"--line:#9b3894;--line-on:#fff\">A</span><span class=\"ds-bullet\" style=\"--line:#006fae;--line-on:#fff\">D</span></div>",
+      "css": ".ds-bullets { display: flex; gap: 8px; } .ds-bullet { font-family: var(--font-schibsted, 'Schibsted Grotesk', sans-serif); display: inline-grid; place-items: center; width: 36px; height: 36px; border-radius: 999px; background: var(--line, #143966); color: var(--line-on, #fff); font-weight: 900; font-size: 16px; line-height: 1; font-variant-numeric: tabular-nums; }"
+    },
+    {
+      "name": "Building List Row",
+      "kind": "nav",
+      "refersTo": "list-row",
+      "description": "Rule-divided 56px row: line bullet, heavy name, muted floor count, chevron.",
+      "html": "<ul class=\"ds-list\"><li><button><span class=\"ds-list-b\" style=\"background:#d42a22;color:#fff\">1</span><span class=\"ds-list-n\">Prédio 1</span><span class=\"ds-list-c\">4 andares</span><svg width=\"18\" height=\"18\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"M9 5l7 7-7 7\"/></svg></button></li><li><button><span class=\"ds-list-b\" style=\"background:#fed304;color:#143966\">3</span><span class=\"ds-list-n\">Prédio 3</span><span class=\"ds-list-c\">4 andares</span><svg width=\"18\" height=\"18\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"M9 5l7 7-7 7\"/></svg></button></li></ul>",
+      "css": ".ds-list { font-family: var(--font-schibsted, 'Schibsted Grotesk', sans-serif); list-style: none; margin: 0; padding: 0; width: 340px; border-top: 1px solid #dfe2e8; border-bottom: 1px solid #dfe2e8; } .ds-list li + li { border-top: 1px solid #dfe2e8; } .ds-list button { font: inherit; display: flex; align-items: center; gap: 12px; width: 100%; min-height: 56px; padding: 8px 4px; border: 0; background: transparent; text-align: left; cursor: pointer; } .ds-list button:hover { background: #f1f2ee; } .ds-list button:hover svg { transform: translateX(2px); } .ds-list button:focus-visible { outline: 3px solid #143966; outline-offset: -2px; } .ds-list-b { display: inline-grid; place-items: center; width: 36px; height: 36px; border-radius: 999px; font-weight: 900; font-size: 16px; } .ds-list-n { flex: 1; font-size: 17px; font-weight: 700; color: #13213a; } .ds-list-c { font-size: 14px; color: #4a5a73; font-variant-numeric: tabular-nums; } .ds-list svg { color: rgb(20 57 102 / 0.6); transition: transform 150ms; }"
+    },
+    {
+      "name": "Station Line",
+      "kind": "custom",
+      "refersTo": "spacing.station",
+      "description": "Floors as stations on the building's line; the picked one is filled and gets the train dot.",
+      "html": "<ol class=\"ds-line\" style=\"--line:#d42a22;--line-text:#d42a22\"><span class=\"ds-line-bar\"></span><span class=\"ds-line-train\" style=\"transform:translateY(52px)\"></span><li><button><span class=\"ds-stop\"></span><span class=\"ds-stop-n\">3º andar</span><span class=\"ds-stop-c\">21 salas</span></button></li><li><button aria-pressed=\"true\"><span class=\"ds-stop\" style=\"opacity:0\"></span><span class=\"ds-stop-n\">2º andar</span><span class=\"ds-stop-c\">21 salas</span></button></li><li><button><span class=\"ds-stop\"></span><span class=\"ds-stop-n\">Térreo</span><span class=\"ds-stop-c\">14 salas</span></button></li></ol>",
+      "css": ".ds-line { font-family: var(--font-schibsted, 'Schibsted Grotesk', sans-serif); position: relative; list-style: none; margin: 0; padding: 0; width: 340px; } .ds-line li { height: 52px; } .ds-line-bar { position: absolute; left: 16px; top: 26px; bottom: 26px; width: 8px; border-radius: 999px; background: var(--line); box-shadow: 0 0 0 1px rgb(20 57 102 / 0.15); } .ds-line-train { position: absolute; left: 8px; top: 14px; width: 24px; height: 24px; box-sizing: border-box; border-radius: 999px; border: 4px solid #fff; background: var(--line); box-shadow: 0 1px 2px rgb(12 36 69 / 0.4), 0 0 0 1px rgb(20 57 102 / 0.2); transition: transform 500ms cubic-bezier(.16,1,.3,1); z-index: 1; } .ds-line button { font: inherit; display: flex; align-items: center; gap: 12px; width: 100%; height: 100%; padding: 0 12px 0 0; border: 0; border-radius: 6px; background: transparent; text-align: left; cursor: pointer; } .ds-line button:hover, .ds-line button[aria-pressed=\"true\"] { background: #f1f2ee; } .ds-line button:focus-visible { outline: 3px solid #143966; outline-offset: -2px; } .ds-stop { position: relative; margin: 0 12px; width: 16px; height: 16px; box-sizing: border-box; border-radius: 999px; border: 3.5px solid var(--line); background: #fff; } .ds-stop-n { flex: 1; font-size: 17px; font-weight: 600; color: #13213a; } .ds-line button[aria-pressed=\"true\"] .ds-stop-n { font-weight: 900; color: var(--line-text); } .ds-stop-c { font-size: 14px; color: #4a5a73; font-variant-numeric: tabular-nums; } @media (prefers-reduced-motion: reduce) { .ds-line-train { transition: none; } }"
+    },
+    {
+      "name": "Building Sign Band",
+      "kind": "card",
+      "refersTo": "sign-band",
+      "description": "Navy band heading a picked building: big bullet, 900 name, white metadata at 80%.",
+      "html": "<header class=\"ds-band\"><span class=\"ds-band-b\">1</span><div><h2>Prédio 1</h2><p>4 andares · 2 entradas</p></div></header>",
+      "css": ".ds-band { font-family: var(--font-schibsted, 'Schibsted Grotesk', sans-serif); display: flex; align-items: center; gap: 16px; width: 340px; box-sizing: border-box; padding: 16px; border-radius: 6px; background: #143966; color: #fff; } .ds-band-b { display: inline-grid; place-items: center; flex: none; width: 56px; height: 56px; border-radius: 999px; background: #d42a22; color: #fff; font-weight: 900; font-size: 24px; } .ds-band h2 { margin: 0; font-size: 32px; font-weight: 900; line-height: 1; letter-spacing: -0.025em; } .ds-band p { margin: 6px 0 0; font-size: 14px; font-weight: 500; color: rgb(255 255 255 / 0.8); }"
+    },
+    {
+      "name": "Map Plate",
+      "kind": "custom",
+      "refersTo": "map-plate",
+      "description": "DOM label over the 3D map: white plate with the line bullet; the picked one takes the line color.",
+      "html": "<div style=\"display:flex;gap:12px;align-items:center;padding:16px;background:#b7ab98\"><span class=\"ds-mplate\" data-badge=\"2\" style=\"--line:#007e5e;--line-on:#fff\">Prédio 2</span><span class=\"ds-mplate\" data-on data-badge=\"1\" style=\"--line:#d42a22;--line-on:#fff;--line-text:#d42a22\">Prédio 1</span><span class=\"ds-mplate ds-mplate--p\" data-badge=\"P\">Estacionamento</span></div>",
+      "css": ".ds-mplate { display: flex; align-items: center; gap: 6px; white-space: nowrap; padding: 4px 10px 4px 4px; border-radius: 6px; background: #fff; color: #13213a; font: 700 13px/1 var(--font-schibsted, 'Schibsted Grotesk', sans-serif); box-shadow: 0 1px 2px rgb(12 36 69 / 0.25), 0 4px 10px rgb(12 36 69 / 0.15); transition: opacity 200ms, background-color 150ms, color 150ms; } .ds-mplate::before { content: attr(data-badge); display: grid; place-items: center; width: 22px; height: 22px; border-radius: 999px; background: var(--line, #143966); color: var(--line-on, #fff); font-weight: 900; font-size: 12px; } .ds-mplate:hover { box-shadow: 0 1px 2px rgb(12 36 69 / 0.25), 0 4px 10px rgb(12 36 69 / 0.15), 0 0 0 2px #143966; } .ds-mplate[data-on] { background: var(--line); color: var(--line-on); font-size: 15px; padding: 5px 12px 5px 5px; } .ds-mplate[data-on]::before { background: #fff; color: var(--line-text, #13213a); } .ds-mplate--p { font-size: 12px; } .ds-mplate--p::before { border-radius: 4px; background: #0b5cad; width: 20px; height: 20px; }"
+    },
+    {
+      "name": "History Pill and Year Chip",
+      "kind": "chip",
+      "refersTo": "history-pill",
+      "description": "Amarela marks history: the open-history pill and year chips on photos.",
+      "html": "<div style=\"display:flex;gap:12px;align-items:center\"><button class=\"ds-hist\"><svg width=\"18\" height=\"18\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"M12 7v5l3 2M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z\"/></svg>Ver história</button><span class=\"ds-year\">1943</span></div>",
+      "css": ".ds-hist { font-family: var(--font-schibsted, 'Schibsted Grotesk', sans-serif); display: inline-flex; align-items: center; gap: 8px; height: 40px; padding: 0 16px 0 12px; border: 0; border-radius: 999px; background: #fed304; color: #143966; font-size: 14px; font-weight: 700; cursor: pointer; } .ds-hist:hover { filter: brightness(0.95); } .ds-hist:focus-visible { outline: 3px solid #143966; outline-offset: 2px; } .ds-year { font-family: var(--font-schibsted, 'Schibsted Grotesk', sans-serif); border-radius: 6px; background: #fed304; color: #143966; padding: 2px 6px; font-size: 12px; font-weight: 700; font-variant-numeric: tabular-nums; }"
+    }
+  ],
+  "narrative": {
+    "northStar": "The Metrô Platform",
+    "overview": "Every paulistano already reads the São Paulo Metrô: a colored line, a round numbered bullet, stations in order on a vertical strip, white enamel plates with a navy band. This system borrows that literacy for a campus. Each building is a line with its own color and bullet; its floors are stations read top to bottom; the chrome is white plates and navy sign bands floating over a busy, pixelated 3D scene.\n\nThe UI is dense but calm: one neo-grotesk from 400 to 900, heavy black weights for names, bold for controls, regular for reading. Color is spent on identity, not decoration: navy is the shell and ink, the five line colors appear at full strength only where they mean \"this building\", and amarela doubles as the history accent. Inside panels everything is flat and divided by hairline rules; anything that floats over the 3D map keeps one soft navy-tinted lift so white does not dissolve into the scene.\n\nThe 3D scene (smooth physically-based render with soft shadows, roofs, ground, rooms with sill-height walls and furniture, room fill colors in `components/scene/FloorPlan.tsx`) is a separate scene layer with its own palette. This system governs the DOM layer over it: panels, sheet, controls and map labels.",
+    "keyCharacteristics": [
+      "Buildings are metro lines: color + round bullet + code, applied everywhere a building is named.",
+      "Floors are stations on a vertical line bar; the picked one gets a sliding \"train\" dot.",
+      "White enamel plates with 6px corners and a soft lift over the map; flat, ruled rows inside panels.",
+      "Navy sign bands head the app and a picked building.",
+      "One typeface, Schibsted Grotesk, with 900 for names."
+    ],
+    "rules": [
+      {
+        "name": "The Line Owns Its Color Rule",
+        "body": "A line color appears only where it identifies its building: bullet, line bar, station rings, picked floor text, picked map plate. Never as a generic accent, button fill or decoration.",
+        "section": "colors"
+      },
+      {
+        "name": "The Readable Line Rule",
+        "body": "Line-colored text on white always uses the line's `text` value, never its fill; that is why amarela text is navy.",
+        "section": "colors"
+      },
+      {
+        "name": "The Heavy Names Rule",
+        "body": "Proper names (buildings, the app) and section heads are 900; controls are 700; reading text is 400. Nothing in between competes with a name.",
+        "section": "typography"
+      },
+      {
+        "name": "The Float Only Rule",
+        "body": "A shadow means \"this floats over the map\". Nothing inside a panel gets one; rows, boxes and chips are flat. Never a hard offset shadow.",
+        "section": "elevation"
+      }
+    ],
+    "dos": [
+      "**Do** give every building its line bullet wherever its name appears (list, search, bands, map plates).",
+      "**Do** use the line's `text` value for line-colored text on white, and its `on` value on the fill.",
+      "**Do** keep 44px minimum for every control and 56px for list rows.",
+      "**Do** separate rows with 1px rule lines and hover them with the platform fill.",
+      "**Do** head the app and a picked building with a navy band (white text, metadata at 80%).",
+      "**Do** make motion motion-safe: station dots pulse for loading, the train dot slides, the sheet eases on `cubic-bezier(.2,.8,.2,1)` over 300ms; all go static under reduced motion."
+    ],
+    "donts": [
+      "**Don't** use a line color as a generic accent; it always means one building.",
+      "**Don't** put shadows on anything inside a panel, and never use a hard offset shadow.",
+      "**Don't** add a second UI typeface; Archivo Narrow stays inside the 3D gate sign.",
+      "**Don't** fall back to grey rows with a single blue accent; identity comes from the line colors.",
+      "**Don't** use amarela for numerals or text on white; on white, amarela's text is navy."
+    ]
+  }
+}

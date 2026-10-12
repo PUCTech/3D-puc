@@ -1,8 +1,8 @@
 import { useMemo } from 'react';
 import * as THREE from 'three';
-import { Edges } from '@react-three/drei';
+
 import { campus, type Point } from '@/lib/campus';
-import { INK_WIDTH, toonRamp } from './pixel';
+
 import { mergeGeometries } from './geometry';
 
 // From photos 03/07/15: straight in plan, the slab waves in elevation and dips over each column.
@@ -57,9 +57,10 @@ function slab(path: Point[], width: number, height: number) {
 }
 
 export function Marquees() {
-  const { slabs, columns } = useMemo(() => {
+  const { slabs, columns, bands } = useMemo(() => {
     const slabs: THREE.BufferGeometry[] = [];
     const columns: THREE.BufferGeometry[] = [];
+    const bands: THREE.BufferGeometry[] = [];
     for (const m of campus.marquees ?? []) {
       const { geometry, columns: at } = slab(m.path, m.width, m.height);
       slabs.push(geometry);
@@ -68,23 +69,30 @@ export function Marquees() {
         const w = m.width - 0.4;
         col.translate(q.p[0] + q.n[0] * w, (m.height - WAVE.depth) / 2, q.p[1] + q.n[1] * w);
         columns.push(col);
+        const band = new THREE.CylinderGeometry(0.16, 0.16, 0.12, 8); // red paint band at the foot (PUC-SP gallery 2023)
+        band.translate(q.p[0] + q.n[0] * w, 0.06, q.p[1] + q.n[1] * w);
+        bands.push(band);
       }
     }
     // Slabs stay separate (few of them) so their top/side material groups survive.
-    return { slabs, columns: columns.length ? mergeGeometries(columns) : null };
+    return { slabs, columns: columns.length ? mergeGeometries(columns) : null, bands: bands.length ? mergeGeometries(bands) : null };
   }, []);
   return (
     <>
       {slabs.map((g, i) => (
         <mesh key={i} geometry={g} castShadow receiveShadow>
-          <meshToonMaterial attach="material-0" color="#5f6366" gradientMap={toonRamp} side={THREE.DoubleSide} />
-          <meshToonMaterial attach="material-1" color="#f2f0ea" gradientMap={toonRamp} side={THREE.DoubleSide} />
-          <Edges threshold={40} color="#1b1b24" lineWidth={INK_WIDTH * 0.7} />
+          <meshStandardMaterial attach="material-0" color="#2e3134" side={THREE.DoubleSide} />
+          <meshStandardMaterial attach="material-1" color="#f2f0ea" side={THREE.DoubleSide} />
         </mesh>
       ))}
+      {bands && (
+        <mesh geometry={bands}>
+          <meshStandardMaterial color="#b53a2c" />
+        </mesh>
+      )}
       {columns && (
         <mesh geometry={columns} castShadow>
-          <meshToonMaterial color="#e8dfc0" gradientMap={toonRamp} />
+          <meshStandardMaterial color="#f3f1ec" />
         </mesh>
       )}
     </>

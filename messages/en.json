@@ -20,7 +20,9 @@
     "wholeBuilding": "Show whole building",
     "planNote": "Original 1942 plan (Rino Levi). Current uses may differ.",
     "showFloor": "Show {floor} on the map",
-    "estimatedNote": "This floor’s layout is estimated (no plan); uses reported by the community."
+    "estimatedNote": "This floor’s layout is estimated (no plan); uses reported by the community.",
+    "roomCount": "{count, plural, one {# room} other {# rooms}}",
+    "todayNote": "Today’s uses from public sources; rooms with no confirmed use show as “Room”."
   },
   "floor": {
     "ground": "Ground floor",
@@ -73,7 +75,8 @@
     "room": "Room",
     "entrance": "Entrance",
     "bar": "Pantry",
-    "canteen": "Canteen"
+    "canteen": "Canteen",
+    "lab": "Laboratory"
   },
   "level": {
     "label": "Level",
@@ -94,5 +97,9 @@
   "night": {
     "toNight": "Show at night",
     "toDay": "Show by day"
+  },
+  "era": {
+    "label": "Era",
+    "today": "Today"
   }
 }

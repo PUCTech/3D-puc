@@ -17,11 +17,12 @@ type Props = {
   children: ReactNode; // scrolls inside the sheet
   label: string;
   resetScrollKey?: string; // scroll the body back to the top when this changes
+  band?: boolean; // navy header band (a building is picked), like the line band on a station sign
 };
 
 // Phone bottom sheet (maps-app style): one panel that is always there, dragged between peek / half / full.
 // It is a full-height panel moved with translateY, so dragging and snapping are GPU-cheap transforms.
-export function MobileSheet({ snap, onSnap, onVisibleHeight, header, children, label, resetScrollKey }: Props) {
+export function MobileSheet({ snap, onSnap, onVisibleHeight, header, children, label, resetScrollKey, band = false }: Props) {
   const t = useTranslations('sheet');
   const [vh, setVh] = useState(0);
   const [drag, setDrag] = useState<number | null>(null); // live visible height while a finger is down
@@ -40,7 +41,7 @@ export function MobileSheet({ snap, onSnap, onVisibleHeight, header, children, l
   useLayoutEffect(() => {
     const el = head.current;
     if (!el) return;
-    const ro = new ResizeObserver(() => setPeek(Math.ceil(el.getBoundingClientRect().height) + 3)); // + top border
+    const ro = new ResizeObserver(() => setPeek(Math.ceil(el.getBoundingClientRect().height)));
     ro.observe(el);
     return () => ro.disconnect();
   }, [vh]);
@@ -85,21 +86,21 @@ export function MobileSheet({ snap, onSnap, onVisibleHeight, header, children, l
   return (
     <section
       aria-label={label}
-      className="pixel-box fixed inset-x-0 bottom-0 z-20 flex flex-col border-x-0 border-b-0 shadow-[0_-4px_0_var(--color-ink)] motion-safe:transition-transform motion-safe:duration-300 motion-safe:ease-[cubic-bezier(.2,.8,.2,1)]"
+      className="fixed inset-x-0 bottom-0 z-20 flex flex-col overflow-hidden rounded-t-[18px] bg-white shadow-[0_-2px_6px_rgb(12_36_69/0.12),0_-12px_32px_rgb(12_36_69/0.16)] motion-safe:transition-transform motion-safe:duration-300 motion-safe:ease-[cubic-bezier(.2,.8,.2,1)]"
       style={{ height: full, transform: `translateY(${full - visible}px)`, transitionDuration: drag !== null ? '0ms' : undefined }}
     >
-      <div ref={head} onPointerDown={onDown} onPointerMove={onMove} onPointerUp={onUp} onPointerCancel={onUp} className="shrink-0 touch-none px-4 pb-3">
+      <div ref={head} onPointerDown={onDown} onPointerMove={onMove} onPointerUp={onUp} onPointerCancel={onUp} className={`shrink-0 touch-none px-4 pb-4 transition-colors ${band ? 'bg-navy text-white' : ''}`}>
         <button
           data-handle
           aria-label={snap === 'full' ? t('collapse') : t('expand')}
           onClick={() => onSnap(snap === 'full' ? 'half' : ORDER[ORDER.indexOf(snap) + 1])}
           className="mx-auto block h-6 w-full"
         >
-          <span className="mx-auto block h-1.5 w-12 bg-ink" />
+          <span className={`mx-auto block h-1.5 w-11 rounded-full ${band ? 'bg-white/45' : 'bg-navy/30'}`} />
         </button>
         {header}
       </div>
-      <div ref={body} className={`min-h-0 flex-1 px-4 pb-[max(1.5rem,env(safe-area-inset-bottom))] ${snap === 'peek' && drag === null ? 'overflow-hidden' : 'overflow-y-auto overscroll-contain'}`}>
+      <div ref={body} className={`min-h-0 flex-1 px-4 pt-4 pb-[max(1.5rem,env(safe-area-inset-bottom))] ${snap === 'peek' && drag === null ? 'overflow-hidden' : 'overflow-y-auto overscroll-contain'}`}>
         {children}
       </div>
     </section>

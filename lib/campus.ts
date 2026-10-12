@@ -3,9 +3,12 @@ import data from '@/data/campus.json';
 export type Locale = 'pt' | 'en';
 export type Localized = Record<Locale, string>;
 export type Point = [number, number];
+// Ground heights on a grid (m relative to the street at the gate), row-major from (x0, z0), `step` m apart: 2017 LiDAR.
+export type Terrain = { x0: number; z0: number; step: number; cols: number; rows: number; h: number[] };
 
-// kind is the room's use from the floor plan (classroom, stair, wc, …); names come from messages by kind.
-export type Room = { id: string; kind?: string; name?: Localized; footprint?: Point[] };
+// kind is the room's use in the 1942 plan (classroom, stair, wc, …); names come from messages by kind.
+// kindToday: its use today when it differs and is known (photos, PUC-SP pages); see docs/consolacao/sources.md.
+export type Room = { id: string; kind?: string; kindToday?: string; name?: Localized; footprint?: Point[] };
 // estimated: no plan exists for this floor; its rooms are guessed from photos.
 export type Floor = { level: number; label?: Localized; height: number; rooms: Room[]; estimated?: boolean };
 export type Building = {
@@ -16,6 +19,7 @@ export type Building = {
   description?: Localized;
   footprint: Point[];
   baseHeight?: number;
+  later?: boolean; // not part of the 1942 Rino Levi complex (built after; year not yet sourced): hidden in the 1943 view
   floors: Floor[];
   entrances?: Point[];
   // Massing parts when one extrusion is wrong (e.g. the Auditório: two storeys + a one-storey terrace wing).
@@ -27,6 +31,7 @@ export type Building = {
     windows?: 'default' | 'shutter-white' | 'shutter-grey' | 'framed' | 'ribbon' | 'pane';
     leanTo?: { from: Point; to: Point; width: number }; // tile lean-to roof along a wall, over a sunken level
     roofShape?: 'flat' | 'eave' | 'gable' | 'hip';
+    roofRise?: number; // hip roof height above the eave slab, m (2017 LiDAR); default: a fixed pitch
     blankEnds?: number; // walls shorter than this many meters have no windows (end walls of bar blocks)
     roofGarden?: boolean;
     cobogoWall?: [Point, Point];
@@ -39,7 +44,8 @@ export type Campus = {
   // Generated site context (import script); optional so hand-written data stays valid.
   boundary?: Point[];
   // Areas where the ground drops (e.g. the court level east of Prédio 2), depth in meters below street level.
-  sunken?: { polygon: Point[]; depth: number }[];
+  // floor: where the flat lower floor is paved, when part of the zone has its own terrain (a garden with `terrain`).
+  sunken?: { polygon: Point[]; floor?: Point[]; depth: number }[];
   upperLot?: Point[];
   // Parking lane: axis from the car gate (`from`) to its end; slope = [start, end] distances along it where it drops `depth` m.
   // Cars: d = distance along the axis, side = -1 | 1 (which row), color.
@@ -58,7 +64,7 @@ export type Campus = {
   context?: { footprint: Point[]; height: number }[]; // neighbouring city buildings
   // hand-written landscaping (photos 02/05/07): planting, red-earth beds, stone path, palms
   // depth: garden on a sunken level (m below street level)
-  gardens?: { name?: string; depth?: number; polygon: Point[]; plants?: { kind: 'palm' | 'slender' | 'shade' | 'monstera' | 'dracaena'; at: Point }[]; earth?: Point[][]; path?: Point[] }[];
+  gardens?: { name?: string; depth?: number; polygon: Point[]; plants?: { kind: 'palm' | 'slender' | 'shade' | 'monstera' | 'dracaena'; at: Point; h?: number }[]; earth?: Point[][]; path?: Point[]; hedges?: Point[][]; terrain?: Terrain }[]; // hedges: clipped beds (drone video; outlines estimated)
   barriers?: { kind: string; path: Point[]; height: number }[]; // OSM fences/walls along the campus edge
   gates?: Point[];
   // OSM street details; angle = direction of the street there (radians, atan2(dz, dx))
@@ -73,6 +79,12 @@ export type Campus = {
   props?: { kind: 'lamp' | 'totem' | 'bench'; at: Point; angle: number }[];
   marquees?: { path: Point[]; width: number; height: number }[]; // covered walkways; the canopy extends to the (dz, -dx) side of the path
 };
+
+// The map shows the campus as it is today, or as Rino Levi's institute looked in 1943 (Acrópole photos).
+export type Era = 'hoje' | '1943';
+// Uses that only existed in 1943 (the student residence) have no mapped use today until a source says otherwise.
+const GONE = new Set(['bedroom']);
+export const roomKind = (r: Room, era: Era) => (era === '1943' ? (r.kind ?? 'room') : (r.kindToday ?? (GONE.has(r.kind ?? '') ? 'room' : (r.kind ?? 'room'))));
 
 export const campus = data as unknown as Campus; // JSON infers number[][], not tuples
 

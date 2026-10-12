@@ -1,5 +1,5 @@
 import { campus } from '@/lib/campus';
-import { toonRamp } from './pixel';
+
 import { useNight } from './night';
 
 // Small objects from the photos: lamp posts (14), the PUC-SP totem sign (CCET photo), concrete benches (tour 01).
@@ -9,11 +9,11 @@ function Lamp() {
     <>
       <mesh position-y={2.2} castShadow>
         <cylinderGeometry args={[0.07, 0.09, 4.4, 6]} />
-        <meshToonMaterial color="#e9e9e4" gradientMap={toonRamp} />
+        <meshStandardMaterial color="#e9e9e4" />
       </mesh>
       <mesh position-y={4.5}>
         <boxGeometry args={[0.45, 0.35, 0.3]} />
-        <meshToonMaterial color="#f4f4ef" emissive="#fff6d0" emissiveIntensity={night ? 2.5 : 0.3} gradientMap={toonRamp} />
+        <meshStandardMaterial color="#f4f4ef" emissive="#fff6d0" emissiveIntensity={night ? 2.5 : 0.3} />
       </mesh>
       {night && <pointLight position-y={4.2} color="#ffd9a0" intensity={40} distance={16} decay={2} />}
     </>
@@ -25,11 +25,11 @@ function Totem() {
     <>
       <mesh position={[-0.55, 1.6, 0]} castShadow>
         <boxGeometry args={[0.18, 3.2, 0.18]} />
-        <meshToonMaterial color="#2c4f9e" gradientMap={toonRamp} />
+        <meshStandardMaterial color="#2c4f9e" />
       </mesh>
       <mesh position={[0, 1.7, 0]} castShadow>
         <boxGeometry args={[1, 2.6, 0.12]} />
-        <meshToonMaterial color="#d9dbdd" gradientMap={toonRamp} />
+        <meshStandardMaterial color="#d9dbdd" />
       </mesh>
       {/* crest: blue shield and red lettering band, at pixel scale */}
       <mesh position={[0, 2, 0.07]}>
@@ -49,12 +49,12 @@ function Bench() {
     <>
       <mesh position-y={0.42} castShadow receiveShadow>
         <boxGeometry args={[1.8, 0.12, 0.5]} />
-        <meshToonMaterial color="#cfcac0" gradientMap={toonRamp} />
+        <meshStandardMaterial color="#cfcac0" />
       </mesh>
       {[-0.7, 0.7].map((x) => (
         <mesh key={x} position={[x, 0.18, 0]}>
           <boxGeometry args={[0.15, 0.36, 0.42]} />
-          <meshToonMaterial color="#bdb8ad" gradientMap={toonRamp} />
+          <meshStandardMaterial color="#bdb8ad" />
         </mesh>
       ))}
     </>

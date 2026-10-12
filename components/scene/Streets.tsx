@@ -40,7 +40,7 @@ export function Streets() {
             key={i}
             position={[mid[0], 0.5, mid[1]]}
             text={s.name}
-            className="whitespace-nowrap font-display text-[13px] uppercase tracking-wider text-white [text-shadow:1px_1px_0_#1b1b24,-1px_-1px_0_#1b1b24,1px_-1px_0_#1b1b24,-1px_1px_0_#1b1b24]"
+            className="whitespace-nowrap text-[13px] font-bold uppercase tracking-wider text-white [text-shadow:1px_1px_0_#13213a,-1px_-1px_0_#13213a,1px_-1px_0_#13213a,-1px_1px_0_#13213a]"
           />
         );
       })}

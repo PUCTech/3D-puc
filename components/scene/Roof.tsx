@@ -1,9 +1,9 @@
 import { useMemo } from 'react';
 import * as THREE from 'three';
-import { Edges } from '@react-three/drei';
+import { crispTexture } from './textures';
+
 import type { Point } from '@/lib/campus';
-import { extrude, mergeGeometries } from './geometry';
-import { INK_WIDTH, toonRamp } from './pixel';
+import { extrude, mergeGeometries, orientedBox } from './geometry';
 
 const EAVE = { overhang: 0.7, thickness: 0.3 }; // photos 13/14: thick slab projecting past the walls
 const GABLE = { overhang: 0.6, rise: 1.2 }; // photo 15: shallow pitched roof on exposed rafters
@@ -25,20 +25,6 @@ function offset(points: Point[], d: number): Point[] {
     const k = Math.min(2, 1 / Math.max(0.25, (1 + ax * bx + az * bz) / 2)); // miter scale, capped
     return [p[0] + ((ax + bx) / 2) * d * k, p[1] + ((az + bz) / 2) * d * k];
   });
-}
-
-// Oriented bounding box via the longest edge's direction: good enough for bar-shaped blocks.
-function orientedBox(points: Point[]) {
-  let best = { len: 0, ux: 1, uz: 0 };
-  points.forEach((p, i) => {
-    const q = points[(i + 1) % points.length];
-    const len = Math.hypot(q[0] - p[0], q[1] - p[1]);
-    if (len > best.len) best = { len, ux: (q[0] - p[0]) / len, uz: (q[1] - p[1]) / len };
-  });
-  const { ux, uz } = best;
-  const [vx, vz] = [-uz, ux];
-  const us = points.map(([x, z]) => x * ux + z * uz), vs = points.map(([x, z]) => x * vx + z * vz);
-  return { ux, uz, vx, vz, u: [Math.min(...us), Math.max(...us)], v: [Math.min(...vs), Math.max(...vs)] };
 }
 
 // Photo 15: corrugated sheeting (ribs down the slope) and exposed rafter tails under the eave.
@@ -98,21 +84,20 @@ function tileTexture() {
   g.fillStyle = '#c9b4a8'; // multiplied by the tile color: a darker course line
   g.fillRect(0, 3, 4, 1);
   g.fillRect(1, 0, 1, 3);
-  const t = new THREE.CanvasTexture(c);
-  t.magFilter = t.minFilter = THREE.NearestFilter;
+  const t = crispTexture(c);
   t.wrapS = t.wrapT = THREE.RepeatWrapping;
   t.colorSpace = THREE.SRGBColorSpace;
   return t;
 }
 
 // Hipped roof over the oriented box: ridge along the long axis, triangular hips at both ends.
-function hip(points: Point[], height: number) {
+function hip(points: Point[], height: number, fixedRise?: number) {
   const { ux, uz, vx, vz, u, v } = orientedBox(points);
   const [u0, u1] = [u[0] - HIP.overhang, u[1] + HIP.overhang];
   const [v0, v1] = [v[0] - HIP.overhang, v[1] + HIP.overhang];
   const half = (v1 - v0) / 2;
   const vm = v0 + half;
-  const rise = half * HIP.slope;
+  const rise = fixedRise ?? half * HIP.slope;
   const inset = Math.min(half, (u1 - u0) / 2); // ridge stops `half` from each end (pyramid when square)
   const at = (a: number, b: number, y: number) => new THREE.Vector3(a * ux + b * vx, y, a * uz + b * vz);
   const top = height + HIP.eave;
@@ -138,7 +123,7 @@ function hip(points: Point[], height: number) {
   return g;
 }
 
-export function Roof({ kind, footprint, height, color, opacity }: { kind: 'eave' | 'gable' | 'hip'; footprint: Point[]; height: number; color: THREE.Color; opacity: number }) {
+export function Roof({ kind, footprint, height, color, opacity, rise }: { kind: 'eave' | 'gable' | 'hip'; footprint: Point[]; height: number; color: THREE.Color; opacity: number; rise?: number }) {
   const tiles = useMemo(() => (kind === 'hip' ? tileTexture() : null), [kind]);
   const eaveSlab = useMemo(() => {
     if (kind !== 'hip') return null;
@@ -147,34 +132,32 @@ export function Roof({ kind, footprint, height, color, opacity }: { kind: 'eave'
     return g;
   }, [kind, footprint, height]);
   const geometry = useMemo(() => {
-    if (kind === 'hip') return hip(footprint, height);
+    if (kind === 'hip') return hip(footprint, height, rise);
     if (kind === 'gable') return gable(footprint, height);
     const g = extrude(offset(footprint, EAVE.overhang), EAVE.thickness);
     g.translate(0, height - EAVE.thickness + 0.02, 0);
     return g;
-  }, [kind, footprint, height]);
+  }, [kind, footprint, height, rise]);
   const details = useMemo(() => (kind === 'gable' ? gableDetails(footprint, height) : null), [kind, footprint, height]);
   return (
     <>
     {details && (
       <>
         <mesh geometry={details.ribs}>
-          <meshToonMaterial color={color.clone().multiplyScalar(0.82)} gradientMap={toonRamp} transparent opacity={opacity} />
+          <meshStandardMaterial color={color.clone().multiplyScalar(0.82)} transparent opacity={opacity} />
         </mesh>
         <mesh geometry={details.rafters}>
-          <meshToonMaterial color="#6b6258" gradientMap={toonRamp} transparent opacity={opacity} />
+          <meshStandardMaterial color="#6b6258" transparent opacity={opacity} />
         </mesh>
       </>
     )}
     {eaveSlab && (
       <mesh geometry={eaveSlab} castShadow receiveShadow>
-        <meshToonMaterial color="#f3f1ec" gradientMap={toonRamp} transparent opacity={opacity} />
-        {opacity === 1 && <Edges threshold={15} color="#1b1b24" lineWidth={INK_WIDTH * 0.8} />}
+        <meshStandardMaterial color="#f3f1ec" transparent opacity={opacity} />
       </mesh>
     )}
     <mesh geometry={geometry} castShadow receiveShadow>
-      <meshToonMaterial color={color} map={tiles} gradientMap={toonRamp} side={THREE.DoubleSide} transparent opacity={opacity} />
-      {opacity === 1 && <Edges threshold={15} color="#1b1b24" lineWidth={INK_WIDTH * 0.8} />}
+      <meshStandardMaterial color={color} map={tiles} side={THREE.DoubleSide} transparent opacity={opacity} />
     </mesh>
     </>
   );
