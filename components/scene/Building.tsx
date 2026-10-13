@@ -1,17 +1,19 @@
 import { useMemo, useRef, useState } from 'react';
 import { Label } from './Label';
 import * as THREE from 'three';
-import { Edges } from '@react-three/drei';
+
 import { useFrame, type ThreeEvent } from '@react-three/fiber';
 import { basementDepth, buildingHeight, floorBase, footprintCenter, type Building as B, type Locale, type Point } from '@/lib/campus';
-import { INK_WIDTH, toonRamp, wallTexture, windowGlowTexture } from './pixel';
+import { wallTexture, windowGlowTexture } from './textures';
 import { useNight } from './night';
+import { useEra } from './era';
 import { blankShortWalls, extrude, flatPolygon, mergeGeometries } from './geometry';
 import { Plants } from './Plants';
 import { Cobogo } from './Cobogo';
 import { Roof } from './Roof';
 import { FloorPlan } from './FloorPlan';
 import { LeanTo } from './LeanTo';
+import { lineFor } from '@/lib/lines';
 
 // Defaults when a building has no hand-written style.
 const WALL = '#f6e7c8';
@@ -84,6 +86,7 @@ export function Building({ building, selected, dimmed, near, locale, floorLevel,
   const walls = useMemo(() => wallTexture(style.wall ?? WALL, style.windows, floorHeight), [style.wall, style.windows, floorHeight]);
   const glow = useMemo(() => windowGlowTexture(style.windows, floorHeight), [style.windows, floorHeight]);
   const night = useNight();
+  const era = useEra();
   const roofColor = useMemo(() => new THREE.Color(style.roof ?? ROOF), [style.roof]);
   const gardens = useMemo(
     () =>
@@ -95,6 +98,8 @@ export function Building({ building, selected, dimmed, near, locale, floorLevel,
   const [cx, cz] = footprintCenter(building);
   const opacity = dimmed ? 0.2 : 1; // faint, so lower-level places (the court) read through tall neighbours
   const [hovered, setHovered] = useState(false);
+  const line = lineFor(building.id, building.name[locale]);
+  const vars = useMemo(() => ({ '--line': line.color, '--line-on': line.on, '--line-text': line.text }), [line.color, line.on, line.text]);
   // In floor view the room labels take over; the name is already in the panel.
   const showLabel = !floor && (selected || hovered || (!dimmed && (near || fullHeight >= LANDMARK_HEIGHT)));
   const handlers = {
@@ -113,20 +118,19 @@ export function Building({ building, selected, dimmed, near, locale, floorLevel,
     },
   };
 
+  if (era === '1943' && building.later && !selected) return null; // not built yet
   return (
     <group position-y={base}>
       {bodies.map((b, i) => (
         <group key={i}>
           <mesh geometry={geometries[i]} castShadow receiveShadow {...handlers}>
             {/* ExtrudeGeometry groups: 0 = caps (roof/floor), 1 = walls */}
-            <meshToonMaterial attach="material-0" color={selected ? SELECTED_ROOF : roofColor} gradientMap={toonRamp} transparent opacity={opacity} />
-            <meshToonMaterial attach="material-1" map={walls} gradientMap={toonRamp} transparent opacity={opacity} emissive="#ffffff" emissiveMap={glow} emissiveIntensity={night ? 1.4 : 0} />
-            {/* Ink outline: the main cartoon cue */}
-            {!dimmed && <Edges threshold={15} color="#1b1b24" lineWidth={INK_WIDTH} />}
+            <meshStandardMaterial attach="material-0" color={selected ? SELECTED_ROOF : roofColor} transparent opacity={opacity} />
+            <meshStandardMaterial attach="material-1" map={walls} transparent opacity={opacity} emissive="#ffffff" emissiveMap={glow} emissiveIntensity={night ? 1.4 : 0} />
           </mesh>
           {/* planted terraces (roofGarden parts) stay flat */}
           {cutAt === null && style.roofShape && style.roofShape !== 'flat' && !b.roofGarden && (
-            <Roof kind={style.roofShape} footprint={b.footprint} height={b.height} color={selected ? SELECTED_ROOF : roofColor} opacity={opacity} />
+            <Roof kind={style.roofShape} footprint={b.footprint} height={b.height} color={selected ? SELECTED_ROOF : roofColor} opacity={opacity} rise={style.roofRise} />
           )}
         </group>
       ))}
@@ -136,13 +140,13 @@ export function Building({ building, selected, dimmed, near, locale, floorLevel,
       {gardens.map((g, i) => (
         <group key={`garden-${i}`}>
           <mesh geometry={g.geometry} receiveShadow>
-            <meshLambertMaterial color="#6cc24a" transparent opacity={opacity} />
+            <meshLambertMaterial color="#5e9142" transparent opacity={opacity} />
           </mesh>
           <group position-y={g.height}>
             <Plants plants={g.shrubs} scale={0.6} />
           </group>
           <mesh geometry={g.railing} castShadow>
-            <meshToonMaterial color="#dcdcd6" gradientMap={toonRamp} transparent opacity={opacity} />
+            <meshStandardMaterial color="#dcdcd6" transparent opacity={opacity} />
           </mesh>
         </group>
       ))}
@@ -150,7 +154,10 @@ export function Building({ building, selected, dimmed, near, locale, floorLevel,
         position={[cx, height + 3, cz]}
         testId="building-label"
         text={building.shortName ?? building.name[locale]}
-        className={`pixel-chip block whitespace-nowrap px-1.5 text-[13px] transition-opacity duration-200 ${selected ? 'bg-sun text-ink' : hovered ? 'bg-ice text-navy' : 'bg-paper text-navy'} ${showLabel ? 'opacity-100' : 'opacity-0'}`}
+        badge={line.code}
+        vars={vars}
+        on={selected}
+        className={`map-plate ${hovered && !selected ? 'ring-2 ring-navy' : ''} ${showLabel ? 'opacity-100' : 'opacity-0'}`}
       />
       {selected && building.entrances?.map(([x, z], i) => <Entrance key={i} x={x} z={z} />)}
     </group>

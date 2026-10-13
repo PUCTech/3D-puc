@@ -48,3 +48,12 @@ next-env.d.ts
 /e2e/
 /test-results/
 /playwright-report/
+.impeccable/config.local.json
+# downloaded reference photos and scans (third-party copyright); sources are listed in docs/consolacao/sources.md
+docs/consolacao/refs/
+# Impeccable working files: screenshots, decision sketches, capture scripts, caches
+.impeccable/review/
+.impeccable/mocks/
+.impeccable/questions/
+.impeccable/*.mjs
+.impeccable/hook.cache.json

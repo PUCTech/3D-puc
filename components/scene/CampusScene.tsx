@@ -1,12 +1,12 @@
 'use client';
 import { useEffect, useState } from 'react';
 import { Canvas, useFrame } from '@react-three/fiber';
-import { basementDepth, buildingHeight, campus, findBuilding, onLowerLevel, type Locale } from '@/lib/campus';
+import { basementDepth, buildingHeight, campus, findBuilding, onLowerLevel, type Era, type Locale } from '@/lib/campus';
 import { Building } from './Building';
 import { Ground } from './Ground';
 import { Streets } from './Streets';
 import { CameraRig } from './CameraRig';
-import { PHONE_DPR, PIXEL_DPR } from './pixel';
+
 import { City } from './City';
 import { Site } from './Site';
 import { Marquees } from './Marquees';
@@ -19,6 +19,7 @@ import { Plants } from './Plants';
 import { GROUND_COLOR } from './Ground';
 import { setOcclusionTarget } from './occlusion';
 import { NightContext } from './night';
+import { EraContext } from './era';
 import { NightLights } from './NightLights';
 
 const STREET_TREES = (campus.streetTrees ?? []).map((at) => ({ kind: 'slender' as const, at }));
@@ -64,7 +65,7 @@ type Props = {
   onSelect: (id: string | null) => void;
   onContextLost?: () => void;
   night?: boolean; // moonlight, lit windows, street lamps and floodlights
-  phone?: boolean; // finer pixels on small screens (PHONE_DPR), desktop keeps PIXEL_DPR
+  era?: Era; // today's campus or the 1943 institute
 };
 
 // Phones and low-memory devices get a smaller shadow map; everything else is the same scene.
@@ -72,8 +73,9 @@ const lite = () =>
   typeof window !== 'undefined' &&
   (window.matchMedia('(pointer: coarse)').matches || ((navigator as { deviceMemory?: number }).deviceMemory ?? 8) <= 4 || (navigator.hardwareConcurrency ?? 8) <= 4);
 
-export default function CampusScene({ selectedId, selectedFloor, lower, bottomInset = 0, leftInset = 0, topInset = 0, locale, onSelect, onContextLost, phone = false, night = false }: Props) {
-  const [shadowSize] = useState(() => (lite() ? 1024 : 2048));
+export default function CampusScene({ selectedId, selectedFloor, lower, bottomInset = 0, leftInset = 0, topInset = 0, locale, onSelect, onContextLost, night = false, era = 'hoje' }: Props) {
+  const [shadowSize] = useState(() => (lite() ? 2048 : 4096));
+  const [maxDpr] = useState(() => (lite() ? 1.5 : 2)); // full sharpness, capped so phones with 3× screens stay smooth
   // Trees and city blocks between the camera and the selection are hidden (occlusion.ts).
   useEffect(() => {
     const b = findBuilding(selectedId);
@@ -92,19 +94,19 @@ export default function CampusScene({ selectedId, selectedFloor, lower, bottomIn
       }
       orthographic
       camera={{ position: [-250, 300, 250], zoom: 4, near: 1, far: 3000 }}
-      dpr={phone ? PHONE_DPR : PIXEL_DPR}
-      gl={{ antialias: false }}
-      shadows="percentage"
-      style={{ imageRendering: 'pixelated' }}
+      dpr={[1, maxDpr]}
+      gl={{ antialias: true }}
+      shadows="soft"
     >
       <NightContext value={night}>
+      <EraContext value={era}>
       <color attach="background" args={[night ? NIGHT_SKY : GROUND_COLOR]} />
-      {/* night: a dim blue sky light and a pale moon keep shapes readable; lamps and windows do the rest */}
-      <hemisphereLight args={night ? ['#5b6fa8', '#1a1f33', 0.55] : ['#ffffff', '#7fae55', 1.1]} />
+      {/* day: cool sky above, warm concrete bounce below (a green bounce tinted every wall); night: dim blue sky and a pale moon */}
+      <hemisphereLight args={night ? ['#5b6fa8', '#1a1f33', 0.55] : ['#e3edf7', '#9a9384', 1.05]} />
       <directionalLight
         position={[120, 240, 80]}
-        color={night ? '#a9bcff' : '#ffffff'}
-        intensity={night ? 0.5 : 2.2}
+        color={night ? '#a9bcff' : '#fff3df'}
+        intensity={night ? 0.5 : 2.6}
         castShadow
         shadow-bias={-0.0005}
         shadow-normalBias={0.08} // removes acne stripes on roofs and slopes
@@ -136,6 +138,7 @@ export default function CampusScene({ selectedId, selectedFloor, lower, bottomIn
       )}
       <Buildings selectedId={selectedId} selectedFloor={selectedFloor} lower={lower} locale={locale} onSelect={onSelect} />
       <CameraRig selectedId={selectedId} bottomInset={bottomInset} leftInset={leftInset} topInset={topInset} />
+      </EraContext>
       </NightContext>
     </Canvas>
   );

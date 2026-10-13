@@ -20,7 +20,9 @@
     "wholeBuilding": "Ver prédio inteiro",
     "planNote": "Planta original de 1942 (Rino Levi). Usos atuais podem ser diferentes.",
     "showFloor": "Ver {floor} no mapa",
-    "estimatedNote": "Layout deste andar estimado (sem planta); usos informados pela comunidade."
+    "estimatedNote": "Layout deste andar estimado (sem planta); usos informados pela comunidade.",
+    "roomCount": "{count, plural, one {# sala} other {# salas}}",
+    "todayNote": "Usos de hoje segundo fontes públicas; salas sem uso confirmado aparecem como “Sala”."
   },
   "floor": {
     "ground": "Térreo",
@@ -73,7 +75,8 @@
     "room": "Sala",
     "entrance": "Entrada",
     "bar": "Copa",
-    "canteen": "Cantina"
+    "canteen": "Cantina",
+    "lab": "Laboratório"
   },
   "level": {
     "label": "Nível",
@@ -94,5 +97,9 @@
   "night": {
     "toNight": "Ver à noite",
     "toDay": "Ver de dia"
+  },
+  "era": {
+    "label": "Época",
+    "today": "Hoje"
   }
 }

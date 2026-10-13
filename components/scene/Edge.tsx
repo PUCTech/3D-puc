@@ -3,7 +3,7 @@ import { Label } from './Label';
 import * as THREE from 'three';
 import { campus, type Point } from '@/lib/campus';
 import { mergeGeometries, ribbons } from './geometry';
-import { barsTexture, toonRamp } from './pixel';
+import { barsTexture } from './textures';
 import { latticeTexture } from './StreetFence';
 import { useNight } from './night';
 
@@ -25,7 +25,7 @@ function Pillar({ at: [x, z], height = 3 }: { at: Point; height?: number }) {
   return (
     <mesh position={[x, height / 2, z]} castShadow>
       <boxGeometry args={[0.8, height, 0.8]} />
-      <meshToonMaterial color="#d8d2c6" gradientMap={toonRamp} />
+      <meshStandardMaterial color="#d8d2c6" />
     </mesh>
   );
 }
@@ -85,7 +85,7 @@ function Gatehouse({ at: [x, z], along: [ax, az] }: { at: Point; along: Point })
         <group key={u} position-x={u}>
           <mesh position-y={GATE.height / 2} castShadow receiveShadow>
             <boxGeometry args={[GATE.house, GATE.height, GATE.depth]} />
-            <meshToonMaterial color="#f1efe9" gradientMap={toonRamp} />
+            <meshStandardMaterial color="#f1efe9" />
           </mesh>
           {u < 0 ? (
             sign && (
@@ -97,7 +97,7 @@ function Gatehouse({ at: [x, z], along: [ax, az] }: { at: Point; along: Point })
           ) : (
             <mesh position={[0, GATE.height * 0.6, face]}>
               <planeGeometry args={[GATE.house * 0.6, GATE.height * 0.4]} />
-              <meshToonMaterial map={lattice} color="#f4f2ec" gradientMap={toonRamp} alphaTest={0.5} transparent side={THREE.DoubleSide} />
+              <meshStandardMaterial map={lattice} color="#f4f2ec" alphaTest={0.5} transparent side={THREE.DoubleSide} />
             </mesh>
           )}
         </group>
@@ -105,11 +105,11 @@ function Gatehouse({ at: [x, z], along: [ax, az] }: { at: Point; along: Point })
       {/* pedestrian gate: white vertical bars (Street View, Jan 2024) */}
       <mesh position-y={1.2}>
         <planeGeometry args={[GATE.width, 2.4]} />
-        <meshToonMaterial map={bars} color="#f3f3ee" gradientMap={toonRamp} alphaTest={0.5} transparent side={THREE.DoubleSide} />
+        <meshStandardMaterial map={bars} color="#f3f3ee" alphaTest={0.5} transparent side={THREE.DoubleSide} />
       </mesh>
       <mesh position-y={2.42}>
         <boxGeometry args={[GATE.width, 0.08, 0.08]} />
-        <meshToonMaterial color="#f3f3ee" gradientMap={toonRamp} />
+        <meshStandardMaterial color="#f3f3ee" />
       </mesh>
     </group>
   );
@@ -127,12 +127,12 @@ export function Edge() {
     <>
       {walls.map((g, i) => (
         <mesh key={`w${i}`} geometry={g} castShadow receiveShadow>
-          <meshToonMaterial color="#cfc6b6" gradientMap={toonRamp} />
+          <meshStandardMaterial color="#cfc6b6" />
         </mesh>
       ))}
       {fences.map((g, i) => (
         <mesh key={`f${i}`} geometry={g}>
-          <meshToonMaterial color="#2f3440" gradientMap={toonRamp} transparent opacity={0.55} />
+          <meshStandardMaterial color="#2f3440" transparent opacity={0.55} />
         </mesh>
       ))}
       {(campus.gates ?? []).map((g, i) => (
@@ -154,7 +154,7 @@ export function Edge() {
           <Label
             position={[entrance.at[0], 6.5, entrance.at[1]]}
             text={narrow ? entrance.label.split(' · ')[0] : entrance.label}
-            className="block whitespace-nowrap rounded-sm border border-[#555] bg-[#f7f6f1] px-1.5 py-0.5 font-display text-[13px] uppercase tracking-wider text-[#2a2a2a] shadow-[2px_2px_0_#000]"
+            className="block whitespace-nowrap rounded-[3px] border border-[#555] bg-[#f7f6f1] px-1.5 py-0.5 text-[13px] font-bold uppercase tracking-wider text-[#2a2a2a] shadow-[0_2px_4px_rgb(0_0_0/0.35)]"
           />
         </group>
       )}

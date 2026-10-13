@@ -2,14 +2,15 @@ import { useMemo } from 'react';
 import * as THREE from 'three';
 import type { Point } from '@/lib/campus';
 import { mergeGeometries } from './geometry';
-import { toonRamp } from './pixel';
+
 import { hideOccluders, tagObject } from './occlusion';
 
 // Custom low-poly plant models, one per species seen in the campus photos
 // (see docs/realism-log.md): Canary palm (07), slender multi-stem street trees (14),
 // broad shade trees (02, tour 01), monstera clumps (02, tour 01), spiky dracaena shrubs (tour 01).
 export type PlantKind = 'palm' | 'slender' | 'shade' | 'monstera' | 'dracaena';
-export type Plant = { kind: PlantKind; at: Point };
+// h: measured height in m (2017 LiDAR canopy), scaling the model; without it each species keeps its nominal size.
+export type Plant = { kind: PlantKind; at: Point; h?: number };
 
 // Deterministic per-plant randomness (mulberry32), so the scene is stable across reloads.
 function rng(seed: number) {
@@ -23,9 +24,9 @@ function rng(seed: number) {
 
 const BARK = '#7a5c3e';
 const PALM_BARK = '#9a7b55';
-const LEAF = ['#2f8f3a', '#3aa043', '#4fb04a', '#26803a'];
-const DARK_LEAF = ['#1f5e2e', '#2a7038', '#23683a'];
-const BLADE = ['#7fb043', '#5f9e3c', '#9cc24f'];
+const LEAF = ['#3b7a3a', '#447f3c', '#4f8a42', '#356f35'];
+const DARK_LEAF = ['#25502c', '#2d5a30', '#28532f'];
+const BLADE = ['#6f9a45', '#587f3a', '#86a650'];
 
 const unitCylinder = new THREE.CylinderGeometry(1, 1, 1, 6);
 const taperCylinder = new THREE.CylinderGeometry(0.7, 1, 1, 6);
@@ -146,7 +147,8 @@ function buildPlants(plants: Plant[], scale: number) {
   const pieces: THREE.BufferGeometry[] = [];
   plants.forEach((p, i) => {
     const r = rng(Math.round(p.at[0] * 1000) ^ Math.round(p.at[1] * 1000) ^ (i * 7919));
-    const place = new THREE.Matrix4().makeTranslation(p.at[0], 0, p.at[1]).multiply(new THREE.Matrix4().makeRotationY(r() * Math.PI * 2)).multiply(new THREE.Matrix4().makeScale(scale, scale, scale));
+    const s = scale * (p.h ? p.h / SIZE[p.kind][1] : 1);
+    const place = new THREE.Matrix4().makeTranslation(p.at[0], 0, p.at[1]).multiply(new THREE.Matrix4().makeRotationY(r() * Math.PI * 2)).multiply(new THREE.Matrix4().makeScale(s, s, s));
     for (const part of BUILDERS[p.kind](r)) {
       let g = part.geometry.clone().applyMatrix4(place.clone().multiply(part.matrix));
       if (g.index) g = g.toNonIndexed(); // merging needs all pieces non-indexed
@@ -155,7 +157,7 @@ function buildPlants(plants: Plant[], scale: number) {
       const colors = new Float32Array(g.getAttribute('position').count * 3);
       for (let v = 0; v < colors.length; v += 3) colors.set([c.r, c.g, c.b], v);
       g.setAttribute('color', new THREE.BufferAttribute(colors, 3));
-      pieces.push(tagObject(g, p.at[0], p.at[1], SIZE[p.kind][0] * scale, SIZE[p.kind][1] * scale));
+      pieces.push(tagObject(g, p.at[0], p.at[1], SIZE[p.kind][0] * s, SIZE[p.kind][1] * s));
     }
   });
   return pieces.length ? mergeGeometries(pieces) : null;
@@ -166,7 +168,7 @@ export function Plants({ plants, scale = 1 }: { plants: Plant[]; scale?: number 
   if (!geometry) return null;
   return (
     <mesh geometry={geometry} castShadow receiveShadow>
-      <meshToonMaterial vertexColors gradientMap={toonRamp} side={THREE.DoubleSide} onBeforeCompile={hideOccluders} />
+      <meshStandardMaterial vertexColors side={THREE.DoubleSide} onBeforeCompile={hideOccluders} />
     </mesh>
   );
 }

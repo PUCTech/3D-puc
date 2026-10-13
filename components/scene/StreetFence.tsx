@@ -2,7 +2,7 @@ import { useMemo } from 'react';
 import * as THREE from 'three';
 import { campus } from '@/lib/campus';
 import { mergeGeometries } from './geometry';
-import { barsTexture, toonRamp } from './pixel';
+import { barsTexture, crispTexture } from './textures';
 import { Plants } from './Plants';
 
 // Photo 14: a low concrete wall, a square concrete lattice above it, square pillars every ~2.6 m.
@@ -18,8 +18,7 @@ export function latticeTexture() {
   g.fillStyle = CONCRETE;
   g.fillRect(0, 0, 4, 1);
   g.fillRect(0, 0, 1, 4);
-  const t = new THREE.CanvasTexture(c);
-  t.magFilter = t.minFilter = THREE.NearestFilter;
+  const t = crispTexture(c);
   t.wrapS = t.wrapT = THREE.RepeatWrapping;
   t.colorSpace = THREE.SRGBColorSpace;
   return t;
@@ -66,19 +65,19 @@ export function StreetFence() {
     <>
       {solid && (
         <mesh geometry={solid} castShadow receiveShadow>
-          <meshToonMaterial color={CONCRETE} gradientMap={toonRamp} />
+          <meshStandardMaterial color={CONCRETE} />
         </mesh>
       )}
       {lattice && (
         <mesh geometry={lattice} castShadow>
-          <meshToonMaterial map={texture} gradientMap={toonRamp} alphaTest={0.5} transparent side={THREE.DoubleSide} />
+          <meshStandardMaterial map={texture} alphaTest={0.5} transparent side={THREE.DoubleSide} />
         </mesh>
       )}
       {barFences.map((f, i) => (
         <group key={i} position={[f.mid[0], 0, f.mid[1]]} rotation-y={f.angle}>
           <mesh position-y={WALL / 2} castShadow receiveShadow>
             <boxGeometry args={[f.len, WALL, 0.3]} />
-            <meshToonMaterial color={CONCRETE} gradientMap={toonRamp} />
+            <meshStandardMaterial color={CONCRETE} />
           </mesh>
           <mesh position-y={WALL + (f.height - WALL) / 2}>
             <planeGeometry args={[f.len, f.height - WALL]} />
@@ -93,7 +92,7 @@ export function StreetFence() {
       {pots.map((p, i) => (
         <mesh key={i} position={[p.at[0], 0.3, p.at[1]]} castShadow>
           <cylinderGeometry args={[0.4, 0.3, 0.6, 10]} />
-          <meshToonMaterial color="#1e2024" gradientMap={toonRamp} />
+          <meshStandardMaterial color="#1e2024" />
         </mesh>
       ))}
       <group position-y={0.6}>

@@ -1,5 +1,6 @@
 'use client';
 import { useTranslations } from 'next-intl';
+import { Icon } from './Icon';
 
 // Day / night lighting for the map.
 export function NightToggle({ night, onChange }: { night: boolean; onChange: (night: boolean) => void }) {
@@ -10,9 +11,9 @@ export function NightToggle({ night, onChange }: { night: boolean; onChange: (ni
       aria-pressed={night}
       aria-label={night ? t('toDay') : t('toNight')}
       title={night ? t('toDay') : t('toNight')}
-      className={`pixel-btn grid h-10 w-10 place-items-center text-lg leading-none ${night ? '' : 'pixel-btn-paper'}`}
+      className="plate-btn grid h-11 w-11 place-items-center"
     >
-      <span aria-hidden>{night ? '☾' : '☀'}</span>
+      <Icon name={night ? 'moon' : 'sun'} />
     </button>
   );
 }

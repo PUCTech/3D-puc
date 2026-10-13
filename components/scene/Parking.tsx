@@ -1,11 +1,12 @@
 import { useMemo } from 'react';
 import { Label } from './Label';
 import * as THREE from 'three';
-import { Edges } from '@react-three/drei';
+
 import { useTranslations } from 'next-intl';
 import { campus, type Point } from '@/lib/campus';
 import { mergeGeometries } from './geometry';
-import { INK_WIDTH, carGateTexture, toonRamp } from './pixel';
+import { carGateTexture } from './textures';
+import { useEra } from './era';
 
 // Parking lane (user + photo 2025-10-29): concrete lane from the car gate, sloping down past the Auditório
 // to the lower level and ending at Prédio 3; cars parallel-parked on both sides; a railed pedestrian ramp.
@@ -64,8 +65,7 @@ function CarGate({ at, yaw, width }: { at: Point; yaw: number; width: number }) 
       {[-1, 1].map((side) => (
         <mesh key={side} position={[0, 1.4, side * (width / 2 + 0.35)]} castShadow>
           <boxGeometry args={[0.7, 2.8, 0.7]} />
-          <meshToonMaterial color="#e3ded3" gradientMap={toonRamp} />
-          <Edges threshold={20} color="#1b1b24" lineWidth={INK_WIDTH * 0.5} />
+          <meshStandardMaterial color="#e3ded3" />
         </mesh>
       ))}
       <mesh position-y={GATE_HEIGHT / 2 + 0.05} rotation-y={Math.PI / 2}>
@@ -82,22 +82,21 @@ function Car({ color }: { color: string }) {
     <group>
       <mesh position-y={0.55} castShadow>
         <boxGeometry args={[4.3, 0.7, 1.8]} />
-        <meshToonMaterial color={color} gradientMap={toonRamp} />
-        <Edges threshold={20} color="#1b1b24" lineWidth={INK_WIDTH * 0.5} />
+        <meshStandardMaterial color={color} />
       </mesh>
       <mesh position={[-0.25, 1.15, 0]} castShadow>
         <boxGeometry args={[2.3, 0.55, 1.6]} />
-        <meshToonMaterial color={color} gradientMap={toonRamp} />
+        <meshStandardMaterial color={color} />
       </mesh>
       <mesh position={[-0.25, 1.17, 0]}>
         <boxGeometry args={[2.34, 0.34, 1.64]} />
-        <meshToonMaterial color="#2b3440" gradientMap={toonRamp} />
+        <meshStandardMaterial color="#2b3440" />
       </mesh>
       {[-1.35, 1.35].flatMap((x) =>
         [-0.85, 0.85].map((z) => (
           <mesh key={`${x}${z}`} position={[x, 0.32, z]} rotation-x={Math.PI / 2}>
             <cylinderGeometry args={[0.32, 0.32, 0.22, 10]} />
-            <meshToonMaterial color="#141416" gradientMap={toonRamp} />
+            <meshStandardMaterial color="#141416" />
           </mesh>
         )),
       )}
@@ -107,6 +106,7 @@ function Car({ color }: { color: string }) {
 
 export function Parking({ lower }: { lower: boolean }) {
   const t = useTranslations('map');
+  const era = useEra();
   const built = useMemo(() => {
     if (!parking) return null;
     const f = frame(parking.from, parking.to);
@@ -176,20 +176,20 @@ export function Parking({ lower }: { lower: boolean }) {
       {!lower && <CarGate at={parking.from} yaw={built.f.yaw} width={parking.width} />}
       <mesh geometry={built.lane} receiveShadow>
         <meshLambertMaterial color="#d6d1c5" side={THREE.DoubleSide} />
-        <Edges threshold={20} color="#1b1b24" lineWidth={INK_WIDTH * 0.6} />
       </mesh>
       {built.lines && (
         <mesh geometry={built.lines}>
           <meshBasicMaterial color="#f4f1e6" side={THREE.DoubleSide} />
         </mesh>
       )}
-      {built.accessible.map((a, i) => (
+      {era === 'hoje' && built.accessible.map((a, i) => (
         <mesh key={i} position={[a.x, a.y + LIFT + 0.02, a.z]} rotation={[-Math.PI / 2, 0, -built.f.yaw]}>
           <planeGeometry args={[4.6, 2]} />
           <meshBasicMaterial color="#2f6db5" side={THREE.DoubleSide} />
         </mesh>
       ))}
-      {built.cars.map((c, i) => (
+      {/* 1943: no cars or accessible bays (both modern) */}
+      {era === 'hoje' && built.cars.map((c, i) => (
         <group key={i} position={[c.x, c.y + LIFT, c.z]} rotation={[0, -built.f.yaw, c.pitch]}>
           <Car color={c.color} />
         </group>
@@ -201,7 +201,7 @@ export function Parking({ lower }: { lower: boolean }) {
       )}
       {built.rails && (
         <mesh geometry={built.rails}>
-          <meshToonMaterial color="#f4f4f0" gradientMap={toonRamp} />
+          <meshStandardMaterial color="#f4f4f0" />
         </mesh>
       )}
       {built.handrails.map((g, i) => (
@@ -209,7 +209,7 @@ export function Parking({ lower }: { lower: boolean }) {
           <lineBasicMaterial color="#f4f4f0" />
         </lineSegments>
       ))}
-      <Label position={[built.label[0], built.labelY + 2.5, built.label[1]]} text={`P · ${t('parking')}`} className="pixel-chip block whitespace-nowrap bg-paper px-1 font-display text-[11px] text-navy" />
+      {era === 'hoje' && <Label position={[built.label[0], built.labelY + 2.5, built.label[1]]} text={t('parking')} badge="P" className="map-plate parking-plate" />}
     </group>
   );
 }

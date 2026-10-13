@@ -467,3 +467,129 @@ Frames sampled every 2 s.
   - The chapel, library and "terraço suspenso" are placed on the Auditório upper floor. They are "left of the hall", which is the auditorium side.
   - The "terraço em frente ao campo de tênis" is placed on Prédio 2's lower level, beside today's court.
   - The reading room has no stated location, so it sits under the site entry.
+
+## Iteration: realistic render and furnished rooms (2026-10-12)
+**Changed**
+- The pixel-art toon look is gone.
+  - Full-resolution, antialiased render.
+  - Physically based materials and soft shadows.
+  - No ink outlines.
+  - High-resolution, smoothly filtered textures, with window frames, sills and sky reflected in the glass.
+- Floors are cut-away models (`components/scene/interior.ts`).
+  - Walls are cut at 1.2 m, with a dark top on every cut wall.
+  - Doors open onto corridors and halls.
+  - Exterior walls run solid to the sill, with glazing and mullions above.
+- Floor finishes by use.
+- Furniture at real sizes, by use.
+
+**Sources and choices** (photos in `docs/consolacao/pictures/` and `public/history/`)
+
+| Room | Finish | Furniture | Source |
+|---|---|---|---|
+| Classrooms | Light grey-blue vinyl | Black tablet-arm chairs in rows, white teacher's table, whiteboard | Google Maps photos, 2017 |
+| Glazed corridor (Prédio 2) | Glossy terracotta tile | Yellow tactile strip, wooden benches | Recent photo |
+| Dorm rooms (Prédio 1) | Parquet | Single bed, wooden desk and chair under the window, wardrobe | `1943-quarto-estudante.jpg` |
+| Reading room | Terrazzo | Bookcases | `1943-sala-leitura.jpg` |
+| Library | Terrazzo | Bookcases, white tables, black chairs (as in the 2017 study-room photo) | 2017 photo |
+| Restaurant / canteen | Terrazzo | White tablecloths, dark ladder-back chairs | `1943-restaurante.jpg` |
+| Auditorium | Wood | Raked rows of dark upholstered seats facing the stage | `1943-auditorio-fundos.jpg` |
+| Stage | Wood | Lectern; a grand piano when the stage is deep enough | `1943-auditorio-frente.jpg` |
+
+**Still invented**
+- Furniture counts and positions.
+- Office, meeting room and restroom layouts.
+- Rooms of unknown use (`room`), which get a work table.
+
+## Iteration: today and 1943 views, first research sweep (2026-10-12)
+**Era switch**
+- **URL and default:** "Hoje | 1943" is kept in the URL as `?epoca=1943`, like `?noite=1`. Today is the default.
+- **Buildings:** Prédio 3 and the DTI are `later: true`, because only Prédio 1, Prédio 2 and the Auditório are Rino Levi's (1940–42). They are hidden in 1943 unless picked.
+- **Room uses:** rooms have an optional `kindToday`. The 1943 dorm rooms show as "Sala" today until a source gives their current use.
+- **1943 interiors:** parquet in classrooms and offices; blackboards and dark wooden two-seat desks; ladder-back chairs; white tablecloths; dark auditorium seats on a shallow rake.
+- **1943 surroundings:**
+  - no parked cars and no accessible bays;
+  - every neighbouring building is capped at 8 m (shortcut: the real 1940s footprints aren't known);
+  - the patio, the court and the street front are unchanged.
+
+**From the new sources** (see `docs/consolacao/sources.md`)
+- **Canopies:** dark waterproofed tops (drone video), white soffits and columns, and a red paint band at each column's foot (PUC-SP gallery).
+- **Patio:**
+  - two lobed, clipped hedge beds (drone video; outlines estimated, placed clear of the mapped trees and path);
+  - a red curb along the flagstone path.
+- **Glazed corridor today:** upholstered benches with planters on one side; wooden bar tables with white stools on the other.
+- **Auditório today:** it is the Auditório Joel Martins (PUC Tour), with steep wooden tiers (about 18 cm per row) and sage-grey seats between wooden side panels.
+- **Prédio 1 today:** Commons 2016 shows its upper corridors still have parquet floors and gridded end windows.
+
+**Open questions**
+- Current uses of Prédio 1's upper floors.
+- Construction dates of Prédio 3 and the DTI.
+- Where the chapel is today. Its 2023 photo shows wooden pews, a wood wall and a Madonna panel.
+- Which building is the "casa das Irmãs Agostinianas" mentioned on the PUC Tour page.
+
+## Iteration: LiDAR survey (2026-10-12)
+**Source:** São Paulo's 2017 LiDAR (PMSP, AWS Open Data). `scripts/lidar-campus.py` walks the Entwine octree and keeps the points around the campus, in campus.json's local frame. Heights below are relative to the street at the gate (776.29 m).
+
+**Heights corrected** (eave from roof points within 1.2 m of the footprint edge; ridge = 99th percentile)
+
+| Building | Before | LiDAR eave | Change | Roof rise (`roofRise`) |
+|---|---|---|---|---|
+| Prédio 1 | 12.6 m | 11.0 m | floors 3.15 → 2.75 m | 2.06 m |
+| Prédio 2 | 16.1 m | 13.7 m | floors 5.37 → 4.58 m | 2.04 m |
+| Auditório | 9.9 m | 9.3 m | — | 0.49 m (a very shallow hip, light grey from the satellite, not terracotta) |
+| DTI | top at 2.8 m | 3.6 m | floors 3.09 → 3.5 m | 1.0 m |
+| Prédio 3 | — | — | already right | — |
+
+**Two unmapped buildings found.** Footprints are LiDAR rectangles on the campus grid (70.4°); the satellite confirms both.
+- **"Bloco norte"**, north of the court: about 10 × 18.5 m, roof 7.7 m above the street, standing on court level (−3.2 m). Modeled as 3 floors × 3.7 m, flat roof, with a rooftop box (not modeled).
+- **"Edifício do bosque"**, in the north-east corner: about 30 × 12 m, roof eave 4.2 m above the street, standing on ground at −9.5 to −11.7 m. Modeled as 4 floors × 3.65 m on base −10.4 m, light-grey hip roof.
+- Their names are descriptive placeholders. One may be the Irmãs Agostinianas house (PUC Tour). Their uses are not confirmed.
+
+**Not modeled**
+- About 16 × 17 m of building-class points under the canopy west of the Edifício do bosque. Roof about 4 m above its ground (−6.3 m). Nothing is visible from above.
+
+**Terrain:** the lot falls far more than the model's single −3.4 m level.
+- Patio: 0 to −1 m.
+- Court: −2.5 to −3 m.
+- East of Prédio 3: −4 to −6 m.
+- North-east corner: −9 to −12 m.
+
+**City:** 244 of 292 neighbour heights replaced. The OSM/GeoSampa values were off by a median of 8 m, and several 40–50 m towers were recorded as 3–5 m. Each height is now roof (90th percentile of building points) minus the gate's street level, so roofs sit at their true elevation above the flat model ground. 13 neighbours with too few returns keep their old height.
+
+## Iteration: terrain, trees and neighbours from LiDAR (2026-10-12)
+- **Bosque terrain:** the north-east garden is now a sloped surface from the LiDAR ground (a 2 m grid, lowest return per cell, gaps filled, lightly smoothed). It falls from −3.5 m to −12.3 m.
+  - The Edifício do bosque stands at the bottom of that slope.
+  - Trees there are seated on the slope.
+  - The flat lower level (`sunken.floor`) no longer covers this area.
+  - The lower-level view leaves a hole over it.
+- **Trees:** crowns were detected from a 1 m canopy height model (local maxima ≥ 5 m, at least 4 m apart). Each detected crown replaces the guessed shade or slender trees under it, sized to its measured height (`h`).
+
+  | Garden | Crowns | Measured height (median) |
+  |---|---|---|
+  | Patio | 4 | 20 m |
+  | Bosque | 10 | 26 m |
+  | Jardim norte | 3 | 10 m |
+
+  Palms, monsteras and dracaenas stay hand-placed, because LiDAR doesn't separate them.
+- **Neighbours:** heights are now roof (90th percentile) minus their own surrounding ground (30th percentile of ground returns within 12 m). This fixes buildings standing on lower or higher streets. Median 16 m, max 85 m; 13 kept their OSM value for lack of returns.
+
+## Iteration: today's classrooms and Prédio 3 (2026-10-12)
+**Sources:** FUNDASP Radar (PUC-SP's maintainer).
+- "Marquês de Paranaguá: campus inicia ano letivo com nove salas de aula reformadas", Feb 2026, with 4 photos.
+- "FUNDASP vai climatizar 10 espaços": Prédio 3 has a basement lab and three classrooms on each of floors 1–3.
+- "FUNDASP apoia restauro de piano histórico": the chapel (Capela Nossa Senhora "Sedes Sapientiae") keeps the piano the canonesses donated in 1971.
+
+**Changed**
+- **Today's classrooms:**
+  - revitalised wood parquet, not vinyl (the 2017 photo was a study room);
+  - blue upholstered tablet-arm chairs with white tablets and black legs.
+- **Prédio 3:** an estimated layout (`estimated: true`). Room counts follow FUNDASP; positions are guessed along the bar.
+  - Corridor on the court side, stair at the north end, restrooms in the south annex.
+  - Lowest floor: lab and support room. Lab benches use the PUC-SP gallery as reference.
+  - Floors 1–3: three classrooms each.
+- **New room kind:** `lab` (Laboratório / Laboratory).
+- **Glazed-corridor furniture:** the bar tables now only appear in corridors over 40 m, i.e. Prédio 2's.
+
+**Still open**
+- Where the chapel is; its photo shows pews, a wood wall and a Madonna panel.
+- Today's uses of Prédio 1's upper floors.
+- Which building got the nine renovated classrooms. The photos show cobogó outside the windows, which suggests Prédio 2.
