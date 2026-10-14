@@ -89,7 +89,9 @@ export default function CampusScene({ selectedId, selectedFloor, lower, bottomIn
       onCreated={({ gl }) =>
         gl.domElement.addEventListener('webglcontextlost', (e) => {
           e.preventDefault();
-          onContextLost?.();
+          // Unmounting (the layout switching between phone and desktop) forces a context loss too; only a canvas
+          // still on the page lost its GPU.
+          if (gl.domElement.isConnected) onContextLost?.();
         })
       }
       orthographic
