@@ -10,6 +10,8 @@ Every picture or document the model is checked against. Downloaded copies live i
 | PUC-SP course-page galleries (`/sites/default/files/galeria/consolacao1–6.jpg`, `1_8…11_8.jpg`) | Patio, canopies (red column bands), glazed corridor today, computer lab (parquet, butcher-block tables), chapel, workshops | PUC-SP (reference only) | Today's corridor furniture, column bands, path curb, chapel and lab references |
 | `docs/consolacao/pictures/videoplayback.mp4`, drone and walk-through video (60 s, "PUC SP Marquês de Paranaguá") | Roofs from above, patio garden, canopies, court, Prédio 3 | Unknown (reference only) | Canopy tops are dark waterproofing over white soffits on white columns; lobed hedge beds and flagstone path in the patio; Prédio 3 is a white block with a dark flat roof |
 | `docs/consolacao/pictures/Screenshot …` (Google Maps photos and Street View) | Glazed corridor, classrooms, study room, court, gate, aerial view | Google / uploaders (reference only) | Today's finishes: terracotta corridor tile, tactile strip, globe pendants; black tablet-arm chairs; white tables and black chairs |
+| [Arquigrafia: Instituto "Sedes Sapientiae"](https://arquigrafia.org.br/explore/acervo/mosaic?q=Sedes+Sapientiae), 11 slides, 1998 (Leandro Lopes Pereira de Melo; Acervo da Biblioteca da FAUUSP) | Aerials of Prédio 1's terracotta hip roof and the Auditório's planted roof terrace and grey hip roof; the wavy canopy on round columns; Prédio 2's glazed corridor (red tile, cobogó glazing) | CC BY-NC-SA 4.0 | Roof terrace side, canopy columns, corridor finish; copies in `refs/arquigrafia/` |
+| Google Maps place photo, May 2018 (user upload) | The patio garden in front of Prédio 2's cobogó façade | Uploader's (reference only) | Patio planting; copy in `refs/google-maps/` |
 | `public/history/1943-*.jpg` (Acrópole nº 64, 1943) | The institute in 1943: dorm room, reading room, restaurant, lab, auditorium, halls | Published 1943; see `data/history.json` | The 1943 view: parquet, dark wood furniture, white tablecloths, raked auditorium |
 
 ## Measurements
@@ -35,4 +37,4 @@ Every picture or document the model is checked against. Downloaded copies live i
 ## Not used
 
 - Instagram, Facebook and other login-walled networks: they can't be scraped within their terms, and most of their photos are private people's posts.
-- [Arquigrafia](https://www.arquigrafia.org.br) has CC BY-NC-ND photos of the building, but its search only renders with JavaScript, so it hasn't been read yet.
+

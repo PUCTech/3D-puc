@@ -593,3 +593,127 @@ Frames sampled every 2 s.
 - Where the chapel is; its photo shows pews, a wood wall and a Madonna panel.
 - Today's uses of Prédio 1's upper floors.
 - Which building got the nine renovated classrooms. The photos show cobogó outside the windows, which suggests Prédio 2.
+
+## Iteration: today's rooms from FUNDASP's CAD plans (2026-10-19)
+**Source:** `docs/consolacao/floor-plans/MPCA_ARQ_Campus Marques_2024.11.06.dwg`, FUNDASP DIPLAD, sheets dated 25/11/2024 ("Estudo COVID"). Rendered in `campus-consolacao-plantas.pdf`.
+- The plans are true metres: their 1.5 m distancing dimensions measure 1.500, and floor plans match the site plan (Prédio 1: 10.0 × 30.5 m walls).
+- OSM/GeoSampa footprints are 1–3 m larger (roof edges). Rooms are stretched onto the footprint, as the 1942 rooms already were.
+
+**Changed**
+- **New field `roomsToday`** on floors: today's walls and uses, shown in the Hoje view. The 1942 `rooms` stay for 1943.
+  - Rooms come from the DWG by flood-filling between walls from each label. Furniture layers are ignored, and wall pixels go to the nearest room so neighbours share an edge.
+  - 1942 rooms the CAD leaves blank are kept with today's use: stairs, the auditorium seating and stage.
+  - Prédio 2's stair core is the 1942 one: the bay sequence is unchanged and the fit shifted it ~1.3 m.
+- **Room numbers** (`number`, e.g. 311) appear on the floor labels.
+- **Prédio 1, floors 0–2:** departments and coordinations (101–109C), teachers' room and SAE on the ground floor. Labs, X-ray lab and classrooms on floor 1. Postgraduate offices and research labs (121–129D) on floor 2. Floor 3 isn't in the CAD and keeps the 1942 rooms.
+- **Prédio 2:** library stacks and study room, copy room, canteen and kitchen in the basement. Classrooms 201–203 and IT labs 204–205 on the ground floor, IT labs 211–215 on floor 1, engineering labs 221–225 and workshop 226 on floor 2.
+- **Auditório:** chapel ("Capela 36 lugares") beside the stage on the ground floor. The direction offices, meeting room, classroom 216 and the roof terrace are on the upper floor. New room kind `chapel`.
+- **Prédio 3:** the estimated layout is replaced. Basement: mechanics and fluids labs, data centre. Floors 1–3: three classrooms each (311–313, 321–323, 330–331). The stair is at the south end, not the north as guessed. The file labels the top floor "1º andar"; its room numbers make it the 3rd.
+- **Edifício do bosque → Prédio 4:** the DWG's Edifício 04 "Caio Prado" is the same corner, depth and floor count. Ground floor: engineering lab 401, the unoccupied restaurant, changing rooms. Floors 1–3: rooms 411–439. The id `edificio-bosque` is kept, so links still work.
+
+**Not changed (conflicts to check)**
+- The DWG site plan names the pavilion south of the court "Casa Paroquial", where the map has the DTI (reported by the user).
+- North of the court, where the map has the "Bloco norte", the DWG labels the neighbour "Residência das Freiras".
+- The DWG's NUCC (IT nucleus, 3 levels) and the maintenance and storage annexes aren't on its site plan, so they aren't placed.
+
+## Iteration: true-scale shells from the CAD (2026-10-19)
+OSM footprints trace roof edges, ~1.2 m outside the walls, and the roof adds its own 0.7 m eave on top. Shells now come from the CAD walls.
+- **Prédio 1:** 10.6 × 31.3 m (was 12.4 × 33.5), with the recessed south entrance from the CAD. It keeps the OSM centre and axis. The 1942 rooms are refitted into it, and the Prédio 1 canopy moved 1.2 m onto the real east wall.
+- **Prédio 3:** 14.3 × 30.1 m (was 16.4 × 30.9), with the stair annex. The basement's "área externa" is outside the shell.
+- **Prédio 4:** 33.5 × 12.2 m (LiDAR estimate was 30.2 × 11.8).
+- Rooms on these floors are placed at 1:1, no stretch.
+- Next: Prédio 2 and the Auditório. Their cobogó wall, lean-to roof and the sunken-terrain edge are tied to the current wall lines.
+- **Prédio 2 and the Auditório** (same day, next pass) are placed with one transform from the E02 drawing, so the wing stays joined to the bar as drawn.
+  - Prédio 2: 58.8 × 10.6 m (was 62.8 × 12.4).
+  - Auditório: the CAD wing box, 30.6 × 17.9 m (was 28.4 × 16.8), curved back wall straightened. Its two massing parts are refitted.
+  - Geometry drawn on an old wall line follows the wall: the cobogó screen, the lean-to, the canopies, the sunken-ground and upper-lot edges, garden edges. Plants stay put.
+- Shells are the CAD bounding rectangle minus real recesses (≥ 4 m² and ≥ 1.5 m deep and wide). Shallower steps are only rooms absorbing more or less of a thick wall.
+- **Auditório curve** (next pass): the west façade is the CAD's arc (r 17.2 m, bulging ~2 m), applied to the footprint and the one-storey roof-garden part.
+  - The seating, in both eras, is the CAD's fan: rows every 0.89 m about the stage, between the stage front (r 13.6 m) and the 30.85 m back arc.
+- **Placement anchor** (next pass): the CAD fixes dimensions, but centring on OSM is only good to ~1 m. Prédio 2 and the Auditório slid 0.77 m along the bar so the Auditório's north wall stays on its entrance canopy, which is aligned to the gate on Street View.
+  - That cleared the canopy running 19 m inside the new Auditório and a 4 m² overlap with the patio garden.
+  - A site audit (gardens, paving, footways, canopies, sunken zones, parking) finds no other conflicts. The 1.4 m between the parking lane and Prédio 2's east wall is under the lean-to.
+- **DTI = the CAD's NUCC** (inference, next pass): NUCC is IT (computer labs, servers, internet room), 17.0 × 9.1 m, two storeys over a partial base level. The DTI pavilion is 17.6 × 10.2 m (OSM), two storeys on the lower ground, IT use as reported by the user.
+  - Now a 17.2 × 9.3 m shell. Ground floor: two computer labs between server rooms. Upper floor: the internet room, rooms and a lab.
+  - The CAD's 2014 site plan labels this spot "Casa Paroquial", so check this on site.
+  - The NUCC base level isn't modeled.
+- **Floor heights unchanged:** the classroom block section gives 4.00 m floor to floor, but LiDAR puts Prédio 2's eave at 13.7 m (3 × 4.00 = 12.0). Where the other 1.7 m goes (taller ground floor or roof structure) has no source yet.
+- **Roof overhang from LiDAR** (next pass): with the CAD walls, the 2017 LiDAR roof shows how far the eaves really project.
+  - Prédio 1: 1.1 m (fit 0.82 → 0.86).
+  - Prédio 2, west side: 1.07 m. The east side reads 3.7 m because the 3 m lean-to is part of it.
+  - Both get the new style field `eave: 1.1`. The others stay at 0.7 m: their best fits were within noise, and Prédio 4 is partly under tree canopy.
+  - The same check finds no placement shift worth making. Best-fit shifts improve the overlap by ≤ 0.01, except the Auditório, whose "best" just slides onto Prédio 2's roof.
+
+## Iteration: walls from walls, doors from doors (2026-10-19)
+**Problem (user screenshot):** crooked, curved interior walls. The room tracer treated every CAD line as a barrier, door-swing arcs included, then closed gaps up to 1.1 m. Door swings fused into room outlines as curved "walls".
+
+**New extraction**
+- **Walls:** only wall geometry, meaning straight lines plus thin solid fills (masonry, thickness < 0.45 m).
+- **Doors:** door blocks (`Door (2D)`, `PORTA…`), their leaves and every door-size swing arc (r 0.5–1.4 m) are kept out of the wall raster.
+  - Each door's opening is closed with its leaf's closed position (hinge → the end whose direction the wall continues behind).
+  - Many doors are drawn ajar (30°), and mirrored blocks need the arc centre taken in world coordinates.
+- **Façade gaps:** the building's silhouette seals openings without a door swing, and gaps under 1 m inside are closed.
+- **Room outlines:** right-angled, with edges snapped to the CAD's wall centre lines (paired wall faces averaged). Neighbours share one straight wall, and there are no diagonal edges.
+- **Result:** 241 doors placed. Corridors no longer merge with the offices along them.
+
+**3D**
+- New floor field `doorsToday` holds the CAD doors, as [hinge, closed leaf end] in app metres.
+- `buildInterior` cuts wall openings exactly there, exterior doors included. It only falls back to the mid-wall guess on floors without CAD doors (the DTI/NUCC has none detected).
+
+**Photos:** the Google Maps listing shows one public photo to a logged-out browser: the patio garden in front of Prédio 2's cobogó (May 2018). Saved under `docs/consolacao/refs/google-maps/` (gitignored, third-party copyright).
+- **Shells from the drawn walls** (next pass): each building's shell is now the outer face of its exterior walls as drawn. That's the union of the floors' wall silhouettes, square-closed so corners stay right-angled. It replaces "room bounding box minus recesses".
+  - Prédio 3's upper floors keep their real 1.2 m recess between the stair annex and the small west box, where a 1.2 m empty strip had appeared.
+  - Prédio 4 now includes its outside entrance stair (35.6 m).
+- **No more holes inside buildings:** any space inside the walls that no labelled room claims becomes a room. It's a stair where tread lines are dense, otherwise an unnamed "Sala". Stairs now come from the CAD on most floors. Prédio 2's 1942 stair core is used only where the CAD shows none (its basement and 2nd floor).
+- **Result:** interior walls wrongly drawn as exterior glazing are down to 0–1% on most floors (was 4–13%). Exceptions: Prédio 3's basement at 14% (its outdoor area) and the Auditório at 23–39%.
+
+## Iteration: checked in the browser (2026-10-19)
+Every view below was checked in the running app, not only in plots.
+- **Auditório hall:** the CAD's own hall outline, with its splayed side walls and curved back wall. It's the only room allowed a non-square outline.
+  - Seats now follow the CAD's arcs: rows 0.9 m apart curving round the stage (new room field `focus`), each seat on its own step, the rake capped under the plan cut.
+  - Interior glazing on this floor fell from 39% to 16%.
+- **Prédio 4 ground floor was buried:** the woodland terrain mesh ran through it. Terrain cells inside building footprints are now left out, so the building stands in its own excavation.
+- **Glazed panels:** some `Door (2D)` blocks have no swing; they're fixed glazed panels with sills. Those are now walls, so the engineering lab 401 and the unused restaurant are separate rooms again (it had read "Cantina 401"). Door swings up to 2 m are accepted.
+- **Prédio 3's lowest floor** is labelled "Subsolo", as in the CAD.
+- **Photos:** 11 Arquigrafia slides (1998, CC BY-NC-SA) in `refs/arquigrafia/`. They confirm the roof terrace on the street side and the low grey hip roof over the hall.
+  - Not modelled yet: in 1998 the terrace was laid out as rectangular planter beds with paths, not a lawn.
+
+## Iteration: sanity audit — access, cramped rooms, stairs (2026-10-19)
+New checks run on every floor: rooms with no way in, rooms under 2.5 m² or 0.9 m wide, walls off the grid, and stairs per floor.
+- **Doorless passages:** gaps the 1 m wall-closing sealed between two rooms are recorded as openings, alongside the door swings (391 openings in all).
+  - Rooms the CAD still gives no way in (the NUCC survey sketch draws openings as bare gaps) get a 0.9 m opening mid-way along their longest wall with a corridor, hall or stair.
+  - Result: inaccessible rooms down from 66 to 2, both shafts of about 2 m².
+- **Stairs on every floor:** where a floor's CAD shows none, the stair of the nearest floor carries through at the same place (Prédio 1 ground, Auditório upper, DTI ground).
+- **Tracer leftovers:**
+  - Prédio 3's 0.76 m façade window band (a 20 m² "room") now belongs to the classrooms beside it.
+  - A stair's second flight, split off as an unnamed piece, rejoins the stair.
+- **Room 332:** the CAD labels Prédio 3's 3rd-floor room "322", duplicating the 2nd floor's. By position it's 332.
+- **Audit now:** 2 inaccessible spaces (shafts), 6 small but real spaces, no off-grid walls, every floor with a stair.
+- **Stairs modelled as the CAD draws them** (next pass): compact stair rooms (≥ 1.8 m wide, no more than 2.6× as long as wide) are U-stairs. That's two flights of 0.28 m treads, a landing across the far end and a wall between the flights, drawn up to the plan cut. Long narrow ones (the Auditório's) stay single flights.
+- **Corridor read as "Sanitários":** a traced region can carry several labels, as when the toilets' label sits at a corridor's end. A space of 25 m² or more now takes the large-space kind (corridor, hall, lab and so on), a smaller one the small kind. Prédio 2's corridors are corridors again.
+- **Corner doors:** where the hinge sits at a wall junction, the closed leaf is now the end whose chord crosses a gap in the walls. Prédio 2's men's restrooms are separate rooms again.
+- **Shells** are simplified at 8 cm, removing the 5 cm pixel jogs at corners.
+
+## Iteration: structure vs the drawn walls (2026-10-19)
+Each floor's CAD wall outline was mapped into the app and laid over the shells.
+- **Shells by floor majority:** a part is building volume only if more than half the floors above ground draw it. Prédio 4's outside entrance stair (drawn on its two lower floors) was being extruded four storeys. Prédio 4 is now 33.0 m.
+- **Auditório shell = the CAD wing:** the ground floor's walls west of Prédio 2, with the analytic façade arc. It ran 37.6 m² past the drawn south wall and is now 508 m².
+- **Auditório massing from the CAD:** two storeys exactly where the CAD draws an upper floor (346 m², east). The roof-garden hall is one storey (160 m², the curved street end). This matches the 1998 aerial slides.
+- **Checked:** every other floor's outline lies within 0.15 m of its shell. The exceptions are Prédio 3's basement, which runs under the yard, and Prédio 1's ground-floor NE notch (1 m²).
+- **Façade windows from the CAD** (next pass): along each floor's exterior outline, stretches without solid masonry are openings. Openings ≥ 0.4 m count as windows, and doors are left to the doors list.
+  - New floor field `windowsToday`. Buildings that have it get a plain wall texture (new window kind `none`) and real panes: glass from a 0.9 m sill to 0.4 m under the next slab, with frame, sill and a mullion over 1.4 m.
+  - Applied where the CAD draws masonry between windows: Prédio 1 (18–24 per floor), Prédio 3 and Prédio 4.
+  - Prédio 2, its basement and the NUCC draw no masonry fill (86–100% "openings"), so they keep the textured windows.
+  - Floors without a CAD sheet repeat the floor below (Prédio 1's 3rd floor). The 1998 slide confirms Prédio 1 is ground plus three storeys with punched windows along the street façade.
+- **Prédio 2 façades from its piers** (next pass): the CAD draws both long façades as continuous glazing between small square piers about every 2.9 m, with no masonry fill. Each bay between piers is now one window: about 20 per façade per floor, mostly 2.62 m clear.
+  - Heights follow the Vitruvius section of the classroom block: 0.84 m parapet and a 0.60 m beam over the glass. These are new style fields `sill` and `lintel`.
+  - The west bays sit behind the cobogó grid.
+- **Auditório façades** (next pass):
+  - The upper block gets the CAD's upper-floor openings: a 16 m run onto the roof terrace and the offices' windows along both long sides.
+  - A glazed run over 6 m is a wall of doors, so the glass starts at the floor, with mullions about every 1.2 m. This matches the 1998 slide (terrace doors under the eave).
+  - The hall walls under the terrace stay blank, as in the slide. The wing's ground-floor "openings" aren't used, since no masonry fill is drawn there.
+- **Prédio 2 bay counts:** the ground and 1st floors have 6 fewer bays than the 2nd because the Auditório wing covers that part of the west façade. That's correct.
+- **Wall thickness from the CAD** (next pass): the median width of the solid masonry fills per building is now style field `walls: [exterior, interior]`.
+  - Prédio 1: 0.25 / 0.20 m. Prédio 3: 0.20 / 0.20 m. Prédio 4: 0.25 / 0.15 m. Everything had been 0.24 / 0.12.
+  - Prédio 2's lab partitions are drawn as thin lines with no fill, so they stay light partitions. Its 0.6 m fills are the corridor piers.
+  - The 1943 view keeps the defaults.
